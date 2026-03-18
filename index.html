@@ -1309,6 +1309,37 @@
       </div>
     </div>
 
+    <!-- Share Receipt Modal -->
+    <div class="modal-overlay" id="shareReceiptModal">
+      <div class="modal-box">
+        <button class="modal-close" onclick="closeShareReceiptModal()">✕</button>
+        <div
+          class="modal-icon"
+          style="background: rgba(37, 211, 102, 0.1); color: #25d366"
+        >
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+          </svg>
+        </div>
+        <h3 style="color: var(--text)">Share Payment Receipt</h3>
+        <p>Please share your payment confirmation screenshot on WhatsApp to receive your diamonds instantly!</p>
+        <button
+          class="btn btn-primary"
+          onclick="shareOnWhatsApp()"
+          style="margin-top: 1rem; background: #25d366; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);"
+        >
+          Share on WhatsApp
+        </button>
+        <button
+          class="btn btn-secondary"
+          onclick="closeShareReceiptModal()"
+          style="margin-top: 0.5rem"
+        >
+          I will do it later
+        </button>
+      </div>
+    </div>
+
     <!-- Server Status -->
     <div class="server-status">
       <div class="status-dot"></div>
@@ -1332,6 +1363,8 @@
       let html5QrCode = null;
       let scannedUPI = null;
       let qrCodeObj = null;
+      let paymentInitiated = false;
+      let pendingOrderId = null;
 
       // Initialize
       document.addEventListener("DOMContentLoaded", () => {
@@ -1720,12 +1753,42 @@
           switchPaymentTab(document.getElementById("tabGenerate"), "generate");
         }
 
-        startTimer(600);
+        startTimer(300);
       }
 
       // Handle Payment Start
       function handlePaymentStart(orderId) {
         console.log("Payment initiated for order:", orderId);
+        paymentInitiated = true;
+        pendingOrderId = orderId;
+      }
+
+      document.addEventListener("visibilitychange", function() {
+        if (document.visibilityState === 'visible' && paymentInitiated) {
+          paymentInitiated = false;
+          if (document.getElementById("paymentModal").classList.contains("active")) {
+             document.getElementById("paymentModal").classList.remove("active");
+             showShareReceiptModal(pendingOrderId);
+          }
+        }
+      });
+
+      function showShareReceiptModal(orderId) {
+        document.getElementById("shareReceiptModal").classList.add("active");
+        if (timerInterval) clearInterval(timerInterval);
+      }
+
+      function closeShareReceiptModal() {
+        document.getElementById("shareReceiptModal").classList.remove("active");
+        window.location.reload();
+      }
+
+      function shareOnWhatsApp() {
+        if (!currentOrder) return;
+        const text = `Hello! I just made a payment.\n\n*Order ID:* ${currentOrder.orderId}\n*IMO ID:* ${currentOrder.userId}\n*Amount:* ₹${currentOrder.amount}\n*Diamonds:* ${currentOrder.diamonds}\n\nPlease find my payment screenshot attached.`;
+        const waUrl = `https://wa.me/919565789134?text=${encodeURIComponent(text)}`;
+        window.open(waUrl, '_blank');
+        closeShareReceiptModal();
       }
 
       // Simulate Payment
@@ -1858,7 +1921,7 @@
       // Close modals on outside click
       document.querySelectorAll(".modal-overlay").forEach((modal) => {
         modal.addEventListener("click", (e) => {
-          if (e.target === modal && modal.id !== "successModal") {
+          if (e.target === modal && modal.id !== "successModal" && modal.id !== "shareReceiptModal") {
             modal.classList.remove("active");
             if (timerInterval) clearInterval(timerInterval);
           }
