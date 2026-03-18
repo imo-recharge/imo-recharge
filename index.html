@@ -652,7 +652,7 @@
         overflow-y: auto;
         position: relative;
         scrollbar-width: thin;
-        scrollbar-color: rgba(99,102,241,0.3) transparent;
+        scrollbar-color: rgba(99, 102, 241, 0.3) transparent;
       }
 
       .modal-overlay.active .modal-box {
@@ -667,7 +667,7 @@
         width: 32px;
         height: 32px;
         border-radius: 50%;
-        background: rgba(255,255,255,0.1);
+        background: rgba(255, 255, 255, 0.1);
         border: none;
         color: var(--text-muted);
         font-size: 1.1rem;
@@ -679,7 +679,7 @@
         z-index: 1;
       }
       .modal-close:hover {
-        background: rgba(239,68,68,0.2);
+        background: rgba(239, 68, 68, 0.2);
         color: var(--danger);
       }
 
@@ -767,7 +767,7 @@
 
       .upi-link-logo svg {
         border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
       }
 
       .upi-link-info {
@@ -857,7 +857,7 @@
         width: 50px;
         height: 50px;
         background: rgba(37, 211, 102, 0.1);
-        color: #25D366;
+        color: #25d366;
         border-radius: 16px;
         display: flex;
         align-items: center;
@@ -882,7 +882,7 @@
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
-        background: #25D366;
+        background: #25d366;
         color: white;
         padding: 0.4rem 0.8rem;
         border-radius: 10px;
@@ -1115,15 +1115,37 @@
           <div class="whatsapp-card mb-2">
             <div class="whatsapp-icon">
               <!-- Inline WhatsApp SVG Icon -->
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"
+                />
               </svg>
             </div>
             <div class="whatsapp-info">
               <h3>Need Help?</h3>
               <p>Contact our support team anytime on WhatsApp.</p>
-              <a href="https://wa.me/919565789134" target="_blank" class="whatsapp-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+              <a
+                href="https://wa.me/919565789134"
+                target="_blank"
+                class="whatsapp-btn"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"
+                  />
+                </svg>
                 Chat on WhatsApp
               </a>
             </div>
@@ -1195,10 +1217,18 @@
           >
             <span>📱</span> UPI App
           </button>
-          <button class="tab-btn" id="tabGenerate" onclick="switchPaymentTab(this, 'generate')">
+          <button
+            class="tab-btn"
+            id="tabGenerate"
+            onclick="switchPaymentTab(this, 'generate')"
+          >
             <span>🎯</span> QR Code
           </button>
-          <button class="tab-btn mobile-only" id="tabScan" onclick="switchPaymentTab(this, 'qr')">
+          <button
+            class="tab-btn mobile-only"
+            id="tabScan"
+            onclick="switchPaymentTab(this, 'qr')"
+          >
             <span>📷</span> Scan QR
           </button>
         </div>
@@ -1591,49 +1621,64 @@
           // Generate UPI links for all apps
           const apps = [
             {
-              id: "gpay", name: "Google Pay", color: "#4285f4", bg: "#e8f0fe",
+              id: "gpay",
+              name: "Google Pay",
+              color: "#4285f4",
+              bg: "#e8f0fe",
               logo: `<svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="48" height="48" rx="12" fill="#fff"/>
                 <path d="M35.88 24.22c0-.76-.07-1.49-.19-2.19H24v4.14h6.68a5.71 5.71 0 01-2.48 3.74v3.1h4.01c2.35-2.16 3.7-5.34 3.7-8.79z" fill="#4285F4"/>
                 <path d="M24 36c3.36 0 6.18-1.11 8.24-3.01l-4.01-3.1c-1.11.75-2.54 1.19-4.23 1.19-3.25 0-6-2.19-6.98-5.14H12.9v3.2A12.48 12.48 0 0024 36z" fill="#34A853"/>
                 <path d="M17.02 25.94A7.48 7.48 0 0116.63 24c0-.67.12-1.32.31-1.94V18.86H12.9A12.48 12.48 0 0012 24c0 2.01.48 3.91 1.33 5.59l3.69-2.89.65-2.76z" fill="#FBBC05" opacity=".9"/>
                 <path d="M24 17.88c1.84 0 3.48.63 4.78 1.87l3.58-3.58C30.17 14.11 27.35 13 24 13a12.48 12.48 0 00-11.1 6.77l4.12 3.2c.98-2.95 3.73-5.09 6.98-5.09z" fill="#EA4335"/>
-              </svg>`
+              </svg>`,
             },
             {
-              id: "phonepe", name: "PhonePe", color: "#5f259f", bg: "#ede7f6",
+              id: "phonepe",
+              name: "PhonePe",
+              color: "#5f259f",
+              bg: "#ede7f6",
               logo: `<svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="48" height="48" rx="12" fill="#5f259f"/>
                 <path d="M32.5 18.5c0-4.69-3.81-8.5-8.5-8.5h-8v27l4.5-4.5v-5.5h3.5c4.69 0 8.5-3.81 8.5-8.5zm-8.5 4h-3.5v-8H24a4 4 0 010 8z" fill="#fff"/>
                 <circle cx="35" cy="36" r="4" fill="#fff"/>
-              </svg>`
+              </svg>`,
             },
             {
-              id: "paytm", name: "Paytm", color: "#00baf2", bg: "#e0f7fe",
+              id: "paytm",
+              name: "Paytm",
+              color: "#00baf2",
+              bg: "#e0f7fe",
               logo: `<svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="48" height="48" rx="12" fill="#00baf2"/>
                 <text x="7" y="32" font-family="Arial" font-weight="900" font-size="14" fill="#fff">Pay</text>
                 <text x="7" y="42" font-family="Arial" font-weight="900" font-size="10" fill="#002970">tm</text>
                 <rect x="7" y="34" width="34" height="3" fill="#002970"/>
-              </svg>`
+              </svg>`,
             },
             {
-              id: "amazonpay", name: "Amazon Pay", color: "#232F3E", bg: "#f2f4f8",
+              id: "amazonpay",
+              name: "Amazon Pay",
+              color: "#232F3E",
+              bg: "#f2f4f8",
               logo: `<svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="48" height="48" rx="12" fill="#fff"/>
                 <text x="5" y="24" font-family="Arial" font-weight="bold" font-size="10" fill="#000">amazon</text>
                 <text x="12" y="34" font-family="Arial" font-weight="bold" font-size="11" fill="#00A8E1">pay</text>
                 <path d="M10 26 C 18 32, 28 32, 36 26" stroke="#FF9900" stroke-width="2.5" stroke-linecap="round" fill="none"/>
                 <path d="M35 25 L 36 26 L 34 27" stroke="#FF9900" stroke-width="2" stroke-linecap="round" fill="none"/>
-              </svg>`
+              </svg>`,
             },
             {
-              id: "upi", name: "Any UPI App", color: "#6366f1", bg: "#ede9fe",
+              id: "upi",
+              name: "Any UPI App",
+              color: "#6366f1",
+              bg: "#ede9fe",
               logo: `<svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="48" height="48" rx="12" fill="#6366f1"/>
                 <text x="5" y="30" font-family="Arial" font-weight="900" font-size="13" fill="#fff">UPI</text>
                 <path d="M8 34h32M24 34v-18M16 24l8-8 8 8" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>`
+              </svg>`,
             },
           ];
 
@@ -1660,21 +1705,21 @@
         }
 
         document.getElementById("paymentModal").classList.add("active");
-        
+
         // Auto-select tab based on screen size
         if (window.innerWidth <= 640) {
           switchPaymentTab(document.getElementById("tabUpi"), "upi");
         } else {
           switchPaymentTab(document.getElementById("tabGenerate"), "generate");
         }
-        
+
         startTimer(600);
       }
 
       // Handle Payment Start
       function handlePaymentStart(orderId) {
         console.log("Payment initiated for order:", orderId);
-        
+
         const upiLinksContainer = document.getElementById("upiLinks");
         if (upiLinksContainer) {
           upiLinksContainer.innerHTML = `
