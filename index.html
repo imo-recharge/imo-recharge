@@ -1,0 +1,1816 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IMO Diamond Recharge - QR Scan & Pay</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- QR Code Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --secondary: #ec4899;
+        --accent: #f59e0b;
+        --success: #10b981;
+        --danger: #ef4444;
+        --bg: #0f172a;
+        --surface: #1e293b;
+        --surface-light: #334155;
+        --text: #f8fafc;
+        --text-muted: #94a3b8;
+        --gradient-1: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+        --gradient-2: linear-gradient(135deg, #f59e0b 0%, #ec4899 100%);
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      .bg-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .bg-animation::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background:
+          radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(236, 72, 153, 0.1) 0%,
+            transparent 40%
+          );
+        animation: rotate 30s linear infinite;
+      }
+
+      @keyframes rotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      header {
+        background: rgba(30, 41, 59, 0.8);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      nav {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: var(--gradient-1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .logo-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--gradient-1);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        -webkit-text-fill-color: white;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+      }
+
+      .container {
+        /*max-width: 1000px;*/
+        margin: 0 auto;
+        padding: 1rem;
+      }
+
+      .card-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: start;
+      }
+
+      .support-card {
+        display: flex;
+        flex-direction: column;
+      }
+
+      @media (max-width: 900px) {
+        .card-container {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .hero {
+        text-align: center;
+        padding: 2rem 0;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: linear-gradient(to right, #fff 0%, #94a3b8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .hero p {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+      }
+
+      .recharge-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 1.5rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        margin-bottom: 2rem;
+      }
+
+      /* Payment Method Tabs */
+      .payment-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        background: rgba(15, 23, 42, 0.5);
+        padding: 0.5rem;
+        border-radius: 16px;
+      }
+
+      .tab-btn {
+        flex: 1;
+        padding: 1rem;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+      }
+
+      .tab-btn.active {
+        background: var(--surface-light);
+        color: var(--text);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .tab-btn:hover:not(.active) {
+        color: var(--text);
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .input-wrapper {
+        position: relative;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 1rem 1rem 1rem 3rem;
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: var(--text);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      }
+
+      .input-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+      }
+
+      .diamond-packages {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .package-card {
+        background: rgba(15, 23, 42, 0.5);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 0.75rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .package-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary);
+      }
+
+      .package-card.selected {
+        border-color: var(--primary);
+        background: rgba(99, 102, 241, 0.1);
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+      }
+
+      .package-card.popular::after {
+        content: "POPULAR";
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: var(--gradient-2);
+        color: white;
+        font-size: 0.55rem;
+        font-weight: 700;
+        padding: 0.15rem 0.5rem;
+        border-bottom-left-radius: 10px;
+      }
+
+      .diamond-icon {
+        font-size: 1.25rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .diamond-count {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+      }
+
+      .diamond-price {
+        color: var(--text-muted);
+        font-size: 0.8rem;
+      }
+
+      .diamond-bonus {
+        color: var(--success);
+        font-size: 0.65rem;
+        margin-top: 0.2rem;
+      }
+
+      /* QR Code Section */
+      .qr-section {
+        display: none;
+        text-align: center;
+        padding: 2rem;
+        background: rgba(15, 23, 42, 0.3);
+        border-radius: 16px;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+      }
+
+      .qr-section.active {
+        display: block;
+      }
+
+      #qrcode {
+        margin: 1.5rem auto;
+        padding: 1rem;
+        background: white;
+        border-radius: 12px;
+        display: inline-block;
+      }
+
+      .qr-instructions {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-top: 1rem;
+      }
+
+      .upi-id-display {
+        background: rgba(99, 102, 241, 0.1);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin: 1rem 0;
+        font-family: monospace;
+        font-size: 1.1rem;
+        color: var(--primary);
+      }
+
+      /* QR Scanner Section */
+      .scanner-section {
+        display: none;
+        text-align: center;
+      }
+
+      .scanner-section.active {
+        display: block;
+      }
+
+      #reader {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+
+      #reader video {
+        border-radius: 16px;
+      }
+
+      #reader__dashboard_section_csr span {
+        color: var(--text) !important;
+      }
+
+      .scan-result {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid var(--success);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 1rem;
+        display: none;
+      }
+
+      .scan-result.show {
+        display: block;
+      }
+
+      .scan-result.error {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: var(--danger);
+      }
+
+      /* UPI Apps Grid */
+      .upi-section {
+        margin-top: 1.5rem;
+      }
+
+      .upi-title {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .upi-apps {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .upi-app {
+        background: rgba(15, 23, 42, 0.5);
+        border: 2px solid transparent;
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .upi-app:hover {
+        border-color: var(--primary);
+        transform: scale(1.05);
+      }
+
+      .upi-app.selected {
+        border-color: var(--success);
+        background: rgba(16, 185, 129, 0.1);
+      }
+
+      .upi-app-icon {
+        width: 40px;
+        height: 40px;
+        margin: 0 auto 0.5rem;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+
+      .upi-app span {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      .btn {
+        width: 100%;
+        padding: 1.25rem;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary {
+        background: var(--gradient-1);
+        color: white;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        margin-top: 1rem;
+      }
+
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .secure-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        color: var(--text-muted);
+        font-size: 0.875rem;
+      }
+
+      /* Tracking Section */
+      .tracking-section {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 2rem;
+        margin-top: 0;
+      }
+
+      .tracking-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .tracking-header h3 {
+        font-size: 1.25rem;
+      }
+
+      .refresh-btn {
+        background: rgba(99, 102, 241, 0.1);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        color: var(--primary);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+      }
+
+      .refresh-btn:hover {
+        background: var(--primary);
+        color: white;
+      }
+
+      .order-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .order-item {
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 1.25rem;
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 1rem;
+        align-items: center;
+        transition: all 0.3s ease;
+      }
+
+      .order-item:hover {
+        border-color: rgba(99, 102, 241, 0.3);
+      }
+
+      .order-info h4 {
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+        font-family: monospace;
+      }
+
+      .order-info p {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      .order-amount {
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+
+      .order-status {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .status-pending {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--accent);
+      }
+
+      .status-success {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success);
+      }
+
+      .status-failed {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger);
+      }
+
+      .mobile-only {
+        display: none !important;
+      }
+
+      /* Modals */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal-box {
+        background: var(--surface);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 2.5rem;
+        max-width: 450px;
+        width: 90%;
+        text-align: center;
+        transform: scale(0.9) translateY(20px);
+        transition: all 0.3s ease;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(99,102,241,0.3) transparent;
+      }
+
+      .modal-overlay.active .modal-box {
+        transform: scale(1) translateY(0);
+      }
+
+      /* Close button */
+      .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+        border: none;
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        z-index: 1;
+      }
+      .modal-close:hover {
+        background: rgba(239,68,68,0.2);
+        color: var(--danger);
+      }
+
+      .modal-icon {
+        width: 64px;
+        height: 64px;
+        background: rgba(99, 102, 241, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 2rem;
+      }
+
+      .modal-box h3 {
+        font-size: 1.4rem;
+        margin-bottom: 0.4rem;
+      }
+
+      .modal-box p {
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .order-details {
+        background: rgba(15, 23, 42, 0.5);
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 1.5rem 0;
+        text-align: left;
+      }
+
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+      }
+
+      .detail-row:last-child {
+        margin-bottom: 0;
+        padding-top: 0.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        font-weight: 600;
+      }
+
+      .upi-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        margin: 1rem 0;
+      }
+
+      .upi-link {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        padding: 0.85rem 1rem;
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.25s ease;
+        width: 100%;
+        text-align: left;
+      }
+
+      .upi-link:hover {
+        background: rgba(255, 255, 255, 0.06);
+        transform: translateX(3px);
+      }
+
+      .upi-link-logo {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+      }
+
+      .upi-link-logo svg {
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      }
+
+      .upi-link-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+        flex: 1;
+      }
+
+      .upi-link-name {
+        font-size: 0.95rem;
+        font-weight: 600;
+        line-height: 1.2;
+      }
+
+      .upi-link-sub {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        font-weight: 400;
+      }
+
+      .upi-link-arrow {
+        font-size: 1.5rem;
+        line-height: 1;
+        font-weight: 400;
+        flex-shrink: 0;
+        opacity: 0.7;
+      }
+
+      .timer {
+        font-size: 0.875rem;
+        color: var(--accent);
+        margin-top: 1rem;
+      }
+
+      .server-status {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(30, 41, 59, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        z-index: 100;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--success);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      /* WhatsApp Support Card */
+      .whatsapp-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(37, 211, 102, 0.2);
+        border-radius: 24px;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+      }
+      .whatsapp-card:hover {
+        border-color: rgba(37, 211, 102, 0.5);
+        box-shadow: 0 15px 35px -15px rgba(37, 211, 102, 0.25);
+      }
+      .whatsapp-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(37, 211, 102, 0.1);
+        color: #25D366;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .whatsapp-info {
+        flex: 1;
+      }
+      .whatsapp-info h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.25rem;
+        color: var(--text);
+      }
+      .whatsapp-info p {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+      }
+      .whatsapp-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: #25D366;
+        color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.25s ease;
+      }
+      .whatsapp-btn:hover {
+        background: #1da851;
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 640px) {
+        .mobile-only {
+          display: flex !important;
+        }
+
+        .diamond-packages {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .upi-apps {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .payment-tabs {
+          flex-wrap: nowrap;
+          gap: 0.25rem;
+        }
+
+        .tab-btn {
+          font-size: 0.78rem;
+          padding: 0.6rem 0.4rem;
+          flex-direction: column;
+          gap: 0.2rem;
+        }
+
+        .order-item {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+
+        .hero h1 {
+          font-size: 2rem;
+        }
+
+        /* Mobile modal: bottom sheet style */
+        .modal-overlay {
+          align-items: flex-end;
+          padding: 0;
+        }
+
+        .modal-box {
+          width: 100%;
+          max-width: 100%;
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+          border-top-left-radius: 20px;
+          border-top-right-radius: 20px;
+          padding: 1.5rem 1.25rem 2rem;
+          max-height: 92vh;
+          transform: translateY(100%);
+        }
+
+        .modal-overlay.active .modal-box {
+          transform: translateY(0);
+        }
+
+        .modal-icon {
+          width: 52px;
+          height: 52px;
+          font-size: 1.6rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .modal-box h3 {
+          font-size: 1.2rem;
+        }
+
+        .order-details {
+          margin: 0.75rem 0;
+          padding: 0.75rem;
+        }
+
+        .detail-row {
+          font-size: 0.85rem;
+        }
+
+        .payment-tabs {
+          margin-bottom: 1rem;
+        }
+
+        .timer {
+          margin-top: 0.5rem;
+          font-size: 0.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-animation"></div>
+
+    <header>
+      <nav>
+        <div class="logo">
+          <div class="logo-icon">💎</div>
+          IMO Diamonds
+        </div>
+        <div style="color: var(--text-muted); font-size: 0.9rem"></div>
+      </nav>
+    </header>
+
+    <div class="container">
+      <div class="hero">
+        <h1>Recharge IMO Diamonds</h1>
+        <p>Scan QR code or use UPI apps to pay instantly</p>
+      </div>
+      <div class="card-container">
+        <div class="recharge-card">
+          <div class="form-group">
+            <label class="form-label">IMO User ID</label>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+              <input
+                type="text"
+                class="form-input"
+                id="imoUserId"
+                placeholder="Enter your IMO User ID"
+                maxlength="20"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Select Diamond Package</label>
+            <div class="diamond-packages" id="packages">
+              <div
+                class="package-card"
+                onclick="selectPackage(this, 100, 50, 0)"
+              >
+                <div class="diamond-icon">💎</div>
+                <div class="diamond-count">100</div>
+                <div class="diamond-price">₹50</div>
+              </div>
+              <div
+                class="package-card"
+                onclick="selectPackage(this, 310, 150, 10)"
+              >
+                <div class="diamond-icon">💎</div>
+                <div class="diamond-count">310</div>
+                <div class="diamond-price">₹150</div>
+                <div class="diamond-bonus">+10 Bonus</div>
+              </div>
+              <div
+                class="package-card popular selected"
+                onclick="selectPackage(this, 1060, 500, 60)"
+              >
+                <div class="diamond-icon">💎</div>
+                <div class="diamond-count">1,060</div>
+                <div class="diamond-price">₹500</div>
+                <div class="diamond-bonus">+60 Bonus</div>
+              </div>
+              <div
+                class="package-card"
+                onclick="selectPackage(this, 2200, 1000, 200)"
+              >
+                <div class="diamond-icon">💎</div>
+                <div class="diamond-count">2,200</div>
+                <div class="diamond-price">₹1,000</div>
+                <div class="diamond-bonus">+200 Bonus</div>
+              </div>
+              <div
+                class="package-card"
+                onclick="selectPackage(this, 5600, 2500, 600)"
+              >
+                <div class="diamond-icon">💎</div>
+                <div class="diamond-count">5,600</div>
+                <div class="diamond-price">₹2,500</div>
+                <div class="diamond-bonus">+600 Bonus</div>
+              </div>
+              <div
+                class="package-card"
+                onclick="selectPackage(this, 12000, 5000, 2000)"
+              >
+                <div class="diamond-icon">💎</div>
+                <div class="diamond-count">12,000</div>
+                <div class="diamond-price">₹5,000</div>
+                <div class="diamond-bonus">+2,000 Bonus</div>
+              </div>
+            </div>
+          </div>
+
+          <button
+            class="btn btn-primary"
+            id="payBtn"
+            onclick="initiatePayment()"
+          >
+            Pay ₹500
+          </button>
+
+          <!-- Payment Method Tabs -->
+          <!--<div class="payment-tabs">
+                        <button class="tab-btn active" onclick="switchPaymentTab(this, 'upi')"><span>📱</span> UPI App</button>
+                        <button class="tab-btn" onclick="switchPaymentTab(this, 'qr')"><span>📷</span> Scan QR</button>
+                        <button class="tab-btn" onclick="switchPaymentTab(this, 'generate')"><span>🎯</span> My QR</button>
+                    </div>-->
+
+          <div class="secure-badge">
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              ></path>
+            </svg>
+            <span id="securityText">Secure UPI Payment • Instant Delivery</span>
+          </div>
+        </div>
+        <div class="support-card">
+          <!-- WhatsApp Support Section -->
+          <div class="whatsapp-card mb-2">
+            <div class="whatsapp-icon">
+              <!-- Inline WhatsApp SVG Icon -->
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+              </svg>
+            </div>
+            <div class="whatsapp-info">
+              <h3>Need Help?</h3>
+              <p>Contact our support team anytime on WhatsApp.</p>
+              <a href="https://wa.me/919565789134" target="_blank" class="whatsapp-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                Chat on WhatsApp
+              </a>
+            </div>
+          </div>
+          <!-- Order Tracking Section -->
+          <div class="tracking-section">
+            <div class="tracking-header">
+              <h3>📋 Recent Orders</h3>
+              <button class="refresh-btn" onclick="loadOrders()">
+                Refresh
+              </button>
+            </div>
+            <div class="order-list" id="orderList">
+              <p
+                style="
+                  text-align: center;
+                  color: var(--text-muted);
+                  padding: 2rem;
+                "
+              >
+                No orders yet. Create your first order!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal-overlay" id="paymentModal">
+      <div class="modal-box">
+        <button class="modal-close" onclick="document.getElementById('paymentModal').classList.remove('active')">✕</button>
+        <div class="modal-icon">💎</div>
+        <h3>Complete Payment</h3>
+        <p>
+          Order ID:
+          <strong id="modalOrderId" style="font-family: monospace"
+            >#ORD123456</strong
+          >
+        </p>
+
+        <div class="order-details">
+          <div class="detail-row">
+            <span>IMO User ID:</span>
+            <span id="modalUserId">-</span>
+          </div>
+          <div class="detail-row">
+            <span>Diamonds:</span>
+            <span id="modalDiamonds">1,060</span>
+          </div>
+          <div class="detail-row">
+            <span>Bonus:</span>
+            <span style="color: var(--success)"
+              >+<span id="modalBonus">60</span></span
+            >
+          </div>
+          <div class="detail-row">
+            <span>Total Amount:</span>
+            <span>₹<span id="modalAmount">500</span></span>
+          </div>
+        </div>
+
+        <!-- Payment Method Tabs -->
+        <div class="payment-tabs">
+          <button
+            class="tab-btn mobile-only"
+            id="tabUpi"
+            onclick="switchPaymentTab(this, 'upi')"
+          >
+            <span>📱</span> UPI App
+          </button>
+          <button class="tab-btn" id="tabGenerate" onclick="switchPaymentTab(this, 'generate')">
+            <span>🎯</span> QR Code
+          </button>
+          <button class="tab-btn mobile-only" id="tabScan" onclick="switchPaymentTab(this, 'qr')">
+            <span>📷</span> Scan QR
+          </button>
+        </div>
+
+        <!-- UPI Apps Section -->
+        <div id="upiSection" class="upi-section">
+          <div class="upi-links" id="upiLinks"></div>
+        </div>
+        <div class="timer" id="timer">Payment expires in 10:00</div>
+
+        <!-- QR Scanner Section -->
+        <div id="scannerSection" class="scanner-section">
+          <div id="reader"></div>
+          <div class="scan-result" id="scanResult">
+            <div style="font-weight: 600; margin-bottom: 0.5rem">
+              QR Code Detected!
+            </div>
+            <div
+              id="scanResultText"
+              style="font-size: 0.9rem; word-break: break-all"
+            ></div>
+            <button
+              class="btn btn-primary"
+              style="margin-top: 1rem"
+              onclick="proceedWithScannedQR()"
+            >
+              Proceed with this UPI ID
+            </button>
+          </div>
+          <button class="btn btn-secondary" onclick="stopScanner()">
+            Cancel Scanning
+          </button>
+        </div>
+
+        <!-- Generate QR Section -->
+        <div id="generateSection" class="qr-section">
+          <div style="margin-bottom: 1rem">
+            <span style="color: var(--text-muted)">Your UPI QR Code</span>
+            <div class="upi-id-display" id="displayUpiId">test@upi</div>
+          </div>
+          <div id="qrcode"></div>
+          <div class="qr-instructions">
+            Scan this QR code with any UPI app to pay<br />
+            <small>Amount: ₹<span id="qrAmount">500</span></small>
+          </div>
+        </div>
+
+        <!--<button class="btn btn-primary" onclick="simulatePayment()" style="background: var(--success)">✓ Simulate Successful Payment</button>-->
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+      <div class="modal-box">
+        <button class="modal-close" onclick="closeSuccessModal()">✕</button>
+        <div
+          class="modal-icon"
+          style="background: rgba(16, 185, 129, 0.1); color: var(--success)"
+        >
+          ✓
+        </div>
+        <h3 style="color: var(--success)">Payment Successful!</h3>
+        <p>Your diamonds will be credited shortly.</p>
+        <button
+          class="btn btn-primary"
+          onclick="closeSuccessModal()"
+          style="margin-top: 1rem"
+        >
+          View Orders
+        </button>
+      </div>
+    </div>
+
+    <!-- Server Status -->
+    <div class="server-status">
+      <div class="status-dot"></div>
+      <span>Local Mode Active</span>
+    </div>
+
+    <script>
+      // Configuration
+      const CONFIG = {
+        merchantUPI: "9565789134@upi", // Change to your actual UPI ID
+        merchantName: "IMO Diamond Recharge",
+        apiUrl: "http://localhost:8787/api",
+        mockMode: true,
+      };
+
+      // State
+      let selectedPackage = { diamonds: 1060, amount: 500, bonus: 60 };
+      let selectedUpiApp = "upi";
+      let currentOrder = null;
+      let timerInterval = null;
+      let html5QrCode = null;
+      let scannedUPI = null;
+      let qrCodeObj = null;
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", () => {
+        loadOrders();
+        updatePayButton();
+        generateQRCode();
+      });
+
+      // Package Selection
+      function selectPackage(element, diamonds, amount, bonus) {
+        document
+          .querySelectorAll(".package-card")
+          .forEach((card) => card.classList.remove("selected"));
+        element.classList.add("selected");
+        selectedPackage = { diamonds, amount, bonus };
+        updatePayButton();
+        updateQRAmount();
+      }
+
+      // UPI App Selection
+      function selectUPI(element, app) {
+        document
+          .querySelectorAll(".upi-app")
+          .forEach((app) => app.classList.remove("selected"));
+        element.classList.add("selected");
+        selectedUpiApp = app;
+      }
+
+      // Update Pay Button
+      function updatePayButton() {
+        const btn = document.getElementById("payBtn");
+        if (btn) btn.textContent = `Pay ₹${selectedPackage.amount}`;
+      }
+
+      // Update QR Amount
+      function updateQRAmount() {
+        document.getElementById("qrAmount").textContent =
+          selectedPackage.amount;
+        generateQRCode();
+      }
+
+      // Switch Payment Tab
+      function switchPaymentTab(btn, tab) {
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        // Hide all sections
+        document.getElementById("upiSection").style.display = "none";
+        document.getElementById("scannerSection").classList.remove("active");
+        document.getElementById("generateSection").classList.remove("active");
+
+        // Show selected section
+        if (tab === "upi") {
+          document.getElementById("upiSection").style.display = "block";
+          document.getElementById("securityText").textContent =
+            "Secure UPI Payment • Instant Delivery";
+          stopScanner();
+        } else if (tab === "qr") {
+          document.getElementById("scannerSection").classList.add("active");
+          document.getElementById("securityText").textContent =
+            "Scan any UPI QR Code to pay";
+          startScanner();
+        } else if (tab === "generate") {
+          document.getElementById("generateSection").classList.add("active");
+          document.getElementById("securityText").textContent =
+            "Share this QR code to receive payment";
+          stopScanner();
+          generateQRCode();
+        }
+      }
+
+      // Generate UPI QR Code
+      function generateQRCode() {
+        const container = document.getElementById("qrcode");
+        container.innerHTML = "";
+
+        const upiUrl = generateUPILink(
+          "GENERATE",
+          selectedPackage.amount,
+          "upi",
+        );
+
+        qrCodeObj = new QRCode(container, {
+          text: upiUrl,
+          width: 200,
+          height: 200,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H,
+        });
+      }
+
+      // Download QR Code
+      function downloadQR() {
+        const canvas = document.querySelector("#qrcode canvas");
+        if (canvas) {
+          const link = document.createElement("a");
+          link.download = `IMO-Payment-${selectedPackage.amount}.png`;
+          link.href = canvas.toDataURL();
+          link.click();
+        }
+      }
+
+      // Start QR Scanner
+      async function startScanner() {
+        try {
+          html5QrCode = new Html5Qrcode("reader");
+
+          const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+          await html5QrCode.start(
+            { facingMode: "environment" },
+            config,
+            onScanSuccess,
+            onScanFailure,
+          );
+        } catch (err) {
+          console.error("Scanner error:", err);
+          alert(
+            "Could not start camera. Please ensure you have given camera permissions.",
+          );
+        }
+      }
+
+      // Stop QR Scanner
+      async function stopScanner() {
+        if (html5QrCode) {
+          try {
+            await html5QrCode.stop();
+            html5QrCode = null;
+          } catch (err) {
+            console.error("Stop scanner error:", err);
+          }
+        }
+      }
+
+      // On Scan Success
+      function onScanSuccess(decodedText, decodedResult) {
+        console.log("QR Code detected:", decodedText);
+
+        // Parse UPI QR Code
+        if (decodedText.startsWith("upi://")) {
+          scannedUPI = decodedText;
+          const url = new URL(decodedText);
+          const params = new URLSearchParams(url.search);
+          const pa = params.get("pa") || "Unknown";
+
+          document.getElementById("scanResultText").textContent =
+            `UPI ID: ${pa}`;
+          document.getElementById("scanResult").classList.remove("error");
+          document.getElementById("scanResult").classList.add("show");
+
+          // Stop scanning after successful detection
+          stopScanner();
+        } else {
+          document.getElementById("scanResultText").textContent =
+            "Invalid QR Code. Please scan a valid UPI QR code.";
+          document.getElementById("scanResult").classList.add("error");
+          document.getElementById("scanResult").classList.add("show");
+        }
+      }
+
+      // On Scan Failure (continuous scanning)
+      function onScanFailure(error) {
+        // Ignore errors during continuous scanning
+      }
+
+      // Proceed with Scanned QR
+      function proceedWithScannedQR() {
+        if (scannedUPI) {
+          // Extract amount from scanned QR if available, else use selected package
+          const url = new URL(scannedUPI);
+          const params = new URLSearchParams(url.search);
+          const scannedAmount = params.get("am");
+
+          if (scannedAmount) {
+            // If scanned QR has fixed amount, use that
+            currentOrder = {
+              orderId: generateOrderId(),
+              userId: document.getElementById("imoUserId").value || "Unknown",
+              diamonds: selectedPackage.diamonds,
+              bonus: selectedPackage.bonus,
+              amount: scannedAmount,
+              status: "pending",
+              upiApp: "scanned",
+              timestamp: new Date().toISOString(),
+              upiUrl: scannedUPI,
+            };
+          } else {
+            // If scanned QR is variable amount, use selected package amount
+            initiatePayment();
+            return;
+          }
+
+          showPaymentModal(currentOrder, true);
+        }
+      }
+
+      // Generate Order ID
+      function generateOrderId() {
+        const timestamp = Date.now().toString(36).toUpperCase();
+        const random = Math.random().toString(36).substring(2, 5).toUpperCase();
+        return `IMO${timestamp}${random}`;
+      }
+
+      // Generate UPI Deep Link
+      function generateUPILink(orderId, amount, app) {
+        const txnNote = `IMO Diamonds - Order ${orderId}`;
+        const txnRef = orderId;
+
+        const baseUPI = `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`;
+
+        const deepLinks = {
+          gpay: `tez://upi/pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
+          phonepe: `phonepe://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
+          paytm: `paytmmp://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
+          amazonpay: `amazonpay://upi/pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
+          upi: baseUPI,
+        };
+
+        return deepLinks[app] || baseUPI;
+      }
+
+      // Initiate Payment
+      async function initiatePayment() {
+        const userId = document.getElementById("imoUserId").value.trim();
+
+        if (!userId) {
+          alert("Please enter your IMO User ID");
+          return;
+        }
+
+        const orderId = generateOrderId();
+        const orderData = {
+          orderId,
+          userId,
+          diamonds: selectedPackage.diamonds,
+          bonus: selectedPackage.bonus,
+          amount: selectedPackage.amount,
+          status: "pending",
+          upiApp: selectedUpiApp,
+          timestamp: new Date().toISOString(),
+        };
+
+        try {
+          if (CONFIG.mockMode) {
+            saveOrderLocal(orderData);
+          } else {
+            const response = await fetch(`${CONFIG.apiUrl}/orders`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(orderData),
+            });
+            const data = await response.json();
+            if (!data.success) throw new Error("Failed to create order");
+          }
+
+          currentOrder = orderData;
+          showPaymentModal(orderData, false);
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Failed to create order. Check console for details.");
+        }
+      }
+
+      // Show Payment Modal
+      function showPaymentModal(order, isScanned) {
+        document.getElementById("modalOrderId").textContent = order.orderId;
+        document.getElementById("modalUserId").textContent = order.userId;
+        document.getElementById("modalDiamonds").textContent =
+          order.diamonds.toLocaleString();
+        document.getElementById("modalBonus").textContent = order.bonus;
+        document.getElementById("modalAmount").textContent = order.amount;
+
+        const upiLinksContainer = document.getElementById("upiLinks");
+        upiLinksContainer.innerHTML = "";
+
+        if (isScanned && order.upiUrl) {
+          // If scanned QR, show option to open that UPI URL
+          const link = document.createElement("a");
+          link.className = "upi-link";
+          link.href = order.upiUrl;
+          link.innerHTML =
+            '<span style="color: var(--success); font-weight: 600;">Open Scanned UPI QR</span>';
+          link.onclick = (e) => {
+            e.preventDefault();
+            window.location.href = order.upiUrl;
+            handlePaymentStart(order.orderId);
+          };
+          upiLinksContainer.appendChild(link);
+        } else {
+          // Generate UPI links for all apps
+          const apps = [
+            {
+              id: "gpay", name: "Google Pay", color: "#4285f4", bg: "#e8f0fe",
+              logo: `<svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="48" height="48" rx="12" fill="#fff"/>
+                <path d="M35.88 24.22c0-.76-.07-1.49-.19-2.19H24v4.14h6.68a5.71 5.71 0 01-2.48 3.74v3.1h4.01c2.35-2.16 3.7-5.34 3.7-8.79z" fill="#4285F4"/>
+                <path d="M24 36c3.36 0 6.18-1.11 8.24-3.01l-4.01-3.1c-1.11.75-2.54 1.19-4.23 1.19-3.25 0-6-2.19-6.98-5.14H12.9v3.2A12.48 12.48 0 0024 36z" fill="#34A853"/>
+                <path d="M17.02 25.94A7.48 7.48 0 0116.63 24c0-.67.12-1.32.31-1.94V18.86H12.9A12.48 12.48 0 0012 24c0 2.01.48 3.91 1.33 5.59l3.69-2.89.65-2.76z" fill="#FBBC05" opacity=".9"/>
+                <path d="M24 17.88c1.84 0 3.48.63 4.78 1.87l3.58-3.58C30.17 14.11 27.35 13 24 13a12.48 12.48 0 00-11.1 6.77l4.12 3.2c.98-2.95 3.73-5.09 6.98-5.09z" fill="#EA4335"/>
+              </svg>`
+            },
+            {
+              id: "phonepe", name: "PhonePe", color: "#5f259f", bg: "#ede7f6",
+              logo: `<svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="48" height="48" rx="12" fill="#5f259f"/>
+                <path d="M32.5 18.5c0-4.69-3.81-8.5-8.5-8.5h-8v27l4.5-4.5v-5.5h3.5c4.69 0 8.5-3.81 8.5-8.5zm-8.5 4h-3.5v-8H24a4 4 0 010 8z" fill="#fff"/>
+                <circle cx="35" cy="36" r="4" fill="#fff"/>
+              </svg>`
+            },
+            {
+              id: "paytm", name: "Paytm", color: "#00baf2", bg: "#e0f7fe",
+              logo: `<svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="48" height="48" rx="12" fill="#00baf2"/>
+                <text x="7" y="32" font-family="Arial" font-weight="900" font-size="14" fill="#fff">Pay</text>
+                <text x="7" y="42" font-family="Arial" font-weight="900" font-size="10" fill="#002970">tm</text>
+                <rect x="7" y="34" width="34" height="3" fill="#002970"/>
+              </svg>`
+            },
+            {
+              id: "amazonpay", name: "Amazon Pay", color: "#232F3E", bg: "#f2f4f8",
+              logo: `<svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="48" height="48" rx="12" fill="#fff"/>
+                <text x="5" y="24" font-family="Arial" font-weight="bold" font-size="10" fill="#000">amazon</text>
+                <text x="12" y="34" font-family="Arial" font-weight="bold" font-size="11" fill="#00A8E1">pay</text>
+                <path d="M10 26 C 18 32, 28 32, 36 26" stroke="#FF9900" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                <path d="M35 25 L 36 26 L 34 27" stroke="#FF9900" stroke-width="2" stroke-linecap="round" fill="none"/>
+              </svg>`
+            },
+            {
+              id: "upi", name: "Any UPI App", color: "#6366f1", bg: "#ede9fe",
+              logo: `<svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="48" height="48" rx="12" fill="#6366f1"/>
+                <text x="5" y="30" font-family="Arial" font-weight="900" font-size="13" fill="#fff">UPI</text>
+                <path d="M8 34h32M24 34v-18M16 24l8-8 8 8" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>`
+            },
+          ];
+
+          apps.forEach((app) => {
+            const link = document.createElement("a");
+            link.className = "upi-link";
+            link.href = generateUPILink(order.orderId, order.amount, app.id);
+            link.style.borderColor = app.color + "55";
+            link.innerHTML = `
+              <span class="upi-link-logo">${app.logo}</span>
+              <span class="upi-link-info">
+                <span class="upi-link-name" style="color:${app.color}">${app.name}</span>
+                <span class="upi-link-sub">Tap to pay ₹${order.amount}</span>
+              </span>
+              <span class="upi-link-arrow" style="color:${app.color}">›</span>
+            `;
+            link.onclick = (e) => {
+              e.preventDefault();
+              window.location.href = link.href;
+              handlePaymentStart(order.orderId);
+            };
+            upiLinksContainer.appendChild(link);
+          });
+        }
+
+        document.getElementById("paymentModal").classList.add("active");
+        
+        // Auto-select tab based on screen size
+        if (window.innerWidth <= 640) {
+          switchPaymentTab(document.getElementById("tabUpi"), "upi");
+        } else {
+          switchPaymentTab(document.getElementById("tabGenerate"), "generate");
+        }
+        
+        // startTimer(600);
+      }
+
+      // Handle Payment Start
+      function handlePaymentStart(orderId) {
+        console.log("Payment initiated for order:", orderId);
+      }
+
+      // Simulate Payment
+      async function simulatePayment() {
+        if (!currentOrder) return;
+
+        currentOrder.status = "success";
+        currentOrder.paidAt = new Date().toISOString();
+        currentOrder.transactionId = "TXN" + Date.now();
+
+        if (CONFIG.mockMode) {
+          updateOrderLocal(currentOrder);
+        } else {
+          await fetch(`${CONFIG.apiUrl}/webhook/payment`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              orderId: currentOrder.orderId,
+              status: "success",
+              transactionId: currentOrder.transactionId,
+            }),
+          });
+        }
+
+        document.getElementById("paymentModal").classList.remove("active");
+        document.getElementById("successModal").classList.add("active");
+        loadOrders();
+        clearInterval(timerInterval);
+      }
+
+      // Start Timer
+      function startTimer(seconds) {
+        let remaining = seconds;
+        const timerEl = document.getElementById("timer");
+
+        if (timerInterval) clearInterval(timerInterval);
+
+        timerInterval = setInterval(() => {
+          remaining--;
+          const mins = Math.floor(remaining / 60);
+          const secs = remaining % 60;
+          timerEl.textContent = `Payment expires in ${mins}:${secs.toString().padStart(2, "0")}`;
+
+          if (remaining <= 0) {
+            clearInterval(timerInterval);
+            document.getElementById("paymentModal").classList.remove("active");
+            alert("Payment session expired. Please try again.");
+          }
+        }, 1000);
+      }
+
+      // Close Success Modal
+      function closeSuccessModal() {
+        document.getElementById("successModal").classList.remove("active");
+        document.getElementById("imoUserId").value = "";
+        scannedUPI = null;
+        document.getElementById("scanResult").classList.remove("show");
+      }
+
+      // Local Storage Functions
+      function saveOrderLocal(order) {
+        const orders = getOrdersLocal();
+        orders.unshift(order);
+        if (orders.length > 20) orders.pop();
+        localStorage.setItem("imo_orders", JSON.stringify(orders));
+        loadOrders();
+      }
+
+      function updateOrderLocal(updatedOrder) {
+        const orders = getOrdersLocal();
+        const index = orders.findIndex(
+          (o) => o.orderId === updatedOrder.orderId,
+        );
+        if (index !== -1) {
+          orders[index] = updatedOrder;
+          localStorage.setItem("imo_orders", JSON.stringify(orders));
+        }
+      }
+
+      function getOrdersLocal() {
+        return JSON.parse(localStorage.getItem("imo_orders") || "[]");
+      }
+
+      // Load Orders
+      async function loadOrders() {
+        try {
+          let orders;
+
+          if (CONFIG.mockMode) {
+            orders = getOrdersLocal();
+          } else {
+            const response = await fetch(`${CONFIG.apiUrl}/orders`);
+            orders = await response.json();
+          }
+
+          displayOrders(orders);
+        } catch (error) {
+          console.error("Error loading orders:", error);
+          displayOrders(getOrdersLocal());
+        }
+      }
+
+      // Display Orders
+      function displayOrders(orders) {
+        const container = document.getElementById("orderList");
+
+        if (orders.length === 0) {
+          container.innerHTML =
+            '<p style="text-align: center; color: var(--text-muted); padding: 2rem;">No orders yet. Create your first order!</p>';
+          return;
+        }
+
+        container.innerHTML = orders
+          .map(
+            (order) => `
+                <div class="order-item">
+                    <div class="order-info">
+                        <h4>${order.orderId}</h4>
+                        <p>${order.userId} • ${new Date(order.timestamp).toLocaleString()}</p>
+                    </div>
+                    <div class="order-amount">₹${order.amount}</div>
+                    <span class="order-status status-${order.status}">${order.status}</span>
+                </div>
+            `,
+          )
+          .join("");
+      }
+
+      // Close modals on outside click
+      document.querySelectorAll(".modal-overlay").forEach((modal) => {
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal && modal.id !== "successModal") {
+            modal.classList.remove("active");
+            if (timerInterval) clearInterval(timerInterval);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
