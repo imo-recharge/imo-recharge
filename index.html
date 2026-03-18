@@ -1674,6 +1674,28 @@
       // Handle Payment Start
       function handlePaymentStart(orderId) {
         console.log("Payment initiated for order:", orderId);
+        
+        const upiLinksContainer = document.getElementById("upiLinks");
+        if (upiLinksContainer) {
+          upiLinksContainer.innerHTML = `
+            <div style="background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 16px; padding: 1.5rem; text-align: center; margin-top: 0.5rem;">
+              <div class="status-dot" style="margin: 0 auto 1rem; width: 14px; height: 14px; background: var(--success);"></div>
+              <h4 style="margin-bottom: 0.5rem; font-size: 1.1rem; color: var(--text);">Payment Initiated</h4>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem; line-height: 1.4;">
+                Please complete the payment in your UPI app.<br>
+                We are waiting for confirmation...
+              </p>
+              <div style="display: flex; gap: 0.5rem; justify-content: center; flex-direction: column;">
+                <button class="btn btn-primary" onclick="simulatePayment()" style="background: var(--success); padding: 1rem;">
+                  I have paid
+                </button>
+                <button class="btn btn-secondary" onclick="showPaymentModal(currentOrder, false)" style="margin-top: 0; padding: 1rem; font-size: 1rem;">
+                  Try different UPI App
+                </button>
+              </div>
+            </div>
+          `;
+        }
       }
 
       // Simulate Payment
