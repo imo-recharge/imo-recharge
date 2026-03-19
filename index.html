@@ -1208,14 +1208,14 @@
         <!-- Payment Method Tabs -->
         <div class="payment-tabs">
           <button
-            class="tab-btn"
+            class="tab-btn active"
             id="tabUpi"
-            onclick="openUpiApp()"
+            onclick="switchPaymentTab(this, 'upi')"
           >
-            <span>📱</span> Any UPI App
+            <span>📱</span> UPI App
           </button>
           <button
-            class="tab-btn active"
+            class="tab-btn"
             id="tabGenerate"
             onclick="switchPaymentTab(this, 'generate')"
           >
@@ -1247,6 +1247,21 @@
           <button class="btn btn-secondary" onclick="stopScanner()">
             Cancel Scanning
           </button>
+        </div>
+
+        <!-- UPI App Section -->
+        <div id="upiSection" class="qr-section active">
+          <div style="margin-bottom: 1.5rem">
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+              Tap the button below to pay using any UPI app installed on your phone.
+            </p>
+            <button class="btn btn-primary" onclick="openUpiApp()">
+              Pay with UPI App
+            </button>
+          </div>
+          <div class="secure-badge">
+            <span>Locked & Secured by UPI</span>
+          </div>
         </div>
 
         <!-- Generate QR Section -->
@@ -1380,10 +1395,14 @@
         if (btn) btn.classList.add("active");
 
         // Hide all sections
+        document.getElementById("upiSection").classList.remove("active");
         document.getElementById("generateSection").classList.remove("active");
 
         // Show selected section
-        if (tab === "generate") {
+        if (tab === "upi") {
+          document.getElementById("upiSection").classList.add("active");
+          document.getElementById("securityText").textContent = "Secure UPI Payment • Instant Delivery";
+        } else if (tab === "generate") {
           document.getElementById("generateSection").classList.add("active");
           document.getElementById("securityText").textContent =
             "Share this QR code to receive payment";
@@ -1520,7 +1539,13 @@
 
         document.getElementById("paymentModal").classList.add("active");
 
-        switchPaymentTab(document.getElementById("tabGenerate"), "generate");
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+          switchPaymentTab(document.getElementById("tabUpi"), "upi");
+        } else {
+          switchPaymentTab(document.getElementById("tabGenerate"), "generate");
+        }
 
         startTimer(300);
       }
