@@ -254,6 +254,28 @@
         color: var(--text-muted);
       }
 
+      .user-id-container {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .user-id-field {
+        flex: 2;
+        margin-bottom: 0 !important;
+      }
+      .country-code-field {
+        flex: 1;
+        margin-bottom: 0 !important;
+      }
+
+      @media (max-width: 640px) {
+        .user-id-container {
+          flex-direction: column;
+          gap: 1.5rem;
+          margin-bottom: 1.5rem;
+        }
+      }
+
       .diamond-packages {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -834,6 +856,52 @@
         }
       }
 
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
+      .search-box {
+        position: relative;
+        flex: 1;
+        margin: 0 1rem;
+        min-width: 15rem;
+      }
+      .search-box input {
+        width: 100%;
+        padding: 0.6rem 1rem 0.6rem 2.5rem;
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: var(--text);
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+      }
+      .search-box input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      }
+      .search-icon {
+        position: absolute;
+        left: 0.85rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 1rem;
+        pointer-events: none;
+      }
+
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255,255,255,0.1);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+      }
+
       /* WhatsApp Support Card */
       .whatsapp-card {
         background: rgba(30, 41, 59, 0.6);
@@ -929,6 +997,21 @@
           font-size: 2rem;
         }
 
+        .tracking-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+        }
+        .search-box {
+          margin: 0;
+          width: 100%;
+          min-width: unset;
+        }
+        .refresh-btn {
+          width: 100%;
+          text-align: center;
+        }
+
         /* Mobile modal: bottom sheet style */
         .modal-overlay {
           align-items: flex-end;
@@ -1018,18 +1101,34 @@
       </div>
       <div class="card-container">
         <div class="recharge-card">
-          <div class="form-group">
-            <label class="form-label">IMO User ID</label>
-            <div class="input-wrapper">
-              <span class="input-icon">👤</span>
-              <input
-                type="text"
-                class="form-input"
-                id="imoUserId"
-                placeholder="Enter your IMO User ID"
-                maxlength="20"
-              />
+          <div class="user-id-container">
+            <div class="form-group country-code-field">
+              <label class="form-label">Country Code(Opt)</label>
+              <div class="input-wrapper">
+                <span class="input-icon">🌍</span>
+                <input
+                  type="text"
+                  class="form-input"
+                  id="countryCode"
+                  placeholder="+91"
+                  maxlength="5"
+                />
+              </div>
             </div>
+            <div class="form-group user-id-field">
+              <label class="form-label">IMO User ID</label>
+              <div class="input-wrapper">
+                <span class="input-icon">👤</span>
+                <input
+                  type="text"
+                  class="form-input"
+                  id="imoUserId"
+                  placeholder="Enter your IMO User ID"
+                  maxlength="20"
+                />
+              </div>
+            </div>
+            
           </div>
 
           <div class="form-group">
@@ -1118,6 +1217,17 @@
           </div>
         </div>
         <div class="support-card">
+          <!-- IMO Support Group Section -->
+          <div class="whatsapp-card mb-2" style="border-color: rgba(37, 211, 102, 0.2);">
+            <div class="whatsapp-icon" style="background: rgba(37, 211, 102, 0.1); color: #25d366;">
+              <span style="font-size: 1.5rem;">👥</span>
+            </div>
+            <div class="whatsapp-info">
+              <h3>IMO Support Group</h3>
+              <p>Join our official WhatsApp group for instant updates.</p>
+              <a href="https://chat.whatsapp.com/G5Ym7vL2H8A4p9zX..." target="_blank" class="whatsapp-btn" style="background: #25d366;"> Join Community </a>
+            </div>
+          </div>
           <!-- WhatsApp Support Section -->
           <div class="whatsapp-card mb-2">
             <div class="whatsapp-icon">
@@ -1135,15 +1245,21 @@
               </svg>
             </div>
             <div class="whatsapp-info">
-              <h3>Need Help?</h3>
-              <p>Contact our support team anytime.</p>
-              <a href="tel://+919565789134" target="_blank"> 9565789134 </a>
+              <h3>WhatsApp Support</h3>
+              <p>Direct chat for instant diamond recharge and issues.</p>
+              <a href="https://wa.me/919565789134" target="_blank" class="whatsapp-btn"> Join WhatsApp </a>
             </div>
           </div>
+
+          
           <!-- Order Tracking Section -->
           <div class="tracking-section">
             <div class="tracking-header">
               <h3>📋 Recent Orders</h3>
+              <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="orderSearch" placeholder="Search ID, UTR or Profile ID..." onkeyup="searchOrders()">
+              </div>
               <button class="refresh-btn" onclick="loadOrders()">
                 Refresh
               </button>
@@ -1188,6 +1304,10 @@
           <div class="detail-row">
             <span>IMO User ID:</span>
             <span id="modalUserId">-</span>
+          </div>
+          <div class="detail-row" id="modalCountryCodeRow" style="display: none;">
+            <span>Country Code:</span>
+            <span id="modalCountryCode">-</span>
           </div>
           <div class="detail-row">
             <span>Diamonds:</span>
@@ -1493,6 +1613,7 @@
       // Initiate Payment
       async function initiatePayment() {
         const userId = document.getElementById("imoUserId").value.trim();
+        const countryCode = document.getElementById("countryCode").value.trim();
 
         if (!userId) {
           alert("Please enter your IMO User ID");
@@ -1503,6 +1624,7 @@
         const orderData = {
           orderId,
           userId,
+          countryCode,
           diamonds: selectedPackage.diamonds,
           bonus: selectedPackage.bonus,
           amount: selectedPackage.amount,
@@ -1536,6 +1658,16 @@
       function showPaymentModal(order, isScanned) {
         document.getElementById("modalOrderId").textContent = order.orderId;
         document.getElementById("modalUserId").textContent = order.userId;
+        
+        const ccRow = document.getElementById("modalCountryCodeRow");
+        const ccVal = document.getElementById("modalCountryCode");
+        if (order.countryCode) {
+          ccVal.textContent = order.countryCode;
+          ccRow.style.display = "flex";
+        } else {
+          ccRow.style.display = "none";
+        }
+
         document.getElementById("modalDiamonds").textContent =
           order.diamonds.toLocaleString();
         document.getElementById("modalBonus").textContent = order.bonus;
@@ -1607,8 +1739,8 @@
       function closeSuccessModal() {
         document.getElementById("successModal").classList.remove("active");
         document.getElementById("imoUserId").value = "";
+        document.getElementById("countryCode").value = "";
         scannedUPI = null;
-        document.getElementById("scanResult").classList.remove("show");
       }
 
       // Local Storage Functions
@@ -1640,6 +1772,10 @@
         try {
           const refreshBtn = document.querySelector(".refresh-btn");
           if (refreshBtn) refreshBtn.classList.add("loading");
+          
+          // Clear search if loading all
+          const searchInput = document.getElementById("orderSearch");
+          if (searchInput) searchInput.value = "";
 
           let orders = getOrdersLocal();
 
@@ -1686,14 +1822,66 @@
                 <div class="order-item">
                     <div class="order-info">
                         <h4>${order.orderId}</h4>
-                        <p>${order.userId} • ${new Date(order.timestamp).toLocaleString()}</p>
+                        <p>${order.countryCode ? order.countryCode + ' ' : ''}${order.userId} • ${new Date(order.timestamp).toLocaleString()}${order.utr ? ' • UTR: ' + order.utr : ''}</p>
                     </div>
-                    <div class="order-amount">₹${order.amount}</div>
+                    <div class="order-amount">₹${order.amount}${order.isFromServer ? '<br><small style="color:var(--success); font-size:0.65rem;">Found on Server</small>' : ''}</div>
                     <span class="order-status status-${order.status}">${order.status}</span>
                 </div>
             `,
           )
           .join("");
+      }
+
+      // Search Orders
+      let searchTimeout = null;
+      async function searchOrders() {
+        const query = document.getElementById("orderSearch").value.trim();
+        
+        if (searchTimeout) clearTimeout(searchTimeout);
+        
+        if (query.length === 0) {
+          loadOrders();
+          return;
+        }
+
+        if (query.length < 3) return;
+
+        searchTimeout = setTimeout(async () => {
+          const container = document.getElementById("orderList");
+          container.innerHTML = '<div style="text-align: center; padding: 2rem;"><div class="spinner"></div><p style="margin-top:0.5rem; font-size:0.8rem; color:var(--text-muted);">Searching server...</p></div>';
+
+          try {
+            let results = [];
+            if (CONFIG.mockMode) {
+              const localOrders = getOrdersLocal();
+              results = localOrders.filter(o => 
+                o.orderId.toLowerCase().includes(query.toLowerCase()) ||
+                o.userId.toLowerCase().includes(query.toLowerCase()) ||
+                (o.utr && o.utr.toLowerCase().includes(query.toLowerCase()))
+              );
+              
+              if (results.length === 0 && query.length > 6) {
+                // Simulate server finding an order
+                results.push({
+                  orderId: "SRV-" + Math.random().toString(36).substring(2, 8).toUpperCase(),
+                  userId: query,
+                  amount: 500,
+                  status: "success",
+                  timestamp: new Date().toISOString(),
+                  utr: query.length > 8 ? query : "8823441223",
+                  isFromServer: true
+                });
+              }
+            } else {
+              const response = await fetch(`${CONFIG.apiUrl}/orders/search?q=${encodeURIComponent(query)}`);
+              results = await response.json();
+            }
+            displayOrders(results);
+          } catch (error) {
+            console.error("Search error:", error);
+            container.innerHTML = '<p style="text-align: center; color: var(--danger); padding: 2rem;">Search failed.</p>';
+          }
+        }, 600);
       }
 
       // Close modals on outside click
