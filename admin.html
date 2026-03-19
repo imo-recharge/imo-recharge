@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IMO Diamond Recharge - Admin Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --secondary: #ec4899;
+        --accent: #f59e0b;
+        --success: #10b981;
+        --danger: #ef4444;
+        --bg: #0f172a;
+        --surface: #1e293b;
+        --surface-light: #334155;
+        --text: #f8fafc;
+        --text-muted: #94a3b8;
+        --gradient-1: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+        --gradient-2: linear-gradient(135deg, #f59e0b 0%, #ec4899 100%);
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      .bg-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .bg-animation::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background:
+          radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(236, 72, 153, 0.1) 0%,
+            transparent 40%
+          );
+        animation: rotate 30s linear infinite;
+      }
+
+      @keyframes rotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      header {
+        background: rgba(30, 41, 59, 0.8);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      nav {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: var(--gradient-1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .logo-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--gradient-1);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        -webkit-text-fill-color: white;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+      }
+
+      .admin-logout {
+        display: none;
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .admin-logout:hover {
+        background: var(--danger);
+        color: white;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+
+      /* View Switching */
+      #loginView,
+      #dashboardView {
+        display: none;
+        animation: fadeIn 0.4s ease forwards;
+      }
+
+      #loginView.active,
+      #dashboardView.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Login Card */
+      .login-card {
+        max-width: 400px;
+        margin: 2rem auto;
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 2.5rem 2rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        text-align: center;
+      }
+
+      .login-header h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .login-header p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+        text-align: left;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 1rem;
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: var(--text);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      }
+
+      .btn {
+        width: 100%;
+        padding: 1rem;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary {
+        background: var(--gradient-1);
+        color: white;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .error-msg {
+        color: var(--danger);
+        font-size: 0.85rem;
+        margin-top: 1rem;
+        min-height: 1.2rem;
+      }
+
+      /* Dashboard */
+      .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .dashboard-header h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+      }
+
+      .dashboard-actions {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .btn-fetch {
+        background: rgba(99, 102, 241, 0.1);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        color: var(--primary);
+        padding: 0.6rem 1.2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-fetch:hover {
+        background: var(--primary);
+        color: white;
+      }
+
+      .orders-table-wrapper {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 1rem 1.5rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      th {
+        background: rgba(15, 23, 42, 0.5);
+        color: var(--text-muted);
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      tbody tr {
+        transition: background 0.2s ease;
+      }
+
+      tbody tr:hover {
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .order-status {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .status-pending {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--accent);
+      }
+
+      .status-success {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success);
+      }
+
+      .status-failed {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger);
+      }
+
+      .skeleton-loader {
+        height: 20px;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.05) 25%,
+          rgba(255, 255, 255, 0.1) 37%,
+          rgba(255, 255, 255, 0.05) 63%
+        );
+        background-size: 400% 100%;
+        animation: skeleton-loading 1.4s ease infinite;
+        border-radius: 4px;
+      }
+
+      @keyframes skeleton-loading {
+        0% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0 50%;
+        }
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-muted);
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="bg-animation"></div>
+
+    <header>
+      <nav>
+        <div class="logo">
+          <div class="logo-icon">💎</div>
+          IMO Admin
+        </div>
+        <button class="admin-logout" id="logoutBtn" onclick="handleLogout()">Logout</button>
+      </nav>
+    </header>
+
+    <div class="container">
+      <!-- Login View -->
+      <div id="loginView" class="active">
+        <div class="login-card">
+          <div class="login-header">
+            <h2>Admin Login</h2>
+            <p>Access the order management dashboard</p>
+          </div>
+          <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+              <label class="form-label">Username</label>
+              <input type="text" class="form-input" id="username" placeholder="admin" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-input" id="password" placeholder="••••••••" required />
+            </div>
+            <button type="submit" class="btn btn-primary" id="loginBtn">Secure Login</button>
+            <div class="error-msg" id="loginError"></div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Dashboard View -->
+      <div id="dashboardView">
+        <div class="dashboard-header">
+          <h1>Order Management</h1>
+          <div class="dashboard-actions">
+            <button class="btn-fetch" onclick="fetchOrders()">🔄 Refresh List</button>
+          </div>
+        </div>
+
+        <div class="orders-table-wrapper">
+          <table id="ordersTable">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>IMO User ID</th>
+                <th>Diamonds</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="ordersBody">
+              <!-- Orders will be injected here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // API Configuration - Replace with your actual endpoints
+      const API_CONFIG = {
+        loginEndpoint: "https://jsonplaceholder.typicode.com/posts", // Dummy endpoint
+        ordersEndpoint: "https://jsonplaceholder.typicode.com/users", // Dummy endpoint
+      };
+
+      // State Management
+      let authToken = localStorage.getItem("adminToken");
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", () => {
+        if (authToken) {
+          showDashboard();
+        } else {
+          showLogin();
+        }
+      });
+
+      // Show/Hide Views
+      function showLogin() {
+        document.getElementById("dashboardView").classList.remove("active");
+        document.getElementById("loginView").classList.add("active");
+        document.getElementById("logoutBtn").style.display = "none";
+      }
+
+      function showDashboard() {
+        document.getElementById("loginView").classList.remove("active");
+        document.getElementById("dashboardView").classList.add("active");
+        document.getElementById("logoutBtn").style.display = "block";
+        fetchOrders();
+      }
+
+      // Handle Login
+      async function handleLogin(e) {
+        e.preventDefault();
+        const usernameInput = document.getElementById("username").value;
+        const passwordInput = document.getElementById("password").value;
+        const loginBtn = document.getElementById("loginBtn");
+        const errorMsg = document.getElementById("loginError");
+
+        loginBtn.disabled = true;
+        loginBtn.textContent = "Logging in...";
+        errorMsg.textContent = "";
+
+        try {
+          // --- Mock API Login implementation ---
+          // Replace this block with your actual login API request:
+          /*
+          const response = await fetch(API_CONFIG.loginEndpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: usernameInput, password: passwordInput })
+          });
+          const data = await response.json();
+          */
+
+          // Simulating network delay and login check for mockup
+          await new Promise(resolve => setTimeout(resolve, 800));
+
+          if (usernameInput === "admin" && passwordInput === "admin") {
+            // Mock token
+            const token = "mock-jwt-token-xyz-123";
+            localStorage.setItem("adminToken", token);
+            authToken = token;
+            showDashboard();
+          } else {
+            errorMsg.textContent = "Invalid username or password. (Hint: Use admin/admin)";
+          }
+        } catch (error) {
+          console.error("Login failed:", error);
+          errorMsg.textContent = "An error occurred during login. Please try again.";
+        } finally {
+          loginBtn.disabled = false;
+          loginBtn.textContent = "Secure Login";
+        }
+      }
+
+      // Handle Logout
+      function handleLogout() {
+        localStorage.removeItem("adminToken");
+        authToken = null;
+        document.getElementById("loginForm").reset();
+        document.getElementById("loginError").textContent = "";
+        showLogin();
+      }
+
+      // Fetch Orders
+      async function fetchOrders() {
+        const tbody = document.getElementById("ordersBody");
+        
+        // Show loading state
+        let skeletons = "";
+        for(let i=0; i<5; i++) {
+          skeletons += `
+            <tr>
+              <td><div class="skeleton-loader"></div></td>
+              <td><div class="skeleton-loader"></div></td>
+              <td><div class="skeleton-loader"></div></td>
+              <td><div class="skeleton-loader"></div></td>
+              <td><div class="skeleton-loader" style="width: 60px;"></div></td>
+              <td><div class="skeleton-loader"></div></td>
+            </tr>
+          `;
+        }
+        tbody.innerHTML = skeletons;
+
+        try {
+          // --- Mock API Fetch implementation ---
+          // Replace this block with your actual fetch API request:
+          /*
+          const response = await fetch(API_CONFIG.ordersEndpoint, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${authToken}`
+            }
+          });
+          const orders = await response.json();
+          */
+
+          // Simulating network delay and mock data
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          const mockOrders = [
+            { id: "ORD98231A", userId: "player_99", diamonds: 1060, amount: 500, status: "success", date: new Date().toISOString() },
+            { id: "ORD12480B", userId: "imo_user552", diamonds: 310, amount: 150, status: "pending", date: new Date(Date.now() - 3600000).toISOString() },
+            { id: "ORD65921C", userId: "killer_x", diamonds: 5600, amount: 2500, status: "success", date: new Date(Date.now() - 86400000).toISOString() },
+            { id: "ORD33190D", userId: "guest1234", diamonds: 100, amount: 50, status: "failed", date: new Date(Date.now() - 172800000).toISOString() }
+          ];
+
+          renderOrders(mockOrders);
+
+        } catch (error) {
+          console.error("Failed to fetch orders:", error);
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" class="empty-state">
+                <span style="color: var(--danger)">⚠️ Error loading orders. Please try again later.</span>
+              </td>
+            </tr>
+          `;
+        }
+      }
+
+      // Render Orders to Table
+      function renderOrders(orders) {
+        const tbody = document.getElementById("ordersBody");
+        
+        if (!orders || orders.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" class="empty-state">
+                No orders found.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        const html = orders.map(order => {
+          // Determine status class
+          let statusClass = "status-pending";
+          if (order.status === "success") statusClass = "status-success";
+          if (order.status === "failed") statusClass = "status-failed";
+          
+          // Format date
+          const dateObj = new Date(order.date);
+          const formattedDate = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+          return `
+            <tr>
+              <td style="font-family: monospace; font-weight: 600;">#${order.id}</td>
+              <td>${order.userId || "Unknown"}</td>
+              <td><span style="color: var(--accent)">💎</span> ${order.diamonds.toLocaleString()}</td>
+              <td style="font-weight: 600;">₹${order.amount.toLocaleString()}</td>
+              <td><span class="order-status ${statusClass}">${order.status}</span></td>
+              <td style="color: var(--text-muted); font-size: 0.9rem;">${formattedDate}</td>
+            </tr>
+          `;
+        }).join('');
+
+        tbody.innerHTML = html;
+      }
+    </script>
+  </body>
+</html>
