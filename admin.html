@@ -320,19 +320,96 @@
         letter-spacing: 0.05em;
       }
 
-      tbody tr {
-        transition: background 0.2s ease;
-      }
-
       tbody tr:hover {
         background: rgba(255, 255, 255, 0.02);
       }
 
+      /* Order Cards */
+      .orders-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+
+      .order-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.2);
+      }
+
+      .order-card:hover {
+        border-color: rgba(99, 102, 241, 0.3);
+        transform: translateY(-4px);
+        box-shadow: 0 20px 35px -15px rgba(0, 0, 0, 0.4);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding-bottom: 0.4rem;
+      }
+
+      .card-title h4 {
+        font-family: monospace;
+        font-size: 0.85rem;
+        letter-spacing: 0.2px;
+        color: var(--primary);
+      }
+
+      .card-date {
+        font-size: 0.6rem;
+        color: var(--text-muted);
+      }
+
+      .card-body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+
+      .detail-val {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .price-badge {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text);
+        text-align: right;
+        margin-top: 0.1rem;
+      }
+
+      .card-footer {
+        display: flex;
+        gap: 0.3rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding-top: 0.6rem;
+        margin-top: auto;
+      }
+
       .order-status {
         display: inline-block;
-        padding: 0.35rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.65rem;
         font-weight: 600;
         text-transform: uppercase;
       }
@@ -378,6 +455,56 @@
         text-align: center;
         padding: 3rem;
         color: var(--text-muted);
+      }
+
+      /* Pagination */
+      .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+        padding-bottom: 2rem;
+      }
+
+      .page-btn {
+        background: rgba(30, 41, 59, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-muted);
+        padding: 0.6rem 1rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+        font-weight: 600;
+        min-width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .page-btn.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      }
+
+      .page-btn:hover:not(.active):not(:disabled) {
+        background: var(--surface-light);
+        color: var(--text);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .page-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .page-info {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin: 0 1rem;
       }
 
     </style>
@@ -437,23 +564,12 @@
             </div>
           </div>
 
-        <div class="orders-table-wrapper">
-          <table id="ordersTable">
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>IMO User ID</th>
-                <th>Diamonds</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="ordersBody">
-              <!-- Orders will be injected here -->
-            </tbody>
-          </table>
+        <div id="ordersContainer" class="orders-grid">
+          <!-- Order cards will be injected here -->
+        </div>
+
+        <div class="pagination-container" id="pagination">
+          <!-- Pagination buttons will be injected here -->
         </div>
       </div>
     </div>
@@ -467,6 +583,9 @@
 
       // State Management
       let authToken = localStorage.getItem("adminToken");
+      let allOrders = [];
+      let currentPage = 1;
+      const itemsPerPage = 8;
 
       // Initialize
       document.addEventListener("DOMContentLoaded", () => {
@@ -547,23 +666,19 @@
 
       // Fetch Orders
       async function fetchOrders() {
-        const tbody = document.getElementById("ordersBody");
+        const container = document.getElementById("ordersContainer");
         
         // Show loading state
         let skeletons = "";
-        for(let i=0; i<5; i++) {
+        for(let i=0; i<4; i++) {
           skeletons += `
-            <tr>
-              <td><div class="skeleton-loader"></div></td>
-              <td><div class="skeleton-loader"></div></td>
-              <td><div class="skeleton-loader"></div></td>
-              <td><div class="skeleton-loader"></div></td>
-              <td><div class="skeleton-loader" style="width: 60px;"></div></td>
-              <td><div class="skeleton-loader"></div></td>
-            </tr>
+            <div class="order-card" style="opacity: 0.4;">
+              <div class="skeleton-loader" style="width: 60%; margin-bottom: 1rem;"></div>
+              <div class="skeleton-loader" style="height: 100px;"></div>
+            </div>
           `;
         }
-        tbody.innerHTML = skeletons;
+        container.innerHTML = skeletons;
 
         try {
           // --- Mock API Fetch implementation ---
@@ -582,88 +697,180 @@
           // Simulating network delay and mock data
           await new Promise(resolve => setTimeout(resolve, 1000));
           
-          const mockOrders = [
-            { id: "ORD98231A", userId: "player_99", countryCode: "+91", diamonds: 1060, amount: 500, status: "success", date: new Date().toISOString() },
-            { id: "ORD12480B", userId: "imo_user552", countryCode: "+880", diamonds: 310, amount: 150, status: "pending", date: new Date(Date.now() - 3600000).toISOString() },
-            { id: "ORD65921C", userId: "killer_x", diamonds: 5600, amount: 2500, status: "success", date: new Date(Date.now() - 86400000).toISOString() },
-            { id: "ORD33190D", userId: "guest1234", countryCode: "+1", diamonds: 100, amount: 50, status: "failed", date: new Date(Date.now() - 172800000).toISOString() }
-          ];
+          // Generate 25 mock orders for pagination demo
+          const mockOrders = [];
+          const statuses = ['success', 'pending', 'failed'];
+          const cc = ['+91', '+880', '+1', '+971'];
+          
+          for(let i=0; i<25; i++) {
+            mockOrders.push({
+              id: `ORD${1000 + i}${String.fromCharCode(65 + (i % 26))}`,
+              userId: i % 4 === 0 ? `killer_x` : `user_${500 + i}`,
+              countryCode: cc[i % 4],
+              diamonds: [100, 310, 1060, 2200, 5600][i % 5],
+              amount: [50, 150, 500, 1000, 2500][i % 5],
+              status: statuses[i % 3],
+              upiApp: ['GPay', 'PhonePe', 'Paytm', 'UPI App'][i % 4],
+              date: new Date(Date.now() - i * 3600000 * 2).toISOString()
+            });
+          }
 
-          renderOrders(mockOrders);
+          allOrders = mockOrders;
+          // Apply search filter if query exists
+          const query = document.getElementById("adminSearch")?.value.trim().toLowerCase();
+          const filtered = query ? allOrders.filter(o => 
+            o.id.toLowerCase().includes(query) || 
+            o.userId.toLowerCase().includes(query)
+          ) : allOrders;
+
+          displayCurrentPage(filtered);
 
         } catch (error) {
           console.error("Failed to fetch orders:", error);
-          tbody.innerHTML = `
-            <tr>
-              <td colspan="6" class="empty-state">
-                <span style="color: var(--danger)">⚠️ Error loading orders. Please try again later.</span>
-              </td>
-            </tr>
+          container.innerHTML = `
+            <div class="empty-state" style="grid-column: 1/-1;">
+              <span style="color: var(--danger)">⚠️ Error loading orders. Please try again later.</span>
+            </div>
           `;
         }
       }
 
-      // Render Orders to Table
+      function displayCurrentPage(orders) {
+        const totalItems = orders.length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        
+        // Ensure currentPage is within bounds
+        if (currentPage > totalPages) currentPage = Math.max(1, totalPages);
+        
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const pageItems = orders.slice(start, end);
+        
+        renderOrders(pageItems);
+        renderPaginationUI(totalItems, totalPages);
+      }
+
+      function renderPaginationUI(totalItems, totalPages) {
+        const container = document.getElementById("pagination");
+        if (totalPages <= 1) {
+          container.innerHTML = "";
+          return;
+        }
+
+        let html = `
+          <button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">←</button>
+          <span class="page-info">Page ${currentPage} of ${totalPages}</span>
+          <button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">→</button>
+        `;
+        
+        container.innerHTML = html;
+      }
+
+      function changePage(newPage) {
+        currentPage = newPage;
+        // Re-fetch or re-filter
+        fetchOrders(); // Simplest is to just call fetch again which handles slicing
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      }
+
+      // Filter Admin Orders (Integrated with Pagination)
+      function filterAdminOrders() {
+        currentPage = 1;
+        fetchOrders();
+      }
+
+      // Render Orders to Card Grid
       function renderOrders(orders) {
-        const tbody = document.getElementById("ordersBody");
+        const container = document.getElementById("ordersContainer");
         
         if (!orders || orders.length === 0) {
-          tbody.innerHTML = `
-            <tr>
-              <td colspan="6" class="empty-state">
-                No orders found.
-              </td>
-            </tr>
+          container.innerHTML = `
+            <div class="empty-state" style="grid-column: 1/-1;">
+              No orders found matching your search.
+            </div>
           `;
           return;
         }
 
         const html = orders.map(order => {
-          // Determine status class
           let statusClass = "status-pending";
           if (order.status === "success") statusClass = "status-success";
           if (order.status === "failed") statusClass = "status-failed";
           
-          // Format date
           const dateObj = new Date(order.date);
           const formattedDate = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
           return `
-            <tr>
-              <td style="font-family: monospace; font-weight: 600;">#${order.id}</td>
-              <td>
-                ${order.countryCode ? `<span style="color: var(--text-muted); font-size: 0.8rem;">${order.countryCode}</span> ` : ''}
-                ${order.userId || "Unknown"}
-              </td>
-              <td><span style="color: var(--accent)">💎</span> ${order.diamonds.toLocaleString()}</td>
-              <td style="font-weight: 600;">₹${order.amount.toLocaleString()}</td>
-              <td><span class="order-status ${statusClass}">${order.status}</span></td>
-              <td style="color: var(--text-muted); font-size: 0.9rem;">${formattedDate}</td>
-              <td>
-                ${order.status === 'pending' ? `<button class="button is-small is-success" onclick="updateStatus('${order.id}', 'success')">Approve</button>` : ''}
-              </td>
-            </tr>
+            <div class="order-card">
+              <div class="card-header">
+                <div class="card-title">
+                  <h4>#${order.id}</h4>
+                  <div class="card-date">${formattedDate}</div>
+                </div>
+                <span class="order-status ${statusClass}">${order.status}</span>
+              </div>
+              
+              <div class="card-body">
+                <div class="detail-row">
+                  <span>User ID</span>
+                  <span class="detail-val">${order.countryCode ? order.countryCode + ' ' : ''}${order.userId}</span>
+                </div>
+                <div class="detail-row">
+                  <span>Diamonds</span>
+                  <span class="detail-val"><span style="color: var(--accent)">💎</span> ${order.diamonds.toLocaleString()}</span>
+                </div>
+                <div class="detail-row">
+                  <span>Method</span>
+                  <span class="detail-val">${order.upiApp || "UPI"}</span>
+                </div>
+                <div class="price-badge">
+                  ₹${order.amount.toLocaleString()}
+                </div>
+              </div>
+
+              <div class="card-footer" style="flex-wrap: wrap;">
+                ${order.status === 'pending' ? `
+                  <button class="btn" style="background: var(--success); color: white; padding: 0.35rem 0.6rem; font-size: 0.75rem; flex: 1;" onclick="updateStatus('${order.id}', 'success')">Approve</button>
+                  <button class="btn" style="background: var(--accent); color: white; padding: 0.35rem 0.6rem; font-size: 0.75rem; flex: 1;" onclick="updateStatus('${order.id}', 'failed')">Reject</button>
+                ` : ''}
+                <button class="btn" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); padding: 0.35rem 0.6rem; font-size: 0.75rem; flex: 1;" onclick="deleteOrder('${order.id}')">Delete</button>
+              </div>
+            </div>
           `;
         }).join('');
 
-        tbody.innerHTML = html;
+        container.innerHTML = html;
       }
 
-      // Filter Admin Orders
+      // Filter Admin Orders (Integrated with Pagination)
       function filterAdminOrders() {
-        const query = document.getElementById("adminSearch").value.trim().toLowerCase();
-        const rows = document.querySelectorAll("#ordersBody tr");
-        
-        rows.forEach(row => {
-          const text = row.textContent.toLowerCase();
-          row.style.display = text.includes(query) ? "" : "none";
-        });
+        currentPage = 1; // Reset to first page on search
+        fetchOrders();
       }
 
-      // Update Status (Mock)
       async function updateStatus(id, status) {
-        alert(`Update order ${id} to ${status}`);
-        // Implement real update here
+        console.log(`Updating order ${id} to ${status}`);
+        // In real app: await fetch(`${API_CONFIG.ordersEndpoint}/${id}`, { method: 'PATCH', body: JSON.stringify({status}) });
+        
+        // Mock feedback
+        const btn = event.target;
+        btn.disabled = true;
+        btn.textContent = "...";
+        
+        setTimeout(() => {
+          alert(`Order #${id} has been marked as ${status.toUpperCase()}`);
+          fetchOrders(); // Refresh list to show change
+        }, 800);
+      }
+
+      async function deleteOrder(id) {
+        if (!confirm(`Permanently delete order #${id}? This action cannot be undone.`)) return;
+        
+        console.log(`Deleting order ${id}`);
+        // In real app: await fetch(`${API_CONFIG.ordersEndpoint}/${id}`, { method: 'DELETE' });
+        
+        alert(`Order #${id} has been deleted.`);
+        fetchOrders();
       }
     </script>
   </body>
