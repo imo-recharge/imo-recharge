@@ -1205,21 +1205,22 @@
           </div>
         </div>
 
-        <!-- Payment Method Tabs -->
-        <div class="payment-tabs">
+        <!-- Payment Actions -->
+        <div class="payment-actions" style="display: flex; flex-direction: column; gap: 0.75rem; margin: 1.5rem 0;">
           <button
-            class="tab-btn active"
-            id="tabUpi"
-            onclick="switchPaymentTab(this, 'upi')"
+            class="btn btn-primary"
+            id="payWithUpiBtn"
+            onclick="openUpiApp()"
           >
-            <span>📱</span> UPI App
+            📱 Pay with UPI App
           </button>
           <button
-            class="tab-btn"
-            id="tabGenerate"
-            onclick="switchPaymentTab(this, 'generate')"
+            class="btn btn-secondary"
+            id="toggleQrBtn"
+            onclick="toggleQRCode()"
+            style="margin-top: 0;"
           >
-            <span>🎯</span> QR Code
+            🎯 Show QR Code
           </button>
         </div>
 
@@ -1247,21 +1248,6 @@
           <button class="btn btn-secondary" onclick="stopScanner()">
             Cancel Scanning
           </button>
-        </div>
-
-        <!-- UPI App Section -->
-        <div id="upiSection" class="qr-section active">
-          <div style="margin-bottom: 1.5rem">
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
-              Tap the button below to pay using any UPI app installed on your phone.
-            </p>
-            <button class="btn btn-primary" onclick="openUpiApp()">
-              Pay with UPI App
-            </button>
-          </div>
-          <div class="secure-badge">
-            <span>Locked & Secured by UPI</span>
-          </div>
         </div>
 
         <!-- Generate QR Section -->
@@ -1387,26 +1373,25 @@
         generateQRCode();
       }
 
-      // Switch Payment Tab
-      function switchPaymentTab(btn, tab) {
-        document
-          .querySelectorAll(".tab-btn")
-          .forEach((b) => b.classList.remove("active"));
-        if (btn) btn.classList.add("active");
-
-        // Hide all sections
-        document.getElementById("upiSection").classList.remove("active");
-        document.getElementById("generateSection").classList.remove("active");
-
-        // Show selected section
-        if (tab === "upi") {
-          document.getElementById("upiSection").classList.add("active");
+      // Toggle QR Code visibility
+      function toggleQRCode() {
+        const qrSection = document.getElementById("generateSection");
+        const toggleBtn = document.getElementById("toggleQrBtn");
+        
+        if (qrSection.classList.contains("active")) {
+          qrSection.classList.remove("active");
+          toggleBtn.textContent = "🎯 Show QR Code";
           document.getElementById("securityText").textContent = "Secure UPI Payment • Instant Delivery";
-        } else if (tab === "generate") {
-          document.getElementById("generateSection").classList.add("active");
-          document.getElementById("securityText").textContent =
-            "Share this QR code to receive payment";
+        } else {
+          qrSection.classList.add("active");
+          toggleBtn.textContent = "🎯 Hide QR Code";
+          document.getElementById("securityText").textContent = "Share this QR code to receive payment";
           generateQRCode();
+          
+          // Smooth scroll to QR code if on mobile
+          if (window.innerWidth < 640) {
+            qrSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
         }
       }
 
@@ -1414,19 +1399,17 @@
       function openUpiApp() {
         if (!currentOrder) return;
         
-        // Remove active state from other tabs
-        document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
-        document.getElementById("tabUpi").classList.add("active");
-        
         const upiUrl = generateUPILink(currentOrder.orderId, currentOrder.amount, "upi");
 
         // Attempt to detect if app didn't launch
         const launchCheckTimeout = setTimeout(() => {
           if (!document.hidden) {
-            // Unsuccessful. Hide the UPI tab entirely and switch to QR
-            const upiTab = document.getElementById("tabUpi");
-            if (upiTab) upiTab.style.display = "none";
-            switchPaymentTab(document.getElementById("tabGenerate"), "generate");
+            // Unsuccessful. Show QR code as fallback
+            const qrSection = document.getElementById("generateSection");
+            if (!qrSection.classList.contains("active")) {
+              toggleQRCode();
+            }
+            alert("Could not open UPI app. Please use the QR code instead.");
           }
         }, 1200);
 
@@ -1538,14 +1521,11 @@
         document.getElementById("modalAmount").textContent = order.amount;
 
         document.getElementById("paymentModal").classList.add("active");
-
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         
-        if (isMobile) {
-          switchPaymentTab(document.getElementById("tabUpi"), "upi");
-        } else {
-          switchPaymentTab(document.getElementById("tabGenerate"), "generate");
-        }
+        // Reset QR state
+        const qrSection = document.getElementById("generateSection");
+        qrSection.classList.remove("active");
+        document.getElementById("toggleQrBtn").textContent = "🎯 Show QR Code";
 
         startTimer(300);
       }
