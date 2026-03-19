@@ -463,9 +463,12 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.8rem;
         margin-top: 2rem;
-        padding-bottom: 2rem;
+        padding: 1.5rem 1rem;
+        background: rgba(15, 23, 42, 0.4);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
       }
 
       .page-btn {
@@ -508,52 +511,73 @@
         margin: 0 1rem;
       }
 
-      /* Mobile Header Fix: Single Row */
+      /* Robust Header Styling */
+      .admin-search-box {
+        display: flex;
+        align-items: center;
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: all 0.3s;
+      }
+      .admin-search-box:focus-within {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      }
+      #adminSearch {
+        background: transparent;
+        border: none;
+        padding: 0.6rem 1rem;
+        color: var(--text);
+        width: 200px;
+        font-size: 0.9rem;
+        outline: none;
+      }
+      .btn-icon {
+        background: rgba(255, 255, 255, 0.05);
+        border: none;
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 0.6rem 0.8rem;
+        color: var(--primary);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-icon:hover {
+        background: var(--primary);
+        color: white;
+      }
+
       @media (max-width: 600px) {
         .dashboard-header {
           flex-direction: row !important;
           flex-wrap: nowrap !important;
-          gap: 0.5rem !important;
-          align-items: center !important;
           justify-content: space-between !important;
-          margin-bottom: 1rem !important;
+          gap: 0.5rem;
+          margin-bottom: 1.5rem;
         }
-        
-        .dashboard-header div:first-child h1 {
-          font-size: 0.95rem !important;
+        .dashboard-title-group h1 {
+          font-size: 1.1rem !important;
           margin: 0;
+          white-space: nowrap;
         }
-        
-        .dashboard-header div:first-child p {
+        .dashboard-title-group p {
           display: none !important;
         }
-
-        .dashboard-actions {
-          gap: 0 !important;
+        .admin-search-box {
           flex: 1;
-          justify-content: flex-end;
-          min-width: 0;
+          max-width: 180px;
         }
-
-        .dashboard-actions .field.has-addons {
-          margin-bottom: 0 !important;
-          max-width: 160px;
-        }
-
         #adminSearch {
-          width: 100% !important;
-          padding: 0.4rem 0.6rem !important;
-          font-size: 0.75rem !important;
-          height: 32px;
+          width: 100%;
+          padding: 0.4rem 0.75rem;
+          font-size: 0.8rem;
         }
-
-        .dashboard-actions > button.btn-fetch {
-          display: none !important; /* Hide extra refresh button */
+        .btn-icon {
+          padding: 0.4rem 0.6rem;
         }
-        
-        .btn-fetch {
-          padding: 0.3rem 0.6rem !important;
-          height: 32px !important;
+        .hide-mobile {
+          display: none !important;
         }
       }
 
@@ -597,20 +621,16 @@
 
         <div id="dashboardView">
           <div class="dashboard-header">
-            <div>
-              <h1>Order Management</h1>
-              <p style="color:var(--text-muted); font-size:0.9rem;">Manage and verify customer diamond recharges</p>
+            <div class="dashboard-title-group">
+              <h1>Orders</h1>
+              <p>Manage and verify recharges</p>
             </div>
             <div class="dashboard-actions">
-              <div class="field has-addons" style="margin-bottom: 0;">
-                <p class="control">
-                  <input class="form-input" type="text" id="adminSearch" placeholder="Search ID/User/UTR..." style="width: 250px; padding: 0.6rem 1rem; margin-top:0;" onkeyup="filterAdminOrders()">
-                </p>
-                <p class="control">
-                  <button class="btn-fetch" style="border-radius: 0 10px 10px 0; border-left: none;" onclick="fetchOrders()">🔄</button>
-                </p>
+              <div class="admin-search-box">
+                <input type="text" id="adminSearch" placeholder="Search orders..." onkeyup="filterAdminOrders()">
+                <button class="btn-icon" onclick="fetchOrders()">🔄</button>
               </div>
-              <button class="btn-fetch" onclick="fetchOrders()">Refresh List</button>
+              <button class="btn-fetch hide-mobile" onclick="fetchOrders()">Refresh</button>
             </div>
           </div>
 
@@ -802,18 +822,19 @@
 
       function renderPaginationUI(totalItems, totalPages) {
         const container = document.getElementById("pagination");
-        if (totalPages <= 1) {
-          container.innerHTML = "";
-          return;
-        }
+        
+        // Show even if only one page exists (as a separator/footer)
+        // Set totalPages to 1 if no items
+        const safeTotal = Math.max(1, totalPages);
 
         let html = `
-          <button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">←</button>
-          <span class="page-info">Page ${currentPage} of ${totalPages}</span>
-          <button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">→</button>
+          <button class="page-btn" ${currentPage <= 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">←</button>
+          <span class="page-info" style="font-weight: 700; color: var(--text);">Page ${currentPage} of ${safeTotal}</span>
+          <button class="page-btn" ${currentPage >= safeTotal ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">→</button>
         `;
         
         container.innerHTML = html;
+        container.style.display = totalItems > 0 ? "flex" : "none";
       }
 
       function changePage(newPage) {
@@ -868,10 +889,6 @@
                 <div class="detail-row">
                   <span>Diamonds</span>
                   <span class="detail-val"><span style="color: var(--accent)">💎</span> ${order.diamonds.toLocaleString()}</span>
-                </div>
-                <div class="detail-row">
-                  <span>Method</span>
-                  <span class="detail-val">${order.upiApp || "UPI"}</span>
                 </div>
                 <div class="price-badge">
                   ₹${order.amount.toLocaleString()}
