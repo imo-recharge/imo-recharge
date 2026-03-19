@@ -1220,35 +1220,11 @@
             onclick="toggleQRCode()"
             style="margin-top: 0;"
           >
-            🎯 Show QR Code
+            🎯 QR Code
           </button>
         </div>
 
         <div class="timer" id="timer">Payment expires in 5:00</div>
-
-        <!-- QR Scanner Section -->
-        <div id="scannerSection" class="scanner-section">
-          <div id="reader"></div>
-          <div class="scan-result" id="scanResult">
-            <div style="font-weight: 600; margin-bottom: 0.5rem">
-              QR Code Detected!
-            </div>
-            <div
-              id="scanResultText"
-              style="font-size: 0.9rem; word-break: break-all"
-            ></div>
-            <button
-              class="btn btn-primary"
-              style="margin-top: 1rem"
-              onclick="proceedWithScannedQR()"
-            >
-              Proceed with this UPI ID
-            </button>
-          </div>
-          <button class="btn btn-secondary" onclick="stopScanner()">
-            Cancel Scanning
-          </button>
-        </div>
 
         <!-- Generate QR Section -->
         <div id="generateSection" class="qr-section">
@@ -1404,6 +1380,49 @@
         // Attempt to launch
         window.location.href = upiUrl;
         handlePaymentStart(currentOrder.orderId);
+        
+        // Start checking for status automatically
+        startPaymentStatusPolling(currentOrder.orderId);
+      }
+
+      // Check for payment status periodically
+      let statusPollingInterval = null;
+      function startPaymentStatusPolling(orderId) {
+        if (statusPollingInterval) clearInterval(statusPollingInterval);
+        
+        statusPollingInterval = setInterval(async () => {
+          try {
+            const status = await checkOrderStatusFromServer(orderId);
+            if (status === 'success') {
+              clearInterval(statusPollingInterval);
+              clearInterval(timerInterval);
+              document.getElementById("paymentModal").classList.remove("active");
+              showSuccessModal();
+              loadOrders(); // Refresh history
+            }
+          } catch (e) {
+            console.error("Polling error:", e);
+          }
+        }, 5000); // Check every 5 seconds
+      }
+
+      // Helper to check order status
+      async function checkOrderStatusFromServer(orderId) {
+        if (CONFIG.mockMode) {
+          // In mock mode, we don't have a real server to check
+          // Just return current local status
+          const orders = getOrdersLocal();
+          const order = orders.find(o => o.orderId === orderId);
+          return order ? order.status : 'pending';
+        }
+
+        try {
+          const response = await fetch(`${CONFIG.apiUrl}/orders/${orderId}`);
+          const data = await response.json();
+          return data.status;
+        } catch (e) {
+          return 'pending';
+        }
       }
 
       // Generate UPI QR Code
@@ -1508,9 +1527,17 @@
         // Reset QR state
         const qrSection = document.getElementById("generateSection");
         qrSection.classList.remove("active");
-        document.getElementById("toggleQrBtn").textContent = "🎯 Show QR Code";
+        document.getElementById("toggleQrBtn").textContent = "🎯 QR Code";
 
         startTimer(300);
+        
+        // Start polling even if user hasn't pressed the button yet (for QR payments)
+        startPaymentStatusPolling(order.orderId);
+      }
+
+      // Show Success Modal
+      function showSuccessModal() {
+        document.getElementById("successModal").classList.add("active");
       }
 
       // Handle Payment Start
@@ -1589,16 +1616,32 @@
       // Load Orders
       async function loadOrders() {
         try {
-          let orders;
+          const refreshBtn = document.querySelector(".refresh-btn");
+          if (refreshBtn) refreshBtn.classList.add("loading");
 
-          if (CONFIG.mockMode) {
-            orders = getOrdersLocal();
-          } else {
+          let orders = getOrdersLocal();
+
+          if (!CONFIG.mockMode) {
             const response = await fetch(`${CONFIG.apiUrl}/orders`);
             orders = await response.json();
           }
 
+          // If we have pending orders, check their latest status from server
+          const pendingOrders = orders.filter(o => o.status === 'pending');
+          if (pendingOrders.length > 0 && !CONFIG.mockMode) {
+             await Promise.all(pendingOrders.map(async (o) => {
+                try {
+                  const status = await checkOrderStatusFromServer(o.orderId);
+                  if (status && status !== 'pending') {
+                    o.status = status;
+                    updateOrderLocal(o);
+                  }
+                } catch (e) {}
+             }));
+          }
+
           displayOrders(orders);
+          if (refreshBtn) refreshBtn.classList.remove("loading");
         } catch (error) {
           console.error("Error loading orders:", error);
           displayOrders(getOrdersLocal());
@@ -1641,6 +1684,7 @@
           ) {
             modal.classList.remove("active");
             if (timerInterval) clearInterval(timerInterval);
+            if (statusPollingInterval) clearInterval(statusPollingInterval);
           }
         });
       });
