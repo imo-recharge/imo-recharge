@@ -418,14 +418,24 @@
         </div>
       </div>
 
-      <!-- Dashboard View -->
-      <div id="dashboardView">
-        <div class="dashboard-header">
-          <h1>Order Management</h1>
-          <div class="dashboard-actions">
-            <button class="btn-fetch" onclick="fetchOrders()">🔄 Refresh List</button>
+        <div id="dashboardView">
+          <div class="dashboard-header">
+            <div>
+              <h1>Order Management</h1>
+              <p style="color:var(--text-muted); font-size:0.9rem;">Manage and verify customer diamond recharges</p>
+            </div>
+            <div class="dashboard-actions">
+              <div class="field has-addons" style="margin-bottom: 0;">
+                <p class="control">
+                  <input class="form-input" type="text" id="adminSearch" placeholder="Search ID/User/UTR..." style="width: 250px; padding: 0.6rem 1rem; margin-top:0;" onkeyup="filterAdminOrders()">
+                </p>
+                <p class="control">
+                  <button class="btn-fetch" style="border-radius: 0 10px 10px 0; border-left: none;" onclick="fetchOrders()">🔄</button>
+                </p>
+              </div>
+              <button class="btn-fetch" onclick="fetchOrders()">Refresh List</button>
+            </div>
           </div>
-        </div>
 
         <div class="orders-table-wrapper">
           <table id="ordersTable">
@@ -437,6 +447,7 @@
                 <th>Amount</th>
                 <th>Status</th>
                 <th>Date</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody id="ordersBody">
@@ -572,10 +583,10 @@
           await new Promise(resolve => setTimeout(resolve, 1000));
           
           const mockOrders = [
-            { id: "ORD98231A", userId: "player_99", diamonds: 1060, amount: 500, status: "success", date: new Date().toISOString() },
-            { id: "ORD12480B", userId: "imo_user552", diamonds: 310, amount: 150, status: "pending", date: new Date(Date.now() - 3600000).toISOString() },
+            { id: "ORD98231A", userId: "player_99", countryCode: "+91", diamonds: 1060, amount: 500, status: "success", date: new Date().toISOString() },
+            { id: "ORD12480B", userId: "imo_user552", countryCode: "+880", diamonds: 310, amount: 150, status: "pending", date: new Date(Date.now() - 3600000).toISOString() },
             { id: "ORD65921C", userId: "killer_x", diamonds: 5600, amount: 2500, status: "success", date: new Date(Date.now() - 86400000).toISOString() },
-            { id: "ORD33190D", userId: "guest1234", diamonds: 100, amount: 50, status: "failed", date: new Date(Date.now() - 172800000).toISOString() }
+            { id: "ORD33190D", userId: "guest1234", countryCode: "+1", diamonds: 100, amount: 50, status: "failed", date: new Date(Date.now() - 172800000).toISOString() }
           ];
 
           renderOrders(mockOrders);
@@ -620,16 +631,39 @@
           return `
             <tr>
               <td style="font-family: monospace; font-weight: 600;">#${order.id}</td>
-              <td>${order.userId || "Unknown"}</td>
+              <td>
+                ${order.countryCode ? `<span style="color: var(--text-muted); font-size: 0.8rem;">${order.countryCode}</span> ` : ''}
+                ${order.userId || "Unknown"}
+              </td>
               <td><span style="color: var(--accent)">💎</span> ${order.diamonds.toLocaleString()}</td>
               <td style="font-weight: 600;">₹${order.amount.toLocaleString()}</td>
               <td><span class="order-status ${statusClass}">${order.status}</span></td>
               <td style="color: var(--text-muted); font-size: 0.9rem;">${formattedDate}</td>
+              <td>
+                ${order.status === 'pending' ? `<button class="button is-small is-success" onclick="updateStatus('${order.id}', 'success')">Approve</button>` : ''}
+              </td>
             </tr>
           `;
         }).join('');
 
         tbody.innerHTML = html;
+      }
+
+      // Filter Admin Orders
+      function filterAdminOrders() {
+        const query = document.getElementById("adminSearch").value.trim().toLowerCase();
+        const rows = document.querySelectorAll("#ordersBody tr");
+        
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          row.style.display = text.includes(query) ? "" : "none";
+        });
+      }
+
+      // Update Status (Mock)
+      async function updateStatus(id, status) {
+        alert(`Update order ${id} to ${status}`);
+        // Implement real update here
       }
     </script>
   </body>
