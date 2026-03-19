@@ -1206,7 +1206,7 @@
         </div>
 
         <!-- Payment Actions -->
-        <div class="payment-actions" style="display: flex; flex-direction: column; gap: 0.75rem; margin: 1.5rem 0;">
+        <div class="payment-actions" id="paymentActions" style="display: flex; flex-direction: column; gap: 0.75rem; margin: 1.5rem 0;">
           <button
             class="btn btn-primary"
             id="payWithUpiBtn"
@@ -1222,6 +1222,14 @@
           >
             🎯 QR Code
           </button>
+        </div>
+
+        <!-- Payment Status Indicator -->
+        <div id="paymentStatus" style="display: none; margin: 1.5rem 0; padding: 1.25rem; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; text-align: center;">
+          <div class="spinner" style="width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 0.75rem;"></div>
+          <div style="font-weight: 600; color: var(--text); margin-bottom: 0.25rem;">Waiting for Payment...</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Please complete the transaction in your UPI app.</div>
+          <button class="btn btn-secondary" onclick="resetPaymentView()" style="margin-top: 1rem; padding: 0.5rem 1rem; font-size: 0.85rem; width: auto;">Cancel</button>
         </div>
 
         <div class="timer" id="timer">Payment expires in 5:00</div>
@@ -1377,12 +1385,23 @@
         
         const upiUrl = generateUPILink(currentOrder.orderId, currentOrder.amount, "upi");
 
+        // UI Changes
+        document.getElementById("paymentActions").style.display = "none";
+        document.getElementById("paymentStatus").style.display = "block";
+        document.getElementById("generateSection").classList.remove("active");
+
         // Attempt to launch
         window.location.href = upiUrl;
         handlePaymentStart(currentOrder.orderId);
         
         // Start checking for status automatically
         startPaymentStatusPolling(currentOrder.orderId);
+      }
+
+      function resetPaymentView() {
+        if (statusPollingInterval) clearInterval(statusPollingInterval);
+        document.getElementById("paymentActions").style.display = "flex";
+        document.getElementById("paymentStatus").style.display = "none";
       }
 
       // Check for payment status periodically
@@ -1524,6 +1543,9 @@
 
         document.getElementById("paymentModal").classList.add("active");
         
+        // Reset View
+        resetPaymentView();
+
         // Reset QR state
         const qrSection = document.getElementById("generateSection");
         qrSection.classList.remove("active");
