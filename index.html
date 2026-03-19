@@ -1401,23 +1401,6 @@
         
         const upiUrl = generateUPILink(currentOrder.orderId, currentOrder.amount, "upi");
 
-        // Attempt to detect if app didn't launch
-        const launchCheckTimeout = setTimeout(() => {
-          if (!document.hidden) {
-            // Unsuccessful. Show QR code as fallback
-            const qrSection = document.getElementById("generateSection");
-            if (!qrSection.classList.contains("active")) {
-              toggleQRCode();
-            }
-            alert("Could not open UPI app. Please use the QR code instead.");
-          }
-        }, 1200);
-
-        // If visibility changes (i.e. app/intent opens), cancel the failure timeout
-        window.addEventListener("visibilitychange", () => {
-          if (document.hidden) clearTimeout(launchCheckTimeout);
-        }, { once: true });
-
         // Attempt to launch
         window.location.href = upiUrl;
         handlePaymentStart(currentOrder.orderId);
