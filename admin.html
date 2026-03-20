@@ -770,13 +770,13 @@
           // Generate 25 mock orders for pagination demo
           const mockOrders = [];
           const statuses = ['success', 'pending', 'failed'];
-          const cc = ['+91', '+880', '+1', '+971'];
+
           
           for(let i=0; i<25; i++) {
             mockOrders.push({
               id: `ORD${1000 + i}${String.fromCharCode(65 + (i % 26))}`,
               userId: i % 4 === 0 ? `killer_x` : `user_${500 + i}`,
-              countryCode: cc[i % 4],
+
               diamonds: [100, 310, 1060, 2200, 5600][i % 5],
               amount: [50, 150, 500, 1000, 2500][i % 5],
               status: statuses[i % 3],
@@ -884,7 +884,7 @@
               <div class="card-body">
                 <div class="detail-row">
                   <span>User ID</span>
-                  <span class="detail-val">${order.countryCode ? order.countryCode + ' ' : ''}${order.userId}</span>
+                  <span class="detail-val">${order.userId}</span>
                 </div>
                 <div class="detail-row">
                   <span>Diamonds</span>
