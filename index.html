@@ -108,6 +108,7 @@
         font-weight: 800;
         background: var(--gradient-1);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
       }
 
@@ -158,6 +159,7 @@
         font-weight: 800;
         background: linear-gradient(to right, #fff 0%, #94a3b8 100%);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
       }
 
@@ -254,27 +256,7 @@
         color: var(--text-muted);
       }
 
-      .user-id-container {
-        display: flex;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-      }
-      .user-id-field {
-        flex: 2;
-        margin-bottom: 0 !important;
-      }
-      .country-code-field {
-        flex: 1;
-        margin-bottom: 0 !important;
-      }
 
-      @media (max-width: 640px) {
-        .user-id-container {
-          flex-direction: column;
-          gap: 1.5rem;
-          margin-bottom: 1.5rem;
-        }
-      }
 
       .diamond-packages {
         display: grid;
@@ -1101,34 +1083,18 @@
       </div>
       <div class="card-container">
         <div class="recharge-card">
-          <div class="user-id-container">
-            <div class="form-group country-code-field">
-              <label class="form-label">Country Code(Opt)</label>
-              <div class="input-wrapper">
-                <span class="input-icon">🌍</span>
-                <input
-                  type="text"
-                  class="form-input"
-                  id="countryCode"
-                  placeholder="+91"
-                  maxlength="5"
-                />
-              </div>
+          <div class="form-group">
+            <label class="form-label">IMO User ID</label>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+              <input
+                type="text"
+                class="form-input"
+                id="imoUserId"
+                placeholder="Enter your IMO User ID"
+                maxlength="20"
+              />
             </div>
-            <div class="form-group user-id-field">
-              <label class="form-label">IMO User ID</label>
-              <div class="input-wrapper">
-                <span class="input-icon">👤</span>
-                <input
-                  type="text"
-                  class="form-input"
-                  id="imoUserId"
-                  placeholder="Enter your IMO User ID"
-                  maxlength="20"
-                />
-              </div>
-            </div>
-            
           </div>
 
           <div class="form-group">
@@ -1305,10 +1271,7 @@
             <span>IMO User ID:</span>
             <span id="modalUserId">-</span>
           </div>
-          <div class="detail-row" id="modalCountryCodeRow" style="display: none;">
-            <span>Country Code:</span>
-            <span id="modalCountryCode">-</span>
-          </div>
+
           <div class="detail-row">
             <span>Diamonds:</span>
             <span id="modalDiamonds">1,060</span>
@@ -1613,7 +1576,7 @@
       // Initiate Payment
       async function initiatePayment() {
         const userId = document.getElementById("imoUserId").value.trim();
-        const countryCode = document.getElementById("countryCode").value.trim();
+
 
         if (!userId) {
           alert("Please enter your IMO User ID");
@@ -1624,7 +1587,7 @@
         const orderData = {
           orderId,
           userId,
-          countryCode,
+
           diamonds: selectedPackage.diamonds,
           bonus: selectedPackage.bonus,
           amount: selectedPackage.amount,
@@ -1659,14 +1622,7 @@
         document.getElementById("modalOrderId").textContent = order.orderId;
         document.getElementById("modalUserId").textContent = order.userId;
         
-        const ccRow = document.getElementById("modalCountryCodeRow");
-        const ccVal = document.getElementById("modalCountryCode");
-        if (order.countryCode) {
-          ccVal.textContent = order.countryCode;
-          ccRow.style.display = "flex";
-        } else {
-          ccRow.style.display = "none";
-        }
+
 
         document.getElementById("modalDiamonds").textContent =
           order.diamonds.toLocaleString();
@@ -1739,7 +1695,7 @@
       function closeSuccessModal() {
         document.getElementById("successModal").classList.remove("active");
         document.getElementById("imoUserId").value = "";
-        document.getElementById("countryCode").value = "";
+
         scannedUPI = null;
       }
 
@@ -1822,7 +1778,7 @@
                 <div class="order-item">
                     <div class="order-info">
                         <h4>${order.orderId}</h4>
-                        <p>${order.countryCode ? order.countryCode + ' ' : ''}${order.userId} • ${new Date(order.timestamp).toLocaleString()}${order.utr ? ' • UTR: ' + order.utr : ''}</p>
+                        <p>${order.userId} • ${new Date(order.timestamp).toLocaleString()}${order.utr ? ' • UTR: ' + order.utr : ''}</p>
                     </div>
                     <div class="order-amount">₹${order.amount}${order.isFromServer ? '<br><small style="color:var(--success); font-size:0.65rem;">Found on Server</small>' : ''}</div>
                     <span class="order-status status-${order.status}">${order.status}</span>
