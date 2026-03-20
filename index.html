@@ -1385,7 +1385,7 @@
       const CONFIG = {
         merchantUPI: "9565789134@upi", // Change to your actual UPI ID
         merchantName: "IMO Diamond Recharge",
-        apiUrl: "https://www.ammajifoundation.org/api/imo/",
+        apiUrl: "https://www.ammajifoundation.org/api/imo",
         mockMode: false,
       };
 
@@ -1600,7 +1600,7 @@
           if (CONFIG.mockMode) {
             saveOrderLocal(orderData);
           } else {
-            const response = await fetch(`${CONFIG.apiUrl}/create/orders`, {
+            const response = await fetch(`${CONFIG.apiUrl}/orders/create`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(orderData),
