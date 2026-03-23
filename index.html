@@ -146,6 +146,28 @@
         /* margin-right: 60px; */
       }
 
+      /* Notification Bar */
+      .notice-bar {
+        background: rgba(99, 102, 241, 0.1);
+        border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+        padding: 0.5rem 1rem;
+        overflow: hidden;
+        white-space: nowrap;
+        position: relative;
+        z-index: 100;
+      }
+      .notice-content {
+        display: inline-block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--primary-dark);
+        animation: marquee 30s linear infinite;
+      }
+      @keyframes marquee {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+      }
+
       .support-card {
         display: flex;
         flex-direction: column;
@@ -277,7 +299,7 @@
         background: rgba(252, 252, 252, 0.5);
         border: 2px solid rgba(8, 0, 39, 0.267);
         border-radius: 12px;
-        padding: 0.6rem 0.4rem;
+        padding: 1.6rem 0.4rem;
         text-align: center;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -337,9 +359,10 @@
       }
 
       .diamond-price {
-        color: var(--text-muted);
-        font-size: 0.75rem;
-        font-weight: 600;
+        color: var(--primary);
+        font-size: 1rem;
+        font-weight: 800;
+        margin-top: 0.25rem;
       }
 
 
@@ -1332,6 +1355,11 @@
     <div class="bg-animation"></div>
 
     <header>
+      <div class="notice-bar">
+        <div class="notice-content">
+          Dear friends, if a user from another country wants to recharge, You can recharge  pay in crypto currency USDT $, for this you can contact on IMO helpline = GKP Self recharge  helpline groups.
+        </div>
+      </div>
       <nav>
         <div class="logo">
           <div class="logo-icon"><img src="Diamond.jpg" alt="Diamond"></div>
@@ -1362,7 +1390,7 @@
           </div>
           <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">* Please Include Country Code If Imo Profile ID Number is Mobile No.</p>
           <div class="form-group">
-            <label class="form-label">Select Diamond Package</label>
+            <label class="form-label">Select Recharge credit List</label>
             <div class="diamond-packages" id="packages">
               <div
                 class="package-card"
