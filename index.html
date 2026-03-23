@@ -314,11 +314,6 @@
         font-size: 0.8rem;
       }
 
-      .diamond-bonus {
-        color: var(--success);
-        font-size: 0.65rem;
-        margin-top: 0.2rem;
-      }
 
       /* QR Code Section */
       .qr-section {
@@ -1062,21 +1057,6 @@
       <div class="hero">
         <h3>Recharge IMO Diamonds</h3>
         <p>Scan QR code or use UPI apps to pay instantly</p>
-        <!-- <p
-          style="
-            margin-top: 1rem;
-            padding: 0.75rem 1rem;
-            font-size: 0.95rem;
-            color: #fdececff;
-            background-color: rgba(245, 100, 16, 0.2);
-            border: 1px solid rgba(191, 241, 6, 0.4);
-            border-radius: 8px;
-            font-weight: 500;
-            display: inline-block;
-          "
-        >
-          * Please Include Country Code If Imo Profile ID Number is Mobile No.
-        </p> -->
       </div>
       <div class="card-container">
         <div class="recharge-card">
@@ -1107,75 +1087,75 @@
               </div>
               <div
                 class="package-card"
-                onclick="selectPackage(this, 50, 90, 10)"
+                onclick="selectPackage(this, 50, 90, 0)"
               >
                 <div class="diamond-icon">💎</div>
                 <div class="diamond-count">50</div>
                 <div class="diamond-price">₹90</div>
-                <div class="diamond-bonus">+10 Bonus</div>
+                <!-- <div class="diamond-bonus">+10 Bonus</div> -->
               </div>
               <div
                 class="package-card popular selected"
-                onclick="selectPackage(this, 100, 170, 20)"
+                onclick="selectPackage(this, 100, 170, 0)"
               >
                 <div class="diamond-icon">💎</div>
                 <div class="diamond-count">100</div>
                 <div class="diamond-price">₹170</div>
-                <div class="diamond-bonus">+20 Bonus</div>
+                <!-- <div class="diamond-bonus">+20 Bonus</div> -->
               </div>
               <div
                 class="package-card"
-                onclick="selectPackage(this, 200, 340, 40)"
+                onclick="selectPackage(this, 200, 340, 0)"
               >
                 <div class="diamond-icon">💎</div>
                 <div class="diamond-count">200</div>
                 <div class="diamond-price">₹340</div>
-                <div class="diamond-bonus">+40 Bonus</div>
+                <!-- <div class="diamond-bonus">+40 Bonus</div> -->
               </div>
               <div
                 class="package-card"
-                onclick="selectPackage(this, 500, 850, 150)"
+                onclick="selectPackage(this, 500, 850, 0)"
               >
                 <div class="diamond-icon">💎</div>
                 <div class="diamond-count">500</div>
                 <div class="diamond-price">₹850</div>
-                <div class="diamond-bonus">+150 Bonus</div>
+                <!-- <div class="diamond-bonus">+150 Bonus</div> -->
               </div>
               <div
                 class="package-card"
-                onclick="selectPackage(this, 1000, 1690, 190)"
+                onclick="selectPackage(this, 1000, 1690, 0)"
               >
                 <div class="diamond-icon">💎</div>
                 <div class="diamond-count">1000</div>
                 <div class="diamond-price">₹1690</div>
-                <div class="diamond-bonus">+190 Bonus</div>
+                <!-- <div class="diamond-bonus">+190 Bonus</div> -->
               </div>
               <div
                 class="package-card"
-                onclick="selectPackage(this, 2000, 3360, 360)"
+                onclick="selectPackage(this, 2000, 3360, 0)"
               >
                 <div class="diamond-icon">💎</div>
                 <div class="diamond-count">2000</div>
                 <div class="diamond-price">₹3360</div>
-                <div class="diamond-bonus">+360 Bonus</div>
+                <!-- <div class="diamond-bonus">+360 Bonus</div> -->
               </div>
               <div
                 class="package-card"
-                onclick="selectPackage(this, 5000, 8400, 400)"
+                onclick="selectPackage(this, 5000, 8400, 0)"
               >
                 <div class="diamond-icon">💎</div>
                 <div class="diamond-count">5000</div>
                 <div class="diamond-price">₹8400</div>
-                <div class="diamond-bonus">+400 Bonus</div>
+                <!-- <div class="diamond-bonus">+400 Bonus</div> -->
               </div>
               <div
                 class="package-card"
-                onclick="selectPackage(this, 10000, 16800, 800)"
+                onclick="selectPackage(this, 10000, 16800, 0)"
               >
                 <div class="diamond-icon">💎</div>
                 <div class="diamond-count">10000</div>
                 <div class="diamond-price">₹16800</div>
-                <div class="diamond-bonus">+800 Bonus</div>
+                <!-- <div class="diamond-bonus">+800 Bonus</div> -->
               </div>
             </div>
           </div>
@@ -1414,7 +1394,7 @@
       };
 
       // State
-      let selectedPackage = { diamonds: 100, amount: 170, bonus: 20 };
+      let selectedPackage = { diamonds: 100, amount: 170, bonus: 0 };
       let selectedUpiApp = "upi";
       let currentOrder = null;
       let timerInterval = null;
