@@ -142,6 +142,8 @@
         grid-template-columns: 1fr 1fr;
         gap: 1.5rem;
         align-items: start;
+        /* margin-left: 60px; */
+        /* margin-right: 60px; */
       }
 
       .support-card {
@@ -307,10 +309,16 @@
         border-bottom-left-radius: 10px;
       }
 
+      .package-info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        margin-bottom: 0.2rem;
+      }
       .diamond-icon {
-        width: 24px;
-        height: 24px;
-        margin: 0 auto 0.3rem;
+        width: 14px;
+        height: 14px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -322,15 +330,16 @@
       }
 
       .diamond-count {
-        font-size: 1rem;
-        font-weight: 700;
-        margin-bottom: 0.2rem;
+        font-size: 1.05rem;
+        font-weight: 800;
         color: #000000;
+        line-height: 1;
       }
 
       .diamond-price {
         color: var(--text-muted);
-        font-size: 0.8rem;
+        font-size: 0.75rem;
+        font-weight: 600;
       }
 
 
@@ -933,9 +942,11 @@
         line-height: 1.1;
       }
       .summary-label-sm {
-        font-size: 0.8rem;
+        font-size: 1rem;
         color: var(--text-muted);
         margin-bottom: 0.1rem;
+        font-weight: 800;
+        color:#000000;
       }
       .summary-value-sm {
         font-size: 1.15rem;
@@ -1257,6 +1268,64 @@
         font-size: 1.4rem;
         color: var(--primary-dark);
       }
+
+      /* Floating Label System */
+      .floating-group {
+        position: relative;
+        margin-bottom: 1.25rem;
+      }
+      .floating-group .form-input {
+        width: 100%;
+        padding: 1.6rem 1rem 0.6rem 1rem !important;
+        background: var(--bg);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        color: var(--text);
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+      }
+      .floating-group .floating-label {
+        position: absolute;
+        left: 1rem;
+        top: 1.25rem;
+        color: var(--text-muted);
+        font-size: 1rem;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        font-weight: 500;
+      }
+      .form-input:focus ~ .floating-label,
+      .form-input:not(:placeholder-shown) ~ .floating-label {
+        top: 0.5rem !important;
+        font-size: 0.75rem !important;
+        font-weight: 700 !important;
+        color: var(--primary) !important;
+      }
+      .help-trigger {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 24px;
+        height: 24px;
+        background: var(--primary);
+        color: white;
+        border-radius: 50%;
+        border: none;
+        font-size: 0.8rem;
+        font-weight: 800;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        z-index: 2;
+        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+      }
+      .help-trigger:hover {
+        background: var(--primary-dark);
+        transform: translateY(-50%) scale(1.1);
+      }
     </style>
   </head>
   <body>
@@ -1279,18 +1348,17 @@
       </div>
       <div class="card-container">
         <div class="recharge-card">
-          <div class="form-group">
-            <label class="form-label">Profile ID Number</label>
-            <div class="input-wrapper">
-              <span class="input-icon">👤</span>
-              <input
-                type="text"
-                class="form-input"
-                id="imoUserId"
-                placeholder="Enter your IMO Profile ID Number"
-                maxlength="20"
-              />
-            </div>
+          <div class="floating-group">
+            <input
+              type="text"
+              id="imoUserId"
+              class="form-input"
+              placeholder=" "
+              maxlength="20"
+              required
+            />
+            <label class="floating-label">Enter IMO Profile ID Number</label>
+            <button type="button" class="help-trigger" onclick="openHelpModal()">?</button>
           </div>
           <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">* Please Include Country Code If Imo Profile ID Number is Mobile No.</p>
           <div class="form-group">
@@ -1300,16 +1368,20 @@
                 class="package-card"
                 onclick="selectPackage(this, 10, 30, 0)"
               >
-                <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
-                <div class="diamond-count">10</div>
+                <div class="package-info">
+                  <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
+                  <div class="diamond-count">10</div>
+                </div>
                 <div class="diamond-price">₹30</div>
               </div>
               <div
                 class="package-card"
                 onclick="selectPackage(this, 50, 90, 0)"
               >
-                <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
-                <div class="diamond-count">50</div>
+                <div class="package-info">
+                  <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
+                  <div class="diamond-count">50</div>
+                </div>
                 <div class="diamond-price">₹90</div>
                 <!-- <div class="diamond-bonus">+10 Bonus</div> -->
               </div>
@@ -1317,8 +1389,10 @@
                 class="package-card popular selected"
                 onclick="selectPackage(this, 100, 170, 0)"
               >
-                <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
-                <div class="diamond-count">100</div>
+                <div class="package-info">
+                  <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
+                  <div class="diamond-count">100</div>
+                </div>
                 <div class="diamond-price">₹170</div>
                 <!-- <div class="diamond-bonus">+20 Bonus</div> -->
               </div>
@@ -1326,8 +1400,10 @@
                 class="package-card"
                 onclick="selectPackage(this, 200, 340, 0)"
               >
-                <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
-                <div class="diamond-count">200</div>
+                <div class="package-info">
+                  <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
+                  <div class="diamond-count">200</div>
+                </div>
                 <div class="diamond-price">₹340</div>
                 <!-- <div class="diamond-bonus">+40 Bonus</div> -->
               </div>
@@ -1335,8 +1411,10 @@
                 class="package-card"
                 onclick="selectPackage(this, 500, 850, 0)"
               >
-                <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
-                <div class="diamond-count">500</div>
+                <div class="package-info">
+                  <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
+                  <div class="diamond-count">500</div>
+                </div>
                 <div class="diamond-price">₹850</div>
                 <!-- <div class="diamond-bonus">+150 Bonus</div> -->
               </div>
@@ -1344,8 +1422,10 @@
                 class="package-card"
                 onclick="selectPackage(this, 1000, 1690, 0)"
               >
-                <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
-                <div class="diamond-count">1000</div>
+                <div class="package-info">
+                  <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
+                  <div class="diamond-count">1000</div>
+                </div>
                 <div class="diamond-price">₹1690</div>
                 <!-- <div class="diamond-bonus">+190 Bonus</div> -->
               </div>
@@ -1353,8 +1433,10 @@
                 class="package-card"
                 onclick="selectPackage(this, 2000, 3360, 0)"
               >
-                <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
-                <div class="diamond-count">2000</div>
+                <div class="package-info">
+                  <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
+                  <div class="diamond-count">2000</div>
+                </div>
                 <div class="diamond-price">₹3360</div>
                 <!-- <div class="diamond-bonus">+360 Bonus</div> -->
               </div>
@@ -1362,8 +1444,10 @@
                 class="package-card"
                 onclick="selectPackage(this, 5000, 8400, 0)"
               >
-                <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
-                <div class="diamond-count">5000</div>
+                <div class="package-info">
+                  <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
+                  <div class="diamond-count">5000</div>
+                </div>
                 <div class="diamond-price">₹8400</div>
                 <!-- <div class="diamond-bonus">+400 Bonus</div> -->
               </div>
@@ -1371,8 +1455,10 @@
                 class="package-card"
                 onclick="selectPackage(this, 10000, 16800, 0)"
               >
-                <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
-                <div class="diamond-count">10000</div>
+                <div class="package-info">
+                  <div class="diamond-icon"><img src="Diamond.jpg" alt="Diamond"></div>
+                  <div class="diamond-count">10000</div>
+                </div>
                 <div class="diamond-price">₹16800</div>
                 <!-- <div class="diamond-bonus">+800 Bonus</div> -->
               </div>
@@ -1386,15 +1472,17 @@
             </div>
             <div class="inline-summary">
               <div class="summary-item">
-                <span class="summary-label-sm">Total credits</span>
                 <span class="summary-value-sm">
+                  <span class="summary-label-sm">Total Credits : </span>
                   <img src="Diamond.jpg" alt="Diamond">
                   <span id="summaryDiamonds">10</span>
                 </span>
               </div>
               <div class="summary-item">
-                <span class="summary-label-sm">total Amnt.</span>
-                <span class="summary-value-sm total-amnt-value" id="summaryTotalAmount">₹30.00</span>
+                <span class="summary-value-sm">
+                  <span class="summary-label-sm">Total Amount : </span>
+                  <span class="summary-value-sm total-amnt-value" id="summaryTotalAmount">₹30.00</span>
+                </span>
               </div>
             </div>
           </div>
@@ -1576,6 +1664,20 @@
       </div>
     </div>
 
+    <!-- Help Modal -->
+    <div class="modal-overlay" id="helpModal">
+      <div class="modal-box" style="max-width: 400px; padding: 1.5rem;">
+        <button class="modal-close" onclick="closeHelpModal()">✕</button>
+        <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">How to find IMO Profile ID?</h3>
+        <div style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.1); background: white;">
+          <img src="https://recharge.akservices.co.in/icon/profile-help.gif" alt="Help Tutorial" style="width: 100%; display: block;">
+        </div>
+        <p style="margin: 1rem 0 0; font-size: 0.85rem; color: var(--text-muted);">
+          Go to your Profile segment in IMO app and click on your ID to copy it.
+        </p>
+      </div>
+    </div>
+
     <!-- Success Modal -->
     <div class="modal-overlay" id="successModal">
       <div class="modal-box">
@@ -1629,6 +1731,14 @@
         updatePayButton();
         generateQRCode();
       });
+
+      // Help Modal Logic
+      function openHelpModal() {
+        document.getElementById("helpModal").classList.add("active");
+      }
+      function closeHelpModal() {
+        document.getElementById("helpModal").classList.remove("active");
+      }
 
       // Package Selection
       function selectPackage(element, diamonds, amount, bonus) {
