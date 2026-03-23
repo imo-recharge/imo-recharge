@@ -131,7 +131,7 @@
       .card-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 2rem;
+        gap: 1rem;
         align-items: start;
       }
 
@@ -854,6 +854,100 @@
         font-size: 0.9rem;
         transition: all 0.3s ease;
       }
+
+      .quantity-selector {
+        margin: 1.5rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      .qty-controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: var(--surface-light);
+        padding: 0.4rem;
+        border-radius: 12px;
+        width: fit-content;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+      .qty-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        background: white;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: var(--primary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+      .qty-btn:hover {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+        transform: translateY(-1px);
+      }
+      .qty-btn:active {
+        transform: translateY(0);
+      }
+      .qty-value {
+        font-size: 1.25rem;
+        font-weight: 800;
+        min-width: 2.5rem;
+        text-align: center;
+        color: var(--text);
+      }
+      .order-divider {
+        height: 1px;
+        background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.05), transparent);
+        margin: 1.5rem 0;
+      }
+      .summary-card {
+        background: rgba(99, 102, 241, 0.05);
+        border-radius: 16px;
+        padding: 1.25rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(99, 102, 241, 0.1);
+      }
+      .summary-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 0.75rem;
+        display: block;
+      }
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+      .summary-row:last-child {
+        margin-bottom: 0;
+        padding-top: 0.5rem;
+        border-top: 1px dashed rgba(99, 102, 241, 0.2);
+        margin-top: 0.5rem;
+      }
+      .summary-label {
+        font-size: 0.95rem;
+        color: var(--text);
+      }
+      .summary-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+      .total-value {
+        font-size: 1.4rem;
+        color: var(--primary-dark);
+      }
       .search-box input:focus {
         outline: none;
         border-color: var(--primary);
@@ -1064,6 +1158,99 @@
           font-size: 0.8rem;
         }
       }
+      .quantity-selector {
+        margin: 1.5rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      .qty-controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: var(--surface-light);
+        padding: 0.4rem;
+        border-radius: 12px;
+        width: fit-content;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+      .qty-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        background: white;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: var(--primary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+      .qty-btn:hover {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+        transform: translateY(-1px);
+      }
+      .qty-btn:active {
+        transform: translateY(0);
+      }
+      .qty-value {
+        font-size: 1.25rem;
+        font-weight: 800;
+        min-width: 2.5rem;
+        text-align: center;
+        color: var(--text);
+      }
+      .order-divider {
+        height: 1px;
+        background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.05), transparent);
+        margin: 1.5rem 0;
+      }
+      .summary-card {
+        background: rgba(99, 102, 241, 0.05);
+        border-radius: 16px;
+        padding: 1.25rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(99, 102, 241, 0.1);
+      }
+      .summary-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 0.75rem;
+        display: block;
+      }
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+      .summary-row:last-child {
+        margin-bottom: 0;
+        padding-top: 0.5rem;
+        border-top: 1px dashed rgba(99, 102, 241, 0.2);
+        margin-top: 0.5rem;
+      }
+      .summary-label {
+        font-size: 0.95rem;
+        color: var(--text);
+      }
+      .summary-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+      .total-value {
+        font-size: 1.4rem;
+        color: var(--primary-dark);
+      }
     </style>
   </head>
   <body>
@@ -1183,6 +1370,32 @@
                 <div class="diamond-price">₹16800</div>
                 <!-- <div class="diamond-bonus">+800 Bonus</div> -->
               </div>
+          </div>
+
+          <div class="quantity-selector">
+            <label class="form-label">Package Quantity</label>
+            <div class="qty-controls">
+              <button class="qty-btn" onclick="updateQuantity(-1)">−</button>
+              <span class="qty-value" id="qtyDisplay">1</span>
+              <button class="qty-btn" onclick="updateQuantity(1)">+</button>
+            </div>
+          </div>
+
+          <div class="order-divider"></div>
+
+          <div class="summary-card">
+            <span class="summary-title">Order Summary</span>
+            <div class="summary-row">
+              <span class="summary-label">Total Diamonds</span>
+              <span class="summary-value" id="summaryDiamonds">100</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Amount per Unit</span>
+              <span class="summary-value" id="summaryUnitAmount">₹170</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label" style="font-weight: 700;">Total Payable</span>
+              <span class="summary-value total-value" id="summaryTotalAmount">₹170</span>
             </div>
           </div>
 
@@ -1211,10 +1424,12 @@
             </svg>
             <span id="securityText">Secure UPI Payment • Instant Delivery</span>
           </div>
+
+          </div>
         </div>
         <div class="support-card">
           <!-- IMO Support Group Section -->
-          <div class="whatsapp-card" style="border-color: rgba(37, 211, 102, 0.2);">
+          <div class="whatsapp-card" style="border-color: rgba(37, 211, 102, 0.2); margin-bottom: 1.5rem;">
             <div class="whatsapp-icon" style="background: rgba(37, 211, 102, 0.1); color: #25d366;">
               <span style="font-size: 1.5rem;">👥</span>
             </div>
@@ -1251,13 +1466,14 @@
           <!-- Order Tracking Section -->
           <div class="tracking-section">
             <div class="tracking-header">
-              <h3>📋 Recent Orders</h3>
-              <div class="search-box">
+              <h3>📋 Check Recharge History</h3>
+            </div>
+            <p style="text-align: left; color: var(--text-muted); margin-bottom: 1rem;">Profile ID / Order ID / UTR</p>
+            <div class="search-box">
                 <span class="search-icon">🔍</span>
-                <input type="text" id="orderSearch" placeholder="Search ID, UTR or Profile ID..." onkeyup="searchOrders()">
+                <input type="text" id="orderSearch" placeholder="Enter profile ID, UTIL ID, or UTR." onkeyup="searchOrders()">
                 <button class="search-btn" onclick="searchOrders()">Search</button>
               </div>
-            </div>
             <div class="order-list" id="orderList">
               <p
                 style="
@@ -1266,7 +1482,7 @@
                   padding: 2.5rem;
                 "
               >
-                🔍 Search with ID, UTR or Profile ID to see your order status.
+                🔍 Enter profile ID, UTIL ID, or UTR.
               </p>
             </div>
           </div>
@@ -1396,6 +1612,7 @@
 
       // State
       let selectedPackage = { diamonds: 100, amount: 170, bonus: 0 };
+      let quantity = 1;
       let selectedUpiApp = "upi";
       let currentOrder = null;
       let timerInterval = null;
@@ -1408,6 +1625,7 @@
       // Initialize
       document.addEventListener("DOMContentLoaded", () => {
         // loadOrders(); // Removed to make recent orders search-only
+        updatePackageSummary();
         updatePayButton();
         generateQRCode();
       });
@@ -1419,8 +1637,27 @@
           .forEach((card) => card.classList.remove("selected"));
         element.classList.add("selected");
         selectedPackage = { diamonds, amount, bonus };
+        updatePackageSummary();
         updatePayButton();
         updateQRAmount();
+      }
+
+      // Quantity Logic
+      function updateQuantity(change) {
+        quantity = Math.max(1, Math.min(100, quantity + change));
+        document.getElementById("qtyDisplay").textContent = quantity;
+        updatePackageSummary();
+        updatePayButton();
+        updateQRAmount();
+      }
+
+      function updatePackageSummary() {
+        const totalDiamonds = selectedPackage.diamonds * quantity;
+        const totalAmount = selectedPackage.amount * quantity;
+
+        document.getElementById("summaryDiamonds").textContent = totalDiamonds.toLocaleString();
+        document.getElementById("summaryUnitAmount").textContent = `₹${selectedPackage.amount}`;
+        document.getElementById("summaryTotalAmount").textContent = `₹${totalAmount.toLocaleString()}`;
       }
 
       // UPI App Selection
@@ -1434,14 +1671,15 @@
 
       // Update Pay Button
       function updatePayButton() {
+        const totalAmount = selectedPackage.amount * quantity;
         const btn = document.getElementById("payBtn");
-        if (btn) btn.textContent = `Pay ₹${selectedPackage.amount}`;
+        if (btn) btn.textContent = `Pay ₹${totalAmount.toLocaleString()}`;
       }
 
       // Update QR Amount
       function updateQRAmount() {
-        document.getElementById("qrAmount").textContent =
-          selectedPackage.amount;
+        const totalAmount = selectedPackage.amount * quantity;
+        document.getElementById("qrAmount").textContent = totalAmount;
         generateQRCode();
       }
 
@@ -1537,9 +1775,11 @@
         const container = document.getElementById("qrcode");
         container.innerHTML = "";
 
+        const totalAmount = selectedPackage.amount * quantity;
+
         const upiUrl = generateUPILink(
           "GENERATE",
-          selectedPackage.amount,
+          totalAmount,
           "upi",
         );
 
@@ -1589,13 +1829,15 @@
         }
 
         const orderId = generateOrderId();
+        const totalDiamonds = selectedPackage.diamonds * quantity;
+        const totalAmount = selectedPackage.amount * quantity;
+
         const orderData = {
           orderId,
           userId,
-
-          diamonds: selectedPackage.diamonds,
-          bonus: selectedPackage.bonus,
-          amount: selectedPackage.amount,
+          diamonds: totalDiamonds,
+          bonus: selectedPackage.bonus * quantity,
+          amount: totalAmount,
           status: "pending",
           upiApp: selectedUpiApp,
           timestamp: new Date().toISOString(),
