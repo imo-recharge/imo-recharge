@@ -1280,9 +1280,7 @@
         const uPIInput = document.getElementById("settingUPI");
         const nameInput = document.getElementById("settingName");
         const imohelplineInput = document.getElementById("settingImoHelpline");
-        const whatsappSupportInput = document.getElementById(
-          "settingWhatsappSupport",
-        );
+        const whatsappSupportInput = document.getElementById("settingWhatsappSupport");
         const status = document.getElementById("settingsStatus");
 
         // Get the token saved during login
@@ -1329,12 +1327,8 @@
       async function saveMerchantConfig() {
         const upiId = document.getElementById("settingUPI").value.trim();
         const name = document.getElementById("settingName").value.trim();
-        const imohelplineInput = document
-          .getElementById("settingImoHelpline")
-          .value.trim();
-        const whatsappSupportInput = document
-          .getElementById("settingWhatsappSupport")
-          .value.trim();
+        const imohelplineInput = document.getElementById("settingImoHelpline").value.trim();
+        const whatsappSupportInput = document.getElementById("settingWhatsappSupport").value.trim();
 
         const btn = document.getElementById("saveConfigBtn");
         const status = document.getElementById("settingsStatus");
