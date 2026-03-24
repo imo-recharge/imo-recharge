@@ -1863,7 +1863,7 @@
             
             // 'target="_blank"' is often required by in-app browsers to break out of the sandbox
             link.target = "_blank"; 
-            link.rel = "strict-origin-when-cross-origin";
+            link.rel = "noopener noreferrer";
             
             document.body.appendChild(link);
             link.click();
@@ -1994,7 +1994,7 @@
         const txnNote = `IMO Profile ID - ${userId}`;
         const txnRef = orderId;
 
-        const baseUPI = `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=UTR-${txnRef}`;
+        const baseUPI = `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tr=UTR-${txnRef}`;  //&tn=${encodeURIComponent(txnNote)}`;
 
         // const deepLinks = {
         //   gpay: `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
