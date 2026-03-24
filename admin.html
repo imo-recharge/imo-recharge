@@ -1061,6 +1061,7 @@
         fetchOrders();
       }
 
+      // Render Orders to Card Grid
       function renderOrders(orders) {
         const container = document.getElementById("ordersContainer");
 
@@ -1068,7 +1069,8 @@
           container.innerHTML = `
             <div class="empty-state" style="grid-column: 1/-1;">
               No orders found matching your search.
-            </div>`;
+            </div>
+          `;
           return;
         }
 
@@ -1088,50 +1090,46 @@
               });
 
             return `
-              <div class="order-card">
-                <div class="card-header">
-                  <div class="card-title">
-                    <h4>#${order.id}</h4>
-                    <div class="card-date">${formattedDate}</div>
-                  </div>
-                  <span class="order-status ${statusClass}">${order.status}</span>
+            <div class="order-card">
+              <div class="card-header">
+                <div class="card-title">
+                  <h4>#${order.id}</h4>
+                  <div class="card-date">${formattedDate}</div>
                 </div>
+                <span class="order-status ${statusClass}">${order.status}</span>
+              </div>
 
-                <div class="card-body">
-                  <div class="detail-row">
-                    <span>Order ID</span>
-                    <span class="detail-val">${order.orderId}</span>
-                  </div>
-                  <div class="detail-row">
-                    <span>User ID</span>
-                    <span class="detail-val">${order.userId}</span>
-                  </div>
-                  <div class="detail-row">
-                    <span>Diamonds</span>
-                    <span class="detail-val"><span style="color: var(--accent)">💎</span> ${order.diamonds.toLocaleString()}</span>
-                  </div>
-                  <div class="price-badge">
-                    ₹${order.amount.toLocaleString()}
-                  </div>
+              <div class="card-body">
+                <div class="detail-row">
+                  <span>Order ID</span>
+                  <span class="detail-val">${order.orderId}</span>
                 </div>
-
-                <div class="card-footer" style="display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px;">
-                  ${
-                    order.status === "pending"
-                      ? `
-                    <button class="btn" style="background: var(--success); color: white; padding: 0.35rem 0.6rem; font-size: 0.75rem; flex: 1; border: none; border-radius: 4px; cursor: pointer;" 
-                      onclick="updateStatus('${order.id}', 'success', event)">Approve</button>
-                    
-                    <button class="btn" style="background: var(--accent); color: white; padding: 0.35rem 0.6rem; font-size: 0.75rem; flex: 1; border: none; border-radius: 4px; cursor: pointer;" 
-                      onclick="updateStatus('${order.id}', 'failed', event)">Reject</button>
-                  `
-                      : ""
-                  }
-                  <button class="btn" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); padding: 0.35rem 0.6rem; font-size: 0.75rem; flex: 1; border-radius: 4px; cursor: pointer;" 
-                    onclick="deleteOrder('${order.id}', event)">Delete</button>
+                <div class="detail-row">
+                  <span>User ID</span>
+                  <span class="detail-val">${order.userId}</span>
+                </div>
+                <div class="detail-row">
+                  <span>Diamonds</span>
+                  <span class="detail-val"><span style="color: var(--accent)">💎</span> ${order.diamonds.toLocaleString()}</span>
+                </div>
+                <div class="price-badge">
+                  ₹${order.amount.toLocaleString()}
                 </div>
               </div>
-            `;
+
+              <div class="card-footer" style="flex-wrap: wrap;">
+                ${
+                  order.status === "pending"
+                    ? `
+                  <button class="btn" style="background: var(--success); color: white; padding: 0.35rem 0.6rem; font-size: 0.75rem; flex: 1;" onclick="updateStatus('${order.id}', 'success', event)">Approve</button>
+                  <button class="btn" style="background: var(--accent); color: white; padding: 0.35rem 0.6rem; font-size: 0.75rem; flex: 1;" onclick="updateStatus('${order.id}', 'failed', event)">Reject</button>
+                `
+                    : ""
+                }
+                <button class="btn" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); padding: 0.35rem 0.6rem; font-size: 0.75rem; flex: 1;" onclick="deleteOrder('${order.id}', event)">Delete</button>
+              </div>
+            </div>
+          `;
           })
           .join("");
 
@@ -1165,7 +1163,7 @@
 
         try {
           const response = await fetch(
-            `${API_CONFIG.ordersEndpoint}/update-status/`,
+            `${API_CONFIG.ordersEndpoint}/update-status`,
             {
               method: "POST",
               headers: {
@@ -1196,19 +1194,56 @@
         }
       }
 
-      async function deleteOrder(id) {
+      async function deleteOrder(id, event) {
+        // 1. Double Confirmation
         if (
           !confirm(
             `Permanently delete order #${id}? This action cannot be undone.`,
           )
-        )
+        ) {
           return;
+        }
 
-        console.log(`Deleting order ${id}`);
-        // In real app: await fetch(`${API_CONFIG.ordersEndpoint}/${id}`, { method: 'DELETE' });
+        // 2. UI Feedback: Identify the card and dim it
+        const btn = event ? event.target : null;
+        const card = btn ? btn.closest(".order-card") : null;
 
-        alert(`Order #${id} has been deleted.`);
-        fetchOrders();
+        if (btn) btn.disabled = true;
+        if (card) card.style.opacity = "0.5";
+
+        try {
+          // 3. API Request
+          const response = await fetch(`${API_CONFIG.ordersEndpoint}/delete`, {
+            method: "POST", // Using POST for compatibility, or DELETE if preferred
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+            },
+            body: JSON.stringify({ id: id }),
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Server Error:", errorText);
+            throw new Error(`Failed to delete (Status: ${response.status})`);
+          }
+
+          const data = await response.json();
+
+          if (data.success) {
+            // 4. Success: Refresh the list
+            await fetchOrders();
+          } else {
+            alert("Error: " + data.message);
+            if (card) card.style.opacity = "1";
+            if (btn) btn.disabled = false;
+          }
+        } catch (error) {
+          console.error("Delete error:", error);
+          alert("Delete failed. Check console for details.");
+          if (card) card.style.opacity = "1";
+          if (btn) btn.disabled = false;
+        }
       }
 
       // Settings Modal Logic
