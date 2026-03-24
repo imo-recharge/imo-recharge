@@ -580,6 +580,51 @@
           display: none !important;
         }
       }
+
+      /* Modal Styling */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+      .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+      .modal-box {
+        background: white;
+        border-radius: 24px;
+        padding: 2rem;
+        width: 90%;
+        max-width: 450px;
+        position: relative;
+        transform: scale(0.9);
+        transition: all 0.3s ease;
+      }
+      .modal-overlay.active .modal-box {
+        transform: scale(1);
+      }
+      .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        border: none;
+        background: none;
+        font-size: 1.25rem;
+        cursor: pointer;
+        color: var(--text-muted);
+      }
     </style>
   </head>
   <body>
@@ -650,6 +695,20 @@
               />
               <button class="btn-icon" onclick="fetchOrders()">🔄</button>
             </div>
+            <button
+              class="btn-fetch"
+              onclick="openSettingsModal()"
+              style="background: var(--primary); color: white"
+            >
+              ⚙️ Settings
+            </button>
+            <button
+              class="btn-fetch"
+              onclick="openPasswordModal()"
+              style="background: var(--secondary); color: white"
+            >
+              🔑 Password
+            </button>
             <button class="btn-fetch hide-mobile" onclick="fetchOrders()">
               Refresh
             </button>
@@ -664,13 +723,131 @@
           <!-- Pagination buttons will be injected here -->
         </div>
       </div>
+
+      <!-- Settings Modal -->
+      <div class="modal-overlay" id="settingsModal">
+        <div class="modal-box">
+          <button class="modal-close" onclick="closeSettingsModal()">✕</button>
+          <h3 style="margin-bottom: 1rem; font-size: 1.5rem; font-weight: 700">
+            Merchant Settings
+          </h3>
+          <p
+            style="
+              margin-bottom: 1.5rem;
+              color: var(--text-muted);
+              font-size: 0.9rem;
+            "
+          >
+            Update the UPI ID and Name used on the recharge site.
+          </p>
+
+          <div class="form-group">
+            <label class="form-label">Merchant UPI ID</label>
+            <input
+              type="text"
+              id="settingUPI"
+              class="form-input"
+              placeholder="e.g. 7054446144-3@ybl"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Merchant Name</label>
+            <input
+              type="text"
+              id="settingName"
+              class="form-input"
+              placeholder="e.g. IMO Diamond Recharge"
+            />
+          </div>
+
+          <button
+            class="btn btn-primary"
+            id="saveConfigBtn"
+            onclick="saveMerchantConfig()"
+          >
+            Save Configuration
+          </button>
+          <div
+            id="settingsStatus"
+            style="margin-top: 1rem; font-size: 0.85rem; text-align: center"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Password Modal -->
+      <div class="modal-overlay" id="passwordModal">
+        <div class="modal-box">
+          <button class="modal-close" onclick="closePasswordModal()">✕</button>
+          <h3 style="margin-bottom: 1rem; font-size: 1.5rem; font-weight: 700">
+            Change Admin Password
+          </h3>
+          <p
+            style="
+              margin-bottom: 1.5rem;
+              color: var(--text-muted);
+              font-size: 0.9rem;
+            "
+          >
+            Update your admin account password.
+          </p>
+
+          <div class="form-group">
+            <label class="form-label">Current Password</label>
+            <input
+              type="password"
+              id="currentPass"
+              class="form-input"
+              placeholder="••••••••"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input
+              type="password"
+              id="newPass"
+              class="form-input"
+              placeholder="••••••••"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Confirm New Password</label>
+            <input
+              type="password"
+              id="confirmPass"
+              class="form-input"
+              placeholder="••••••••"
+            />
+          </div>
+
+          <button
+            class="btn btn-primary"
+            id="savePassBtn"
+            onclick="changeAdminPassword()"
+            style="background: var(--gradient-1)"
+          >
+            Update Password
+          </button>
+          <div
+            id="passStatus"
+            style="margin-top: 1rem; font-size: 0.85rem; text-align: center"
+          ></div>
+        </div>
+      </div>
     </div>
 
     <script>
       // API Configuration - Replace with your actual endpoints
       const API_CONFIG = {
-        loginEndpoint: "https://jsonplaceholder.typicode.com/posts", // Dummy endpoint
-        ordersEndpoint: "https://jsonplaceholder.typicode.com/users", // Dummy endpoint
+        baseUrl: "https://anfoundation.co.in/api/imo",
+        loginEndpoint: "https://anfoundation.co.in/api/imo/login",
+        ordersEndpoint: "https://anfoundation.co.in/api/imo/orders",
+        configEndpoint: "https://anfoundation.co.in/api/imo/config",
+        configGetEndpoint: "https://anfoundation.co.in/api/imo/config/get",
+        changePasswordEndpoint:
+          "https://anfoundation.co.in/api/imo/change-password",
       };
 
       // State Management
@@ -715,34 +892,49 @@
         errorMsg.textContent = "";
 
         try {
-          // --- Mock API Login implementation ---
-          // Replace this block with your actual login API request:
-          /*
+          // 1. Show loading state
+          loginBtn.disabled = true;
+          loginBtn.textContent = "Authenticating...";
+          errorMsg.textContent = "";
+
+          // 2. Actual API request to your Django backend
           const response = await fetch(API_CONFIG.loginEndpoint, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username: usernameInput, password: passwordInput })
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: usernameInput,
+              password: passwordInput,
+            }),
           });
+
           const data = await response.json();
-          */
 
-          // Simulating network delay and login check for mockup
-          await new Promise((resolve) => setTimeout(resolve, 800));
+          // 3. Handle the Response
+          if (response.ok && data.success) {
+            // Save the custom token returned by Django
+            const token = data.token;
 
-          if (usernameInput === "admin" && passwordInput === "admin") {
-            // Mock token
-            const token = "mock-jwt-token-xyz-123";
+            // Store it for persistence (works in most WebViews/imo)
             localStorage.setItem("adminToken", token);
+
+            // Update the global variable for immediate use
             authToken = token;
+
+            // Redirect to your dashboard
             showDashboard();
           } else {
-            errorMsg.textContent =
-              "Invalid username or password. (Hint: Use admin/admin)";
+            // Display the specific error message from your Django view
+            errorMsg.textContent = data.message || "Invalid credentials.";
           }
         } catch (error) {
           console.error("Login failed:", error);
+
+          // Specific tip for the imo browser:
+          // If the fetch fails entirely, it's often a CORS or HTTPS issue.
           errorMsg.textContent =
-            "An error occurred during login. Please try again.";
+            "Connection error. Please check your internet or HTTPS settings.";
         } finally {
           loginBtn.disabled = false;
           loginBtn.textContent = "Secure Login";
@@ -915,7 +1107,7 @@
                 </div>
                 <span class="order-status ${statusClass}">${order.status}</span>
               </div>
-              
+
               <div class="card-body">
                 <div class="detail-row">
                   <span>User ID</span>
@@ -983,6 +1175,166 @@
 
         alert(`Order #${id} has been deleted.`);
         fetchOrders();
+      }
+
+      // Settings Modal Logic
+      async function openSettingsModal() {
+        const modal = document.getElementById("settingsModal");
+        const uPIInput = document.getElementById("settingUPI");
+        const nameInput = document.getElementById("settingName");
+        const status = document.getElementById("settingsStatus");
+
+        // Get the token saved during login
+        const token = localStorage.getItem("adminToken");
+
+        // Safety Check: If no token, redirect to login
+        if (!token) {
+          alert("Session expired. Please login again.");
+          showLogin();
+          return;
+        }
+
+        status.textContent = "Loading configuration...";
+        modal.classList.add("active");
+
+        try {
+          const response = await fetch(API_CONFIG.configGetEndpoint, {
+            method: "GET", // Or POST depending on your API design
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Send the token here
+            },
+          });
+
+          const data = await response.json();
+          if (response.ok && data.success && data.merchantUPI) {
+            uPIInput.value = data.merchantUPI;
+            nameInput.value = data.merchantName || "";
+            status.textContent = "";
+          } else {
+            status.textContent = "No existing config found.";
+          }
+        } catch (error) {
+          console.error("Config fetch error:", error);
+          status.textContent = "Error loading config. Using defaults.";
+        }
+      }
+
+      function closeSettingsModal() {
+        document.getElementById("settingsModal").classList.remove("active");
+      }
+
+      async function saveMerchantConfig() {
+        const upiId = document.getElementById("settingUPI").value.trim();
+        const name = document.getElementById("settingName").value.trim();
+        const btn = document.getElementById("saveConfigBtn");
+        const status = document.getElementById("settingsStatus");
+
+        if (!upiId) {
+          alert("UPI ID is required");
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Saving...";
+        status.textContent = "";
+
+        try {
+          const response = await fetch(API_CONFIG.configEndpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({ merchantUPI: upiId, merchantName: name }),
+          });
+
+          const data = await response.json();
+          if (data.success || response.ok) {
+            status.style.color = "var(--success)";
+            status.textContent = "✅ Configuration saved successfully!";
+            setTimeout(closeSettingsModal, 1500);
+          } else {
+            throw new Error(data.message || "Failed to save");
+          }
+        } catch (error) {
+          console.error("Save error:", error);
+          status.style.color = "var(--danger)";
+          status.textContent = "❌ Error saving configuration.";
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Save Configuration";
+        }
+      }
+
+      // Password Modal Logic
+      function openPasswordModal() {
+        document.getElementById("passwordModal").classList.add("active");
+        document.getElementById("passStatus").textContent = "";
+      }
+
+      function closePasswordModal() {
+        document.getElementById("passwordModal").classList.remove("active");
+        document.getElementById("currentPass").value = "";
+        document.getElementById("newPass").value = "";
+        document.getElementById("confirmPass").value = "";
+      }
+
+      async function changeAdminPassword() {
+        const currentPass = document.getElementById("currentPass").value;
+        const newPass = document.getElementById("newPass").value;
+        const confirmPass = document.getElementById("confirmPass").value;
+        const btn = document.getElementById("savePassBtn");
+        const status = document.getElementById("passStatus");
+
+        if (!currentPass || !newPass || !confirmPass) {
+          status.style.color = "var(--danger)";
+          status.textContent = "⚠️ All fields are required.";
+          return;
+        }
+
+        if (newPass !== confirmPass) {
+          status.style.color = "var(--danger)";
+          status.textContent = "⚠️ New passwords do not match.";
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Updating...";
+        status.textContent = "";
+
+        try {
+          const response = await fetch(API_CONFIG.changePasswordEndpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({
+              currentPassword: currentPass,
+              newPassword: newPass,
+            }),
+          });
+
+          const data = await response.json();
+          if (data.success || response.ok) {
+            status.style.color = "var(--success)";
+            status.textContent = "✅ Password changed successfully!";
+            setTimeout(closePasswordModal, 1500);
+            // 1. Clear the token from localStorage
+            localStorage.removeItem("adminToken");
+            showLogin();
+          } else {
+            throw new Error(data.message || "Failed to update password");
+          }
+        } catch (error) {
+          console.error("Password update error:", error);
+          status.style.color = "var(--danger)";
+          status.textContent = `❌ ${error.message}`;
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Update Password";
+        }
       }
     </script>
   </body>
