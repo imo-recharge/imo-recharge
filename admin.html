@@ -1143,26 +1143,35 @@
       }
 
       async function updateStatus(id, status, event) {
-        // 1. Get the button element from the event
+        // Ensure 'event' is here
+        console.log(`Updating order ID: ${id} to ${status}`);
+
+        // Check if event exists to prevent the crash
+        if (!event || !event.target) {
+          console.error(
+            "Event object is missing. Make sure to pass 'event' in onclick.",
+          );
+          return;
+        }
+
         const btn = event.target;
         const originalText = btn.textContent;
 
-        // 2. Immediate UI Feedback (Disable to prevent double-taps)
+        // UI Feedback
         btn.disabled = true;
-        btn.innerHTML = `<span class="spinner-small"></span>`; // Or just "..."
+        btn.textContent = "...";
 
         try {
-          // 3. Actual API Request
           const response = await fetch(
             `${API_CONFIG.ordersEndpoint}/update-status/`,
             {
-              method: "POST", // POST is safer for some mobile WebViews than PATCH
+              method: "POST",
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
               },
               body: JSON.stringify({
-                order_id: id,
+                id: id, // Django Database ID
                 new_status: status,
               }),
             },
@@ -1171,19 +1180,15 @@
           const data = await response.json();
 
           if (response.ok && data.success) {
-            // 4. Success feedback
-            alert(`Order #${id} updated to ${status.toUpperCase()}`);
-
-            // Refresh the list to show the new status
-            await fetchOrders();
+            alert(`Order #${id} updated successfully!`);
+            await fetchOrders(); // Refresh list
           } else {
-            throw new Error(data.message || "Update failed");
+            alert("Error: " + (data.message || "Update failed"));
+            btn.disabled = false;
+            btn.textContent = originalText;
           }
         } catch (error) {
-          console.error("Status update error:", error);
-          alert("Error: " + error.message);
-
-          // Reset button so user can try again
+          console.error("Fetch error:", error);
           btn.disabled = false;
           btn.textContent = originalText;
         }
