@@ -1101,6 +1101,10 @@
 
               <div class="card-body">
                 <div class="detail-row">
+                  <span>Order ID</span>
+                  <span class="detail-val">${order.orderId}</span>
+                </div>
+                <div class="detail-row">
                   <span>User ID</span>
                   <span class="detail-val">${order.userId}</span>
                 </div>
@@ -1138,19 +1142,51 @@
         fetchOrders();
       }
 
-      async function updateStatus(id, status) {
-        console.log(`Updating order ${id} to ${status}`);
-        // In real app: await fetch(`${API_CONFIG.ordersEndpoint}/${id}`, { method: 'PATCH', body: JSON.stringify({status}) });
-
-        // Mock feedback
+      async function updateStatus(id, status, event) {
+        // 1. Get the button element from the event
         const btn = event.target;
-        btn.disabled = true;
-        btn.textContent = "...";
+        const originalText = btn.textContent;
 
-        setTimeout(() => {
-          alert(`Order #${id} has been marked as ${status.toUpperCase()}`);
-          fetchOrders(); // Refresh list to show change
-        }, 800);
+        // 2. Immediate UI Feedback (Disable to prevent double-taps)
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-small"></span>`; // Or just "..."
+
+        try {
+          // 3. Actual API Request
+          const response = await fetch(
+            `${API_CONFIG.ordersEndpoint}/update-status/`,
+            {
+              method: "POST", // POST is safer for some mobile WebViews than PATCH
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+              },
+              body: JSON.stringify({
+                order_id: id,
+                new_status: status,
+              }),
+            },
+          );
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            // 4. Success feedback
+            alert(`Order #${id} updated to ${status.toUpperCase()}`);
+
+            // Refresh the list to show the new status
+            await fetchOrders();
+          } else {
+            throw new Error(data.message || "Update failed");
+          }
+        } catch (error) {
+          console.error("Status update error:", error);
+          alert("Error: " + error.message);
+
+          // Reset button so user can try again
+          btn.disabled = false;
+          btn.textContent = originalText;
+        }
       }
 
       async function deleteOrder(id) {
