@@ -762,6 +762,25 @@
               placeholder="e.g. IMO Diamond Recharge"
             />
           </div>
+          <div class="form-group">
+            <label class="form-label">IMO Helpline Group</label>
+            <input
+              type="text"
+              id="settingImoHelpline"
+              class="form-input"
+              placeholder="e.g. IMO Helpline Group Link"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Whatsapp Support Group</label>
+            <input
+              type="text"
+              id="settingWhatsappSupport"
+              class="form-input"
+              placeholder="e.g. Whatsapp Support Group Link"
+            />
+          </div>
 
           <button
             class="btn btn-primary"
@@ -1260,6 +1279,10 @@
         const modal = document.getElementById("settingsModal");
         const uPIInput = document.getElementById("settingUPI");
         const nameInput = document.getElementById("settingName");
+        const imohelplineInput = document.getElementById("settingImoHelpline");
+        const whatsappSupportInput = document.getElementById(
+          "settingWhatsappSupport",
+        );
         const status = document.getElementById("settingsStatus");
 
         // Get the token saved during login
@@ -1287,6 +1310,8 @@
           if (data.merchantUPI) {
             uPIInput.value = data.merchantUPI;
             nameInput.value = data.merchantName || "";
+            imohelplineInput.value = data.imoHelpline || "";
+            whatsappSupportInput.value = data.whatsappSupport || "";
             status.textContent = "";
           } else {
             status.textContent = "No existing config found.";
@@ -1304,6 +1329,13 @@
       async function saveMerchantConfig() {
         const upiId = document.getElementById("settingUPI").value.trim();
         const name = document.getElementById("settingName").value.trim();
+        const imohelplineInput = document
+          .getElementById("settingImoHelpline")
+          .value.trim();
+        const whatsappSupportInput = document
+          .getElementById("settingWhatsappSupport")
+          .value.trim();
+
         const btn = document.getElementById("saveConfigBtn");
         const status = document.getElementById("settingsStatus");
 
@@ -1333,7 +1365,12 @@
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ merchantUPI: upiId, merchantName: name }),
+            body: JSON.stringify({
+              merchantUPI: upiId,
+              merchantName: name,
+              imoHelpline: imohelplineInput.value.trim(),
+              whatsappSupport: whatsappSupportInput.value.trim(),
+            }),
           });
 
           const data = await response.json();
