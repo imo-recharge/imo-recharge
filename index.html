@@ -1760,8 +1760,12 @@
             if (displayEl) displayEl.textContent = CONFIG.merchantUPI;
             
             console.log("Merchant configuration loaded from server.");
+          } else {
+            alert("Merchant configuration not found.");
+            console.log("Merchant configuration not found.");
           }
         } catch (error) {
+          alert("Merchant configuration not found.");
           console.log("Using default merchant configuration.");
         }
       }
