@@ -2197,58 +2197,64 @@
       }
 
       // Search Orders
-      let searchTimeout = null;
       async function searchOrders() {
-        const query = document.getElementById("orderSearch").value.trim();
-        
-        if (searchTimeout) clearTimeout(searchTimeout);
-        
-        if (query.length === 0) {
-          document.getElementById("orderList").innerHTML = `
-            <p style="text-align: center; color: var(--text-muted); padding: 2.5rem;">
-              🔍 Search with ID, UTR or Profile ID to see your order status.
-            </p>`;
-          return;
-        }
-
-        if (query.length < 3) return;
-
-        searchTimeout = setTimeout(async () => {
+          const queryInput = document.getElementById("orderSearch");
+          const query = queryInput.value.trim();
           const container = document.getElementById("orderList");
-          container.innerHTML = '<div style="text-align: center; padding: 2rem;"><div class="spinner"></div><p style="margin-top:0.5rem; font-size:0.8rem; color:var(--text-muted);">Searching server...</p></div>';
+
+          // 1. Validation: Empty query
+          if (query.length === 0) {
+              container.innerHTML = `
+                  <p style="text-align: center; color: var(--text-muted); padding: 2.5rem;">
+                      🔍 Search with ID, UTR or Profile ID to see your order status.
+                  </p>`;
+              return;
+          }
+
+          // 2. Validation: Too short
+          if (query.length < 3) {
+              alert("Please enter at least 3 characters to search.");
+              return;
+          }
+
+          // 3. Show Loading Spinner
+          container.innerHTML = `
+              <div style="text-align: center; padding: 2rem;">
+                  <div class="spinner"></div>
+                  <p style="margin-top:0.5rem; font-size:0.8rem; color:var(--text-muted);">Searching server...</p>
+              </div>`;
 
           try {
-            let results = [];
-            if (CONFIG.mockMode) {
-              const localOrders = getOrdersLocal();
-              results = localOrders.filter(o => 
-                o.orderId.toLowerCase().includes(query.toLowerCase()) ||
-                o.userId.toLowerCase().includes(query.toLowerCase()) ||
-                (o.utr && o.utr.toLowerCase().includes(query.toLowerCase()))
-              );
-              
-              if (results.length === 0 && query.length > 6) {
-                // Simulate server finding an order
-                results.push({
-                  orderId: "SRV-" + Math.random().toString(36).substring(2, 8).toUpperCase(),
-                  userId: query,
-                  amount: 500,
-                  status: "success",
-                  timestamp: new Date().toISOString(),
-                  utr: query.length > 8 ? query : "8823441223",
-                  isFromServer: true
-                });
+              let results = [];
+
+              if (CONFIG.mockMode) {
+                  // Mock logic for testing
+                  const localOrders = typeof getOrdersLocal === 'function' ? getOrdersLocal() : [];
+                  results = localOrders.filter(o => 
+                      o.orderId.toLowerCase().includes(query.toLowerCase()) ||
+                      o.userId.toLowerCase().includes(query.toLowerCase()) ||
+                      (o.utr && o.utr.toLowerCase().includes(query.toLowerCase()))
+                  );
+              } else {
+                  // Actual API Call (No Authorization header as requested)
+                  const response = await fetch(`${CONFIG.apiUrl}/orders/search?q=${encodeURIComponent(query)}`);
+                  
+                  if (!response.ok) throw new Error("Server returned an error");
+                  
+                  results = await response.json();
               }
-            } else {
-              const response = await fetch(`${CONFIG.apiUrl}/orders/search?q=${encodeURIComponent(query)}`);
-              results = await response.json();
-            }
-            displayOrders(results);
+
+              // 4. Render Results
+              if (typeof displayOrders === 'function') {
+                  displayOrders(results);
+              } else {
+                  console.error("displayOrders function is missing!");
+              }
+
           } catch (error) {
-            console.error("Search error:", error);
-            container.innerHTML = '<p style="text-align: center; color: var(--danger); padding: 2rem;">Search failed.</p>';
+              console.error("Search error:", error);
+              container.innerHTML = '<p style="text-align: center; color: var(--danger); padding: 2rem;">Search failed. Please check your connection.</p>';
           }
-        }, 600);
       }
 
       // Close modals on outside click
