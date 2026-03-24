@@ -1840,8 +1840,20 @@
         document.getElementById("paymentStatus").style.display = "block";
         document.getElementById("generateSection").classList.remove("active");
 
-        // Attempt to launch
-        window.location.href = upiUrl;
+        // Attempt to launch using an anchor tag (more reliable in many in-app browsers/WebViews)
+        const link = document.createElement("a");
+        link.href = upiUrl;
+        link.rel = "noreferrer";
+        document.body.appendChild(link);
+        link.click();
+        
+        // Remove the link after a short delay
+        setTimeout(() => {
+          if (document.body.contains(link)) {
+            document.body.removeChild(link);
+          }
+        }, 100);
+
         handlePaymentStart(currentOrder.orderId);
         
         // Start checking for status automatically
