@@ -1637,14 +1637,6 @@
           </button>
           <button
             class="btn btn-secondary"
-            id="copyUpiBtn"
-            onclick="copyUPI()"
-            style="margin-top: 0; background: rgba(99, 102, 241, 0.05); color: var(--primary); border: 1px dashed var(--primary);"
-          >
-            📋 Copy UPI ID
-          </button>
-          <button
-            class="btn btn-secondary"
             id="toggleQrBtn"
             onclick="toggleQRCode()"
             style="margin-top: 0;"
@@ -1874,51 +1866,6 @@
         
         // Start checking for status automatically
         startPaymentStatusPolling(currentOrder.orderId);
-      }
-
-      function copyUPI() {
-        const upiId = CONFIG.merchantUPI;
-        const btn = document.getElementById("copyUpiBtn");
-        
-        // Try modern clipboard API
-        if (navigator.clipboard && window.isSecureContext) {
-          navigator.clipboard.writeText(upiId).then(() => {
-            updateCopyButton(btn);
-          }).catch(err => {
-            fallbackCopy(upiId, btn);
-          });
-        } else {
-          fallbackCopy(upiId, btn);
-        }
-      }
-
-      function updateCopyButton(btn) {
-        const originalText = btn.innerHTML;
-        btn.innerHTML = "✅ UPI ID Copied!";
-        btn.style.background = "rgba(16, 185, 129, 0.1)";
-        btn.style.borderColor = "var(--success)";
-        btn.style.color = "var(--success)";
-        
-        setTimeout(() => {
-          btn.innerHTML = originalText;
-          btn.style.background = "rgba(99, 102, 241, 0.05)";
-          btn.style.borderColor = "var(--primary)";
-          btn.style.color = "var(--primary)";
-        }, 2000);
-      }
-
-      function fallbackCopy(text, btn) {
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-        document.body.appendChild(textArea);
-        textArea.select();
-        try {
-          document.execCommand('copy');
-          updateCopyButton(btn);
-        } catch (err) {
-          alert("Please manually copy this UPI ID: " + text);
-        }
-        document.body.removeChild(textArea);
       }
 
       function resetPaymentView() {
