@@ -1095,9 +1095,7 @@
               <div class="card-header">
                 <div class="card-title">
                   <h4>ID : #${order.id}</h4>
-                  <div class="card-date">${formattedDate}</div>
                 </div>
-                
               </div>
 
               <div class="card-body">
@@ -1122,6 +1120,10 @@
                 <div class="detail-row">
                   <span>Status</span>
                   <span class="order-status ${statusClass}">${order.status}</span>
+                </div>
+                <div class="detail-row">
+                  <span>Date</span>
+                  <span class="detail-val">${formattedDate}</span>
                 </div>
               </div>
 
