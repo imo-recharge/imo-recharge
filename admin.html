@@ -1332,6 +1332,7 @@
             setTimeout(closePasswordModal, 1500);
             // 1. Clear the token from localStorage
             localStorage.removeItem("adminToken");
+            authToken = null;
             showLogin();
           } else {
             throw new Error(data.message || "Failed to update password");
