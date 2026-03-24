@@ -1007,7 +1007,7 @@
           if (!response.ok) {
             if (response.status === 401) {
               alert("Session expired. Please login again.");
-              return showLoginPage();
+              return showLogin();
             }
             throw new Error("Failed to fetch data from server");
           }
@@ -1280,7 +1280,9 @@
         const uPIInput = document.getElementById("settingUPI");
         const nameInput = document.getElementById("settingName");
         const imohelplineInput = document.getElementById("settingImoHelpline");
-        const whatsappSupportInput = document.getElementById("settingWhatsappSupport");
+        const whatsappSupportInput = document.getElementById(
+          "settingWhatsappSupport",
+        );
         const status = document.getElementById("settingsStatus");
 
         // Get the token saved during login
@@ -1327,8 +1329,12 @@
       async function saveMerchantConfig() {
         const upiId = document.getElementById("settingUPI").value.trim();
         const name = document.getElementById("settingName").value.trim();
-        const imohelplineInput = document.getElementById("settingImoHelpline").value.trim();
-        const whatsappSupportInput = document.getElementById("settingWhatsappSupport").value.trim();
+        const imohelplineInput = document
+          .getElementById("settingImoHelpline")
+          .value.trim();
+        const whatsappSupportInput = document
+          .getElementById("settingWhatsappSupport")
+          .value.trim();
 
         const btn = document.getElementById("saveConfigBtn");
         const status = document.getElementById("settingsStatus");
@@ -1363,7 +1369,7 @@
               merchantUPI: upiId,
               merchantName: name,
               imoHelpline: imohelplineInput,
-              whatsappSupport: whatsappSupportInput
+              whatsappSupport: whatsappSupportInput,
             }),
           });
 
