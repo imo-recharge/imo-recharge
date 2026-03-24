@@ -1033,6 +1033,69 @@
       }
 
       /* WhatsApp Support Card */
+      .imo-card {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 24px;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        margin-bottom: 1.5rem;
+      }
+      .imo-card:hover {
+        border-color: rgba(37, 211, 102, 0.5);
+        box-shadow: 0 15px 35px -15px rgba(37, 211, 102, 0.25);
+      }
+      .imo-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(37, 211, 102, 0.1);
+        color: #25d366;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .imo-info {
+        flex: 1;
+      }
+      .imo-info h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.25rem;
+        color: var(--text);
+      }
+      .imo-info p {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+      }
+      .imo-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: #25d366;
+        color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.25s ease;
+      }
+      .imo-btn:hover {
+        background: #1da851;
+        color: white;
+        transform: translateY(-2px);
+      }
+      
+      
+      /* WhatsApp Support Card */
       .whatsapp-card {
         background: rgba(255, 255, 255, 0.4);
         backdrop-filter: blur(20px);
@@ -1542,14 +1605,14 @@
         </div>
         <div class="support-card">
           <!-- IMO Support Group Section -->
-          <div class="whatsapp-card" style="border-color: rgba(33, 150, 243, 0.3); margin-bottom: 1.5rem;">
-            <div class="whatsapp-icon" style="background: rgba(33, 150, 243, 0.1); color: #2196f3;">
+          <div class="imo-card" style="border-color: rgba(33, 150, 243, 0.3); margin-bottom: 1.5rem;">
+            <div class="imo-icon" style="background: rgba(33, 150, 243, 0.1); color: #2196f3;">
               <img src="imo.png" alt="IMO" style="width: 24px; height: 24px;">
             </div>
-            <div class="whatsapp-info">
+            <div class="imo-info">
               <h3>IMO Helpline Group</h3>
               <p>Join our official WhatsApp group for instant updates.</p>
-              <a href="https://s.imoim.net/iO3OUL" target="_blank" class="whatsapp-btn" id="imoHelpline" style="background: #2196f3;"> Join Community </a>
+              <a href="https://s.imoim.net/iO3OUL" target="_blank" class="imo-btn" id="imoHelpline" style="background: #2196f3;"> Join Community </a>
             </div>
           </div>
           <!-- WhatsApp Support Section -->
