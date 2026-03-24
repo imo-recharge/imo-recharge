@@ -1229,6 +1229,16 @@
         const btn = document.getElementById("saveConfigBtn");
         const status = document.getElementById("settingsStatus");
 
+        // Get the token saved during login
+        const token = localStorage.getItem("adminToken");
+
+        // Safety Check: If no token, redirect to login
+        if (!token) {
+          alert("Session expired. Please login again.");
+          showLogin();
+          return;
+        }
+
         if (!upiId) {
           alert("UPI ID is required");
           return;
@@ -1243,7 +1253,7 @@
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${authToken}`,
+              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({ merchantUPI: upiId, merchantName: name }),
           });
