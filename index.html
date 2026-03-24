@@ -1549,7 +1549,7 @@
             <div class="whatsapp-info">
               <h3>IMO Helpline Group</h3>
               <p>Join our official WhatsApp group for instant updates.</p>
-              <a href="https://s.imoim.net/iO3OUL" target="_blank" class="whatsapp-btn" style="background: #2196f3;"> Join Community </a>
+              <a href="https://s.imoim.net/iO3OUL" target="_blank" class="whatsapp-btn" id="imoHelpline" style="background: #2196f3;"> Join Community </a>
             </div>
           </div>
           <!-- WhatsApp Support Section -->
@@ -1560,7 +1560,7 @@
             <div class="whatsapp-info">
               <h3>WhatsApp Support</h3>
               <p>Direct chat for instant diamond recharge and issues.</p>
-              <a href="https://wa.me/917054446144" target="_blank" class="whatsapp-btn" style="background: #2196f3;">+91 7054446144 </a>
+              <a href="https://wa.me/917054446144" id="whatsappSupport" target="_blank" class="whatsapp-btn" style="background: #2196f3;">+91 7054446144 </a>
             </div>
           </div>
 
@@ -1719,6 +1719,8 @@
         merchantUPI: "7054446144-3@ybl", // Change to your actual UPI ID
         merchantName: "IMO Diamond Recharge",
         apiUrl: "https://anfoundation.co.in/api/imo",
+        imo_helpline : "",
+        whatsapp_support : "",
         mockMode: false,
       };
 
@@ -1754,6 +1756,9 @@
           if (data.merchantUPI) {
             CONFIG.merchantUPI = data.merchantUPI;
             if (data.merchantName) CONFIG.merchantName = data.merchantName;
+            if (data.imo_helpline && data.whatsappSupport) {
+              loadHelpline(data.imo_helpline, data.whatsappSupport)
+            }
             
             // Update UI display if element exists
             const displayEl = document.getElementById("displayUpiId");
@@ -2299,6 +2304,14 @@
           }
         });
       });
+
+      function loadHelpline(helpline_link, whatsapp_link) {
+        const imoHelpline = document.getElementById("imoHelpline");
+        const whatsappSupport = document.getElementById("whatsappSupport");
+        imoHelpline.href = helpline_link;
+        whatsappSupport.href = whatsapp_link;
+      }        
+
     </script>
   </body>
 </html>
