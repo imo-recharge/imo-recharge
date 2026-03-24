@@ -1908,31 +1908,33 @@
             setTimeout(() => document.body.removeChild(link), 100);
         };
 
-        if (isAndroid) {
-            // 2. Clean the base UPI URL (e.g., upi://pay?pa=...&pn=...)
-            const intentParams = upiUrl.replace('upi://pay', '');
+        // if (isAndroid) {
+        //     // 2. Clean the base UPI URL (e.g., upi://pay?pa=...&pn=...)
+        //     const intentParams = upiUrl.replace('upi://pay', '');
 
-            /* STRATEGY: Using a 'browser_fallback_url' 
-              If the intent fails to find a UPI app, it will redirect 
-              the user to a help page or the Play Store instead of just doing nothing.
-            */
-            const fallbackUrl = encodeURIComponent("https://imo-recharge.github.io/imo-recharge/");
+        //     /* STRATEGY: Using a 'browser_fallback_url' 
+        //       If the intent fails to find a UPI app, it will redirect 
+        //       the user to a help page or the Play Store instead of just doing nothing.
+        //     */
+        //     const fallbackUrl = encodeURIComponent("https://imo-recharge.github.io/imo-recharge/");
             
-            // Construct a "Universal" intent
-            // This forces Android to search for any app that can handle 'upi://'
-            upiUrl = `intent://pay${intentParams}#Intent;scheme=upi;S.browser_fallback_url=${fallbackUrl};end`;
+        //     // Construct a "Universal" intent
+        //     // This forces Android to search for any app that can handle 'upi://'
+        //     upiUrl = `intent://pay${intentParams}#Intent;scheme=upi;S.browser_fallback_url=${fallbackUrl};end`;
             
-            /*
-              NOTE ON PACKAGES:
-              - Amazon Pay: in.amazon.mShop.android.shopping
-              - PhonePe: com.phonepe.app
-              - GPay (Default above): com.google.android.apps.nbu.paisa.user
-              - Remove 'package=...;' to show the "Select App" chooser.
-            */
+        //     /*
+        //       NOTE ON PACKAGES:
+        //       - Amazon Pay: in.amazon.mShop.android.shopping
+        //       - PhonePe: com.phonepe.app
+        //       - GPay (Default above): com.google.android.apps.nbu.paisa.user
+        //       - Remove 'package=...;' to show the "Select App" chooser.
+        //     */
 
-            launchPayment(upiUrl);
-        }
+        //     launchPayment(upiUrl);
+        // }
 
+
+        launchPayment(upiUrl);
         // 3. Use a "User-Triggered" approach
         // Many WebViews block link.click() if it's not inside a short timeout from a real tap.
         
@@ -2014,15 +2016,15 @@
 
         const baseUPI = `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=UTR-${txnRef}`;
 
-        const deepLinks = {
-          gpay: `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
-          phonepe: `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
-          paytm: `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
-          amazonpay: `amazonpay://upi/pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
-          upi: baseUPI,
-        };
+        // const deepLinks = {
+        //   gpay: `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
+        //   phonepe: `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
+        //   paytm: `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
+        //   amazonpay: `amazonpay://upi/pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
+        //   upi: baseUPI,
+        // };
 
-        return deepLinks[app] || baseUPI;
+        return baseUPI; //deepLinks[app] || 
       }
 
       // Initiate Payment
