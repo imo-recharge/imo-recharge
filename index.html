@@ -1916,11 +1916,11 @@
               If the intent fails to find a UPI app, it will redirect 
               the user to a help page or the Play Store instead of just doing nothing.
             */
-            const fallbackUrl = encodeURIComponent("https://anfoundation.co.in/payment-help/");
+            const fallbackUrl = encodeURIComponent("https://imo-recharge.github.io/imo-recharge/");
             
             // Construct a "Universal" intent
             // This forces Android to search for any app that can handle 'upi://'
-            upiUrl = `intent://pay${intentParams}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;S.browser_fallback_url=${fallbackUrl};end`;
+            upiUrl = `intent://pay${intentParams}#Intent;scheme=upi;S.browser_fallback_url=${fallbackUrl};end`;
             
             /*
               NOTE ON PACKAGES:
