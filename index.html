@@ -1940,10 +1940,10 @@
 
       // Generate UPI Deep Link
       function generateUPILink(orderId, amount, app) {
-        const txnNote = `IMO Diamonds - Order ${orderId}`;
+        const txnNote = `IMO Diamonds Profile Id - ${userId}`;
         const txnRef = orderId;
 
-        const baseUPI = `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`;
+        const baseUPI = `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=UTIL-${txnRef}`;
 
         const deepLinks = {
           gpay: `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
