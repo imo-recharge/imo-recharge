@@ -1713,9 +1713,6 @@
       </div>
     </div>
 
-    <!-- Server Status -->
-
-
     <script>
       // Configuration
       const CONFIG = {
@@ -1750,7 +1747,7 @@
       // Fetch Merchant Configuration from Server
       async function loadMerchantConfig() {
         try {
-          const response = await fetch(`${CONFIG.apiUrl}/config`);
+          const response = await fetch(`${CONFIG.apiUrl}/config/get`);
           if (!response.ok) throw new Error("Config endpoint not found");
           
           const data = await response.json();
