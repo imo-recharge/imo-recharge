@@ -1121,8 +1121,8 @@
                 ${
                   order.status === "pending"
                     ? `
-                  <button class="btn" style="background: var(--success); color: white; padding: 0.35rem 0.6rem; font-size: 0.75rem; flex: 1;" onclick="updateStatus('${order.id}', 'success')">Approve</button>
-                  <button class="btn" style="background: var(--accent); color: white; padding: 0.35rem 0.6rem; font-size: 0.75rem; flex: 1;" onclick="updateStatus('${order.id}', 'failed')">Reject</button>
+                  <button class="btn" style="background: var(--success); color: white; padding: 0.35rem 0.6rem; font-size: 0.75rem; flex: 1;" onclick="updateStatus('${order.id}', 'success', event)">Approve</button>
+                  <button class="btn" style="background: var(--accent); color: white; padding: 0.35rem 0.6rem; font-size: 0.75rem; flex: 1;" onclick="updateStatus('${order.id}', 'failed', event)">Reject</button>
                 `
                     : ""
                 }
