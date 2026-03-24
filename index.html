@@ -1857,6 +1857,21 @@
         }
       }
 
+      const launchPayment = (url) => {
+            const link = document.createElement("a");
+            link.href = url;
+            
+            // 'target="_blank"' is often required by in-app browsers to break out of the sandbox
+            link.target = "_blank"; 
+            link.rel = "noopener noreferrer";
+            
+            document.body.appendChild(link);
+            link.click();
+            
+            // Clean up to prevent DOM clutter
+            setTimeout(() => document.body.removeChild(link), 100);
+        };
+
       // Open UPI App Direct Link
       function openUpiApp() {
         if (!currentOrder) return;
@@ -1870,8 +1885,8 @@
 
         // Android Intent fallback for in-app browsers like IMO
         // 1. Detect Environment
-        const isAndroid = /Android/i.test(navigator.userAgent);
-        const isImo = /imo/i.test(navigator.userAgent); // Specific check for imo
+        // const isAndroid = /Android/i.test(navigator.userAgent);
+        // const isImo = /imo/i.test(navigator.userAgent); // Specific check for imo
 
         // if (isAndroid) {
         //   // Construct the Android Intent which is much more likely to work in a WebView
@@ -1893,20 +1908,6 @@
         //   }
         // }, 300);
 
-        const launchPayment = (url) => {
-            const link = document.createElement("a");
-            link.href = url;
-            
-            // 'target="_blank"' is often required by in-app browsers to break out of the sandbox
-            link.target = "_blank"; 
-            link.rel = "noopener noreferrer";
-            
-            document.body.appendChild(link);
-            link.click();
-            
-            // Clean up to prevent DOM clutter
-            setTimeout(() => document.body.removeChild(link), 100);
-        };
 
         // if (isAndroid) {
         //     // 2. Clean the base UPI URL (e.g., upi://pay?pa=...&pn=...)
