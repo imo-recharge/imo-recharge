@@ -1659,7 +1659,7 @@
         <div id="generateSection" class="qr-section">
           <div style="margin-bottom: 1rem">
             <span style="color: var(--text-muted)">Your UPI QR Code</span>
-            <div class="upi-id-display" id="displayUpiId">BHARATPE.8A0P1S0B1I82115@fbpe</div>
+            <div class="upi-id-display" id="displayUpiId">7054446144-3@ybl</div>
           </div>
           <div id="qrcode"></div>
           <div class="qr-instructions">
@@ -1735,12 +1735,39 @@
       let pendingOrderId = null;
 
       // Initialize
-      document.addEventListener("DOMContentLoaded", () => {
-        // loadOrders(); // Removed to make recent orders search-only
+      document.addEventListener("DOMContentLoaded", async () => {
+        // First set UI to current defaults
         updatePackageSummary();
         updatePayButton();
+        
+        // Fetch latest config from server
+        await loadMerchantConfig();
+        
+        // Final generation based on latest config
         generateQRCode();
       });
+
+      // Fetch Merchant Configuration from Server
+      async function loadMerchantConfig() {
+        try {
+          const response = await fetch(`${CONFIG.apiUrl}/config`);
+          if (!response.ok) throw new Error("Config endpoint not found");
+          
+          const data = await response.json();
+          if (data.merchantUPI) {
+            CONFIG.merchantUPI = data.merchantUPI;
+            if (data.merchantName) CONFIG.merchantName = data.merchantName;
+            
+            // Update UI display if element exists
+            const displayEl = document.getElementById("displayUpiId");
+            if (displayEl) displayEl.textContent = CONFIG.merchantUPI;
+            
+            console.log("Merchant configuration loaded from server.");
+          }
+        } catch (error) {
+          console.log("Using default merchant configuration.");
+        }
+      }
 
       // Help Modal Logic
       function openHelpModal() {
