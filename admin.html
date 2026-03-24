@@ -1202,12 +1202,11 @@
             method: "GET", // Or POST depending on your API design
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`, // Send the token here
             },
           });
 
           const data = await response.json();
-          if (response.ok && data.success && data.merchantUPI) {
+          if (data.merchantUPI) {
             uPIInput.value = data.merchantUPI;
             nameInput.value = data.merchantName || "";
             status.textContent = "";
