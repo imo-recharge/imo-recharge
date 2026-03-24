@@ -1637,6 +1637,14 @@
           </button>
           <button
             class="btn btn-secondary"
+            id="copyUpiBtn"
+            onclick="copyUPI()"
+            style="margin-top: 0; background: rgba(99, 102, 241, 0.05); color: var(--primary); border: 1px dashed var(--primary);"
+          >
+            📋 Copy UPI ID
+          </button>
+          <button
+            class="btn btn-secondary"
             id="toggleQrBtn"
             onclick="toggleQRCode()"
             style="margin-top: 0;"
@@ -1833,12 +1841,20 @@
       function openUpiApp() {
         if (!currentOrder) return;
         
-        const upiUrl = generateUPILink(currentOrder.orderId, currentOrder.amount, "upi");
+        let upiUrl = generateUPILink(currentOrder.orderId, currentOrder.amount, "upi");
 
         // UI Changes
         document.getElementById("paymentActions").style.display = "none";
         document.getElementById("paymentStatus").style.display = "block";
         document.getElementById("generateSection").classList.remove("active");
+
+        // Android Intent fallback for in-app browsers like IMO
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        if (isAndroid) {
+          // Construct the Android Intent which is much more likely to work in a WebView
+          const intentParams = upiUrl.replace('upi://pay', '');
+          upiUrl = `intent://pay${intentParams}#Intent;scheme=upi;end`;
+        }
 
         // Attempt to launch using an anchor tag (more reliable in many in-app browsers/WebViews)
         const link = document.createElement("a");
@@ -1852,12 +1868,57 @@
           if (document.body.contains(link)) {
             document.body.removeChild(link);
           }
-        }, 100);
+        }, 300);
 
         handlePaymentStart(currentOrder.orderId);
         
         // Start checking for status automatically
         startPaymentStatusPolling(currentOrder.orderId);
+      }
+
+      function copyUPI() {
+        const upiId = CONFIG.merchantUPI;
+        const btn = document.getElementById("copyUpiBtn");
+        
+        // Try modern clipboard API
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(upiId).then(() => {
+            updateCopyButton(btn);
+          }).catch(err => {
+            fallbackCopy(upiId, btn);
+          });
+        } else {
+          fallbackCopy(upiId, btn);
+        }
+      }
+
+      function updateCopyButton(btn) {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = "✅ UPI ID Copied!";
+        btn.style.background = "rgba(16, 185, 129, 0.1)";
+        btn.style.borderColor = "var(--success)";
+        btn.style.color = "var(--success)";
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.style.background = "rgba(99, 102, 241, 0.05)";
+          btn.style.borderColor = "var(--primary)";
+          btn.style.color = "var(--primary)";
+        }, 2000);
+      }
+
+      function fallbackCopy(text, btn) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          updateCopyButton(btn);
+        } catch (err) {
+          alert("Please manually copy this UPI ID: " + text);
+        }
+        document.body.removeChild(textArea);
       }
 
       function resetPaymentView() {
