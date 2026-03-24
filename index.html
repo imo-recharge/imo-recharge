@@ -8,10 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <!-- QR Code Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
+        
     <style>
       * {
         margin: 0;
@@ -1734,9 +1731,6 @@
       let selectedUpiApp = "upi";
       let currentOrder = null;
       let timerInterval = null;
-      let html5QrCode = null;
-      let scannedUPI = null;
-      let qrCodeObj = null;
       let paymentInitiated = false;
       let pendingOrderId = null;
 
@@ -1902,25 +1896,13 @@
 
       // Generate UPI QR Code
       function generateQRCode() {
-        const container = document.getElementById("qrcode");
-        container.innerHTML = "";
-
+        const userId = document.getElementById("imoUserId").value.trim() || "-";
         const totalAmount = selectedPackage.amount * quantity;
-
-        const upiUrl = generateUPILink(
-          "GENERATE",
-          totalAmount,
-          "upi",
-        );
-
-        qrCodeObj = new QRCode(container, {
-          text: upiUrl,
-          width: 200,
-          height: 200,
-          colorDark: "#000000",
-          colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.H,
-        });
+        const upiUrl = generateUPILink("GENERATE", totalAmount, "upi", userId);
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(upiUrl)}`;
+        
+        const container = document.getElementById("qrcode");
+        container.innerHTML = `<img src="${qrUrl}" alt="Scan to Pay" style="width: 200px; height: 200px; margin: 0 auto; display: block;">`;
       }
 
       // Generate Order ID
@@ -1931,7 +1913,8 @@
       }
 
       // Generate UPI Deep Link
-      function generateUPILink(orderId, amount, app) {
+      function generateUPILink(orderId, amount, app, userIdArg = null) {
+        const userId = userIdArg || document.getElementById("imoUserId").value.trim() || "-";
         const txnNote = `IMO Diamonds Profile Id - ${userId}`;
         const txnRef = orderId;
 
