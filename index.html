@@ -1904,7 +1904,7 @@
         
         // Construct a "Universal" intent
         // This forces Android to search for any app that can handle 'upi://'
-        upiUrl = `intent://pay?${intentParams}#Intent;scheme=upi;S.browser_fallback_url=${fallbackUrl};end`;
+        upiUrl = `intent://pay${intentParams}`;   //#Intent;scheme=upi;S.browser_fallback_url=${fallbackUrl};end
         
         /*
           NOTE ON PACKAGES:
