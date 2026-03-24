@@ -1869,27 +1869,73 @@
         document.getElementById("generateSection").classList.remove("active");
 
         // Android Intent fallback for in-app browsers like IMO
+        // 1. Detect Environment
         const isAndroid = /Android/i.test(navigator.userAgent);
-        if (isAndroid) {
-          // Construct the Android Intent which is much more likely to work in a WebView
-          const intentParams = upiUrl.replace('upi://pay', '');
-          upiUrl = `intent://pay${intentParams}#Intent;scheme=upi;end`;
-        }
+        const isImo = /imo/i.test(navigator.userAgent); // Specific check for imo
+
+        // if (isAndroid) {
+        //   // Construct the Android Intent which is much more likely to work in a WebView
+        //   const intentParams = upiUrl.replace('upi://pay', '');
+        //   upiUrl = `intent://pay${intentParams}#Intent;scheme=upi;end`;
+        // }
 
         // Attempt to launch using an anchor tag (more reliable in many in-app browsers/WebViews)
-        const link = document.createElement("a");
-        link.href = upiUrl;
-        link.rel = "noreferrer";
-        document.body.appendChild(link);
-        link.click();
-        
-        // Remove the link after a short delay
-        setTimeout(() => {
-          if (document.body.contains(link)) {
-            document.body.removeChild(link);
-          }
-        }, 300);
+        // const link = document.createElement("a");
+        // link.href = upiUrl;
+        // link.rel = "noreferrer";
+        // document.body.appendChild(link);
+        // link.click();
 
+        // // Remove the link after a short delay
+        // setTimeout(() => {
+        //   if (document.body.contains(link)) {
+        //     document.body.removeChild(link);
+        //   }
+        // }, 300);
+
+        const launchPayment = (url) => {
+            const link = document.createElement("a");
+            link.href = url;
+            
+            // 'target="_blank"' is often required by in-app browsers to break out of the sandbox
+            link.target = "_blank"; 
+            link.rel = "noopener noreferrer";
+            
+            document.body.appendChild(link);
+            link.click();
+            
+            // Clean up to prevent DOM clutter
+            setTimeout(() => document.body.removeChild(link), 100);
+        };
+
+        if (isAndroid) {
+            // 2. Clean the base UPI URL (e.g., upi://pay?pa=...&pn=...)
+            const intentParams = upiUrl.replace('upi://pay', '');
+
+            /* STRATEGY: Using a 'browser_fallback_url' 
+              If the intent fails to find a UPI app, it will redirect 
+              the user to a help page or the Play Store instead of just doing nothing.
+            */
+            const fallbackUrl = encodeURIComponent("https://anfoundation.co.in/payment-help/");
+            
+            // Construct a "Universal" intent
+            // This forces Android to search for any app that can handle 'upi://'
+            upiUrl = `intent://pay${intentParams}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;S.browser_fallback_url=${fallbackUrl};end`;
+            
+            /*
+              NOTE ON PACKAGES:
+              - Amazon Pay: in.amazon.mShop.android.shopping
+              - PhonePe: com.phonepe.app
+              - GPay (Default above): com.google.android.apps.nbu.paisa.user
+              - Remove 'package=...;' to show the "Select App" chooser.
+            */
+
+            launchPayment(upiUrl);
+        }
+
+        // 3. Use a "User-Triggered" approach
+        // Many WebViews block link.click() if it's not inside a short timeout from a real tap.
+        
         handlePaymentStart(currentOrder.orderId);
         
         // Start checking for status automatically
