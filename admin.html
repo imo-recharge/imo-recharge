@@ -1096,33 +1096,33 @@
               <div class="card-body">
                 <div class="detail-row">
                   <span>ID</span>
-                  <span class="detail-val">${order.id}</span>
+                  <span class="detail-val">: ${order.id}</span>
                 </div>
                 <div class="detail-row">
                   <span>IMO ID</span>
-                  <span class="detail-val">${order.userId}</span>
+                  <span class="detail-val"> : ${order.userId}</span>
                 </div>
                 <div class="detail-row">
                   <span>Diamonds</span>
-                  <span class="detail-val"><span style="color: var(--accent)">💎</span> ${order.diamonds.toLocaleString()}</span>
+                  <span class="detail-val"> : <span style="color: var(--accent)">💎</span> ${order.diamonds.toLocaleString()}</span>
                 </div>
                 <div class="detail-row">
                   <span>Amount</span>
-                  <span class="detail-val">
+                  <span class="detail-val"> : 
                     ₹${order.amount.toLocaleString()}
                   </span>
                 </div>
                 <div class="detail-row">
                   <span>UTR</span>
-                  <span class="detail-val">${order.orderId}</span>
+                  <span class="detail-val"> : ${order.orderId}</span>
                 </div>
                 <div class="detail-row">
                   <span>Status</span>
-                  <span class="order-status ${statusClass}">${order.status}</span>
+                  <span class="order-status ${statusClass}"> : ${order.status}</span>
                 </div>
                 <div class="detail-row">
                   <span>Date</span>
-                  <span class="detail-val">${formattedDate}</span>
+                  <span class="detail-val"> : ${formattedDate}</span>
                 </div>
               </div>
 
