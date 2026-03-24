@@ -950,78 +950,69 @@
         showLogin();
       }
 
-      // Fetch Orders
+      // Fetch Orders from Django Server
       async function fetchOrders() {
         const container = document.getElementById("ordersContainer");
+        const adminSearch = document.getElementById("adminSearch");
+        const query = adminSearch ? adminSearch.value.trim() : "";
 
-        // Show loading state
+        // 1. Show loading skeleton state
         let skeletons = "";
         for (let i = 0; i < 4; i++) {
           skeletons += `
             <div class="order-card" style="opacity: 0.4;">
-              <div class="skeleton-loader" style="width: 60%; margin-bottom: 1rem;"></div>
-              <div class="skeleton-loader" style="height: 100px;"></div>
-            </div>
-          `;
+              <div class="skeleton-loader" style="width: 60%; margin-bottom: 1rem; height: 20px; background: #eee;"></div>
+              <div class="skeleton-loader" style="height: 100px; background: #eee;"></div>
+            </div>`;
         }
         container.innerHTML = skeletons;
 
         try {
-          // --- Mock API Fetch implementation ---
-          // Replace this block with your actual fetch API request:
-          /*
-          const response = await fetch(API_CONFIG.ordersEndpoint, {
+          // 2. Prepare the URL (Include search query if present)
+          let url = API_CONFIG.ordersEndpoint;
+          if (query) {
+            url += `?q=${encodeURIComponent(query)}`;
+          }
+
+          // 3. Actual API request to Django
+          const response = await fetch(url, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${authToken}`
-            }
+              Authorization: `Bearer ${localStorage.getItem("adminToken")}`, // Fetch current token
+            },
           });
-          const orders = await response.json();
-          */
 
-          // Simulating network delay and mock data
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-
-          // Generate 25 mock orders for pagination demo
-          const mockOrders = [];
-          const statuses = ["success", "pending", "failed"];
-
-          for (let i = 0; i < 25; i++) {
-            mockOrders.push({
-              id: `ORD${1000 + i}${String.fromCharCode(65 + (i % 26))}`,
-              userId: i % 4 === 0 ? `killer_x` : `user_${500 + i}`,
-
-              diamonds: [100, 310, 1060, 2200, 5600][i % 5],
-              amount: [50, 150, 500, 1000, 2500][i % 5],
-              status: statuses[i % 3],
-              upiApp: ["GPay", "PhonePe", "Paytm", "UPI App"][i % 4],
-              date: new Date(Date.now() - i * 3600000 * 2).toISOString(),
-            });
+          if (!response.ok) {
+            if (response.status === 401) {
+              alert("Session expired. Please login again.");
+              return showLoginPage();
+            }
+            throw new Error("Failed to fetch data from server");
           }
 
-          allOrders = mockOrders;
-          // Apply search filter if query exists
-          const query = document
-            .getElementById("adminSearch")
-            ?.value.trim()
-            .toLowerCase();
-          const filtered = query
-            ? allOrders.filter(
-                (o) =>
-                  o.id.toLowerCase().includes(query) ||
-                  o.userId.toLowerCase().includes(query),
-              )
-            : allOrders;
+          // 4. Parse the real data from server
+          const orders = await response.json();
 
-          displayCurrentPage(filtered);
+          // 5. Store globally for pagination and display
+          allOrders = orders;
+
+          // 6. Update the UI
+          // If your Django view returns an array directly, we pass 'allOrders'
+          if (allOrders.length === 0) {
+            container.innerHTML = `
+              <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                <p style="color: var(--text-muted)">No orders found matching your search.</p>
+              </div>`;
+          } else {
+            displayCurrentPage(allOrders);
+          }
         } catch (error) {
-          console.error("Failed to fetch orders:", error);
+          console.error("Fetch error:", error);
           container.innerHTML = `
-            <div class="empty-state" style="grid-column: 1/-1;">
-              <span style="color: var(--danger)">⚠️ Error loading orders. Please try again later.</span>
-            </div>
-          `;
+            <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+              <span style="color: var(--danger)">⚠️ Error connection to server. Please check your HTTPS/CORS settings.</span>
+            </div>`;
         }
       }
 
