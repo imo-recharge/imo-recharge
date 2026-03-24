@@ -1094,7 +1094,7 @@
             <div class="order-card">
               <div class="card-header">
                 <div class="card-title">
-                  <h4>#${order.id}</h4>
+                  <h4>ID : #${order.id}</h4>
                   <div class="card-date">${formattedDate}</div>
                 </div>
                 <span class="order-status ${statusClass}">${order.status}</span>
@@ -1114,6 +1114,7 @@
                   <span class="detail-val"><span style="color: var(--accent)">💎</span> ${order.diamonds.toLocaleString()}</span>
                 </div>
                 <div class="price-badge">
+                  <span>Amount</span>
                   ₹${order.amount.toLocaleString()}
                 </div>
               </div>
