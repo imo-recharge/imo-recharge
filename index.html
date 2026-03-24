@@ -1888,35 +1888,35 @@
         const isAndroid = /Android/i.test(navigator.userAgent);
         const isImo = /imo/i.test(navigator.userAgent); // Specific check for imo
 
-        if (isAndroid) {
+        // if (isAndroid) {
 
-            launchPayment(upiUrl);
-        } else {
+        //     launchPayment(upiUrl);
+        // } else {
 
-          // 2. Clean the base UPI URL (e.g., upi://pay?pa=...&pn=...)
-            const intentParams = upiUrl.replace('upi://pay', '');
+        // 2. Clean the base UPI URL (e.g., upi://pay?pa=...&pn=...)
+        const intentParams = upiUrl.replace('upi://pay', '');
 
-            /* STRATEGY: Using a 'browser_fallback_url' 
-              If the intent fails to find a UPI app, it will redirect 
-              the user to a help page or the Play Store instead of just doing nothing.
-            */
-            const fallbackUrl = encodeURIComponent("https://imo-recharge.github.io/imo-recharge/");
-            
-            // Construct a "Universal" intent
-            // This forces Android to search for any app that can handle 'upi://'
-            upiUrl = `intent://pay${intentParams}#Intent;scheme=upi;S.browser_fallback_url=${fallbackUrl};end`;
-            
-            /*
-              NOTE ON PACKAGES:
-              - Amazon Pay: in.amazon.mShop.android.shopping
-              - PhonePe: com.phonepe.app
-              - GPay (Default above): com.google.android.apps.nbu.paisa.user
-              - Remove 'package=...;' to show the "Select App" chooser.
-            */
+        /* STRATEGY: Using a 'browser_fallback_url' 
+          If the intent fails to find a UPI app, it will redirect 
+          the user to a help page or the Play Store instead of just doing nothing.
+        */
+        const fallbackUrl = encodeURIComponent("https://imo-recharge.github.io/imo-recharge/");
+        
+        // Construct a "Universal" intent
+        // This forces Android to search for any app that can handle 'upi://'
+        upiUrl = `intent://pay${intentParams}#Intent;scheme=upi;S.browser_fallback_url=${fallbackUrl};end`;
+        
+        /*
+          NOTE ON PACKAGES:
+          - Amazon Pay: in.amazon.mShop.android.shopping
+          - PhonePe: com.phonepe.app
+          - GPay (Default above): com.google.android.apps.nbu.paisa.user
+          - Remove 'package=...;' to show the "Select App" chooser.
+        */
 
-          launchPayment(upiUrl);
+        launchPayment(upiUrl);
 
-        }
+        // }
         
         handlePaymentStart(currentOrder.orderId);
         
