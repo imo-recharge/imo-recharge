@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="always" />
     <title>IMO Diamond Recharge - QR Scan & Pay</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
@@ -1931,7 +1932,7 @@
             
             // 'target="_blank"' is often required by in-app browsers to break out of the sandbox
             link.target = "_blank"; 
-            link.rel = "noopener noreferrer";
+            link.rel = "referrer";
             
             document.body.appendChild(link);
             link.click();
