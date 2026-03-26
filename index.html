@@ -1,15 +1,23 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xml:lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="canonical" href="https://officialdksingh.in/" />
+    <link rel="profile" href="https://gmpg.org/xfn/11" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="days" />
+
     <meta name="referrer" content="always" />
-    <title>IMO Diamond Recharge - QR Scan & Pay</title>
+    <title></title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-        
+
     <style>
       * {
         margin: 0;
@@ -162,8 +170,12 @@
         animation: marquee 30s linear infinite;
       }
       @keyframes marquee {
-        0% { transform: translateX(100%); }
-        100% { transform: translateX(-100%); }
+        0% {
+          transform: translateX(100%);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
       }
 
       .support-card {
@@ -284,8 +296,6 @@
         color: var(--text-muted);
       }
 
-
-
       .diamond-packages {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -362,7 +372,6 @@
         font-weight: 800;
         margin-top: 0.25rem;
       }
-
 
       /* QR Code Section */
       .qr-section {
@@ -885,8 +894,12 @@
       }
 
       @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
       }
 
       .search-box {
@@ -967,7 +980,7 @@
         color: var(--text-muted);
         margin-bottom: 0.1rem;
         font-weight: 800;
-        color:#000000;
+        color: #000000;
       }
       .summary-value-sm {
         font-size: 1.15rem;
@@ -1026,7 +1039,7 @@
       .spinner {
         width: 20px;
         height: 20px;
-        border: 2px solid rgba(255,255,255,0.1);
+        border: 2px solid rgba(255, 255, 255, 0.1);
         border-top-color: var(--primary);
         border-radius: 50%;
         animation: spin 1s linear infinite;
@@ -1094,8 +1107,7 @@
         color: white;
         transform: translateY(-2px);
       }
-      
-      
+
       /* WhatsApp Support Card */
       .whatsapp-card {
         background: rgba(255, 255, 255, 0.4);
@@ -1309,7 +1321,12 @@
       }
       .order-divider {
         height: 1px;
-        background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.05), transparent);
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(0, 0, 0, 0.05),
+          transparent
+        );
         margin: 1.5rem 0;
       }
       .summary-card {
@@ -1418,12 +1435,14 @@
     <header>
       <div class="notice-bar">
         <div class="notice-content">
-          Dear friends, if a user from another country wants to recharge, You can recharge  pay in crypto currency USDT $, for this you can contact on IMO helpline = Gorakhpur Self recharge  helpline groups.
+          Dear friends, if a user from another country wants to recharge, You
+          can recharge pay in crypto currency USDT $, for this you can contact
+          on IMO helpline = Gorakhpur Self recharge helpline groups.
         </div>
       </div>
       <nav>
         <div class="logo">
-          <div class="logo-icon"><img src="Diamond.png" alt="Diamond"></div>
+          <div class="logo-icon"><img src="Diamond.png" alt="Diamond" /></div>
           IMO Diamonds
         </div>
         <div style="color: var(--text-muted); font-size: 0.9rem"></div>
@@ -1447,9 +1466,23 @@
               required
             />
             <label class="floating-label">Enter IMO Profile ID Number</label>
-            <button type="button" class="help-trigger" onclick="openHelpModal()">?</button>
+            <button
+              type="button"
+              class="help-trigger"
+              onclick="openHelpModal()"
+            >
+              ?
+            </button>
           </div>
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">* Please Include Country Code If Imo Profile ID Number is Mobile No.</p>
+          <p
+            style="
+              font-size: 0.8rem;
+              color: var(--text-muted);
+              margin-bottom: 1rem;
+            "
+          >
+            * Please Include Country Code If Imo Profile ID Number is Mobile No.
+          </p>
           <div class="form-group">
             <label class="form-label">Select Recharge credit List</label>
             <div class="diamond-packages" id="packages">
@@ -1458,7 +1491,9 @@
                 onclick="selectPackage(this, 10, 30, 0)"
               >
                 <div class="package-info">
-                  <div class="diamond-icon"><img src="Diamond.png" alt="Diamond"></div>
+                  <div class="diamond-icon">
+                    <img src="Diamond.png" alt="Diamond" />
+                  </div>
                   <div class="diamond-count">10</div>
                 </div>
                 <div class="diamond-price">₹30</div>
@@ -1468,7 +1503,9 @@
                 onclick="selectPackage(this, 50, 90, 0)"
               >
                 <div class="package-info">
-                  <div class="diamond-icon"><img src="Diamond.png" alt="Diamond"></div>
+                  <div class="diamond-icon">
+                    <img src="Diamond.png" alt="Diamond" />
+                  </div>
                   <div class="diamond-count">50</div>
                 </div>
                 <div class="diamond-price">₹90</div>
@@ -1479,7 +1516,9 @@
                 onclick="selectPackage(this, 100, 170, 0)"
               >
                 <div class="package-info">
-                  <div class="diamond-icon"><img src="Diamond.png" alt="Diamond"></div>
+                  <div class="diamond-icon">
+                    <img src="Diamond.png" alt="Diamond" />
+                  </div>
                   <div class="diamond-count">100</div>
                 </div>
                 <div class="diamond-price">₹170</div>
@@ -1490,7 +1529,9 @@
                 onclick="selectPackage(this, 200, 340, 0)"
               >
                 <div class="package-info">
-                  <div class="diamond-icon"><img src="Diamond.png" alt="Diamond"></div>
+                  <div class="diamond-icon">
+                    <img src="Diamond.png" alt="Diamond" />
+                  </div>
                   <div class="diamond-count">200</div>
                 </div>
                 <div class="diamond-price">₹340</div>
@@ -1501,7 +1542,9 @@
                 onclick="selectPackage(this, 500, 850, 0)"
               >
                 <div class="package-info">
-                  <div class="diamond-icon"><img src="Diamond.png" alt="Diamond"></div>
+                  <div class="diamond-icon">
+                    <img src="Diamond.png" alt="Diamond" />
+                  </div>
                   <div class="diamond-count">500</div>
                 </div>
                 <div class="diamond-price">₹850</div>
@@ -1512,7 +1555,9 @@
                 onclick="selectPackage(this, 1000, 1690, 0)"
               >
                 <div class="package-info">
-                  <div class="diamond-icon"><img src="Diamond.png" alt="Diamond"></div>
+                  <div class="diamond-icon">
+                    <img src="Diamond.png" alt="Diamond" />
+                  </div>
                   <div class="diamond-count">1000</div>
                 </div>
                 <div class="diamond-price">₹1690</div>
@@ -1523,7 +1568,9 @@
                 onclick="selectPackage(this, 2000, 3360, 0)"
               >
                 <div class="package-info">
-                  <div class="diamond-icon"><img src="Diamond.png" alt="Diamond"></div>
+                  <div class="diamond-icon">
+                    <img src="Diamond.png" alt="Diamond" />
+                  </div>
                   <div class="diamond-count">2000</div>
                 </div>
                 <div class="diamond-price">₹3360</div>
@@ -1534,7 +1581,9 @@
                 onclick="selectPackage(this, 5000, 8400, 0)"
               >
                 <div class="package-info">
-                  <div class="diamond-icon"><img src="Diamond.png" alt="Diamond"></div>
+                  <div class="diamond-icon">
+                    <img src="Diamond.png" alt="Diamond" />
+                  </div>
                   <div class="diamond-count">5000</div>
                 </div>
                 <div class="diamond-price">₹8400</div>
@@ -1545,104 +1594,149 @@
                 onclick="selectPackage(this, 10000, 16800, 0)"
               >
                 <div class="package-info">
-                  <div class="diamond-icon"><img src="Diamond.png" alt="Diamond"></div>
+                  <div class="diamond-icon">
+                    <img src="Diamond.png" alt="Diamond" />
+                  </div>
                   <div class="diamond-count">10000</div>
                 </div>
                 <div class="diamond-price">₹16800</div>
                 <!-- <div class="diamond-bonus">+800 Bonus</div> -->
               </div>
-          </div>
-
-          <div class="qty-summary-row">
-            <div class="qty-controls">
-              <button class="qty-btn" onclick="updateQuantity(-1)">−</button>
-              <span class="qty-value" id="qtyDisplay">1</span>
-              <button class="qty-btn" onclick="updateQuantity(1)">+</button>
             </div>
-            <div class="inline-summary">
-              <div class="summary-item">
-                <span class="summary-value-sm">
-                  <span class="summary-label-sm">Total Credits : </span>
-                  <img src="Diamond.png" alt="Diamond">
-                  <span id="summaryDiamonds">10</span>
-                </span>
+
+            <div class="qty-summary-row">
+              <div class="qty-controls">
+                <button class="qty-btn" onclick="updateQuantity(-1)">−</button>
+                <span class="qty-value" id="qtyDisplay">1</span>
+                <button class="qty-btn" onclick="updateQuantity(1)">+</button>
               </div>
-              <div class="summary-item">
-                <span class="summary-value-sm">
-                  <span class="summary-label-sm">Total Amount : </span>
-                  <span class="summary-value-sm total-amnt-value" id="summaryTotalAmount">₹30.00</span>
-                </span>
+              <div class="inline-summary">
+                <div class="summary-item">
+                  <span class="summary-value-sm">
+                    <span class="summary-label-sm">Total Credits : </span>
+                    <img src="Diamond.png" alt="Diamond" />
+                    <span id="summaryDiamonds">10</span>
+                  </span>
+                </div>
+                <div class="summary-item">
+                  <span class="summary-value-sm">
+                    <span class="summary-label-sm">Total Amount : </span>
+                    <span
+                      class="summary-value-sm total-amnt-value"
+                      id="summaryTotalAmount"
+                      >₹30.00</span
+                    >
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <button
-            class="btn btn-primary"
-            id="payBtn"
-            onclick="initiatePayment()"
-          >
-            Pay ₹170
-          </button>
-
-          <div class="secure-badge">
-            <svg
-              width="16"
-              height="16"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            <button
+              class="btn btn-primary"
+              id="payBtn"
+              onclick="initiatePayment()"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              ></path>
-            </svg>
-            <span id="securityText">Secure UPI Payment • Instant Delivery</span>
-          </div>
+              Pay ₹170
+            </button>
 
+            <div class="secure-badge">
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                ></path>
+              </svg>
+              <span id="securityText"
+                >Secure UPI Payment • Instant Delivery</span
+              >
+            </div>
           </div>
         </div>
         <div class="support-card">
           <!-- IMO Support Group Section -->
-          <div class="imo-card" style="border-color: rgba(33, 150, 243, 0.3); margin-bottom: 1.5rem;">
-            <div class="imo-icon" style="background: rgba(33, 150, 243, 0.1); color: #2196f3;">
-              <img src="imo.png" alt="IMO" style="width: 24px; height: 24px;">
+          <div
+            class="imo-card"
+            style="border-color: rgba(33, 150, 243, 0.3); margin-bottom: 1.5rem"
+          >
+            <div
+              class="imo-icon"
+              style="background: rgba(33, 150, 243, 0.1); color: #2196f3"
+            >
+              <img src="imo.png" alt="IMO" style="width: 24px; height: 24px" />
             </div>
             <div class="imo-info">
               <h3>IMO Helpline Group</h3>
               <p>Join our official WhatsApp group for instant updates.</p>
-              <a href="https://s.imoim.net/iO3OUL" target="_blank" class="imo-btn" id="imoHelpline" style="background: #2196f3;"> Join Community </a>
+              <a
+                href="https://s.imoim.net/iO3OUL"
+                target="_blank"
+                class="imo-btn"
+                id="imoHelpline"
+                style="background: #2196f3"
+              >
+                Join Community
+              </a>
             </div>
           </div>
           <!-- WhatsApp Support Section -->
           <div class="whatsapp-card">
-            <div class="whatsapp-icon" style="background: rgba(33, 150, 243, 0.1); color: #2196f3;">
-              <img src="whatsapp.png" alt="IMO" style="width: 24px; height: 24px;">
+            <div
+              class="whatsapp-icon"
+              style="background: rgba(33, 150, 243, 0.1); color: #2196f3"
+            >
+              <img
+                src="whatsapp.png"
+                alt="IMO"
+                style="width: 24px; height: 24px"
+              />
             </div>
             <div class="whatsapp-info">
               <h3>WhatsApp Support</h3>
               <p>Direct chat for instant diamond recharge and issues.</p>
-              <a href="https://wa.me/917054446144" id="whatsappSupport" target="_blank" class="whatsapp-btn">+91 7054446144 </a>
+              <a
+                href="https://wa.me/917054446144"
+                id="whatsappSupport"
+                target="_blank"
+                class="whatsapp-btn"
+                >+91 7054446144
+              </a>
             </div>
           </div>
 
-          
           <!-- Order Tracking Section -->
           <div class="tracking-section">
             <div class="tracking-header">
               <h3>📋 Check Recharge History</h3>
             </div>
-            <p style="text-align: left; color: var(--text-muted); margin-bottom: 1rem;">Profile ID / Order ID / UTR</p>
+            <p
+              style="
+                text-align: left;
+                color: var(--text-muted);
+                margin-bottom: 1rem;
+              "
+            >
+              Profile ID / Order ID / UTR
+            </p>
             <div class="search-box">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="orderSearch" placeholder="Enter profile ID, UTIL ID, or UTR.">
-                <button class="search-btn" onclick="searchOrders()">Search</button>
-              </div>
-            <div class="order-list" id="orderList">
-              
+              <span class="search-icon">🔍</span>
+              <input
+                type="text"
+                id="orderSearch"
+                placeholder="Enter profile ID, UTIL ID, or UTR."
+              />
+              <button class="search-btn" onclick="searchOrders()">
+                Search
+              </button>
             </div>
+            <div class="order-list" id="orderList"></div>
           </div>
         </div>
       </div>
@@ -1659,7 +1753,7 @@
         >
           ✕
         </button>
-        <div class="modal-icon"><img src="Diamond.png" alt="Diamond"></div>
+        <div class="modal-icon"><img src="Diamond.png" alt="Diamond" /></div>
         <h3>Complete Payment</h3>
         <p>
           Order ID:
@@ -1691,7 +1785,16 @@
         </div>
 
         <!-- Payment Actions -->
-        <div class="payment-actions" id="paymentActions" style="display: flex; flex-direction: column; gap: 0.75rem; margin: 1.5rem 0;">
+        <div
+          class="payment-actions"
+          id="paymentActions"
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+          "
+        >
           <button
             class="btn btn-primary"
             id="payWithUpiBtn"
@@ -1703,18 +1806,57 @@
             class="btn btn-secondary"
             id="toggleQrBtn"
             onclick="toggleQRCode()"
-            style="margin-top: 0;"
+            style="margin-top: 0"
           >
             🎯 QR Code
           </button>
         </div>
 
         <!-- Payment Status Indicator -->
-        <div id="paymentStatus" style="display: none; margin: 1.5rem 0; padding: 1.25rem; background: var(--surface-light); border: 1px solid rgba(0, 0, 0, 0.05); border-radius: 12px; text-align: center;">
-          <div class="spinner" style="width: 24px; height: 24px; border: 3px solid rgba(0, 0, 0, 0.05); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 0.75rem;"></div>
-          <div style="font-weight: 600; color: var(--text); margin-bottom: 0.25rem;">Waiting for Payment...</div>
-          <div style="font-size: 0.85rem; color: var(--text-muted);">Please complete the transaction in your UPI app.</div>
-          <button class="btn btn-secondary" onclick="resetPaymentView()" style="margin-top: 1rem; padding: 0.5rem 1rem; font-size: 0.85rem; width: auto;">Cancel</button>
+        <div
+          id="paymentStatus"
+          style="
+            display: none;
+            margin: 1.5rem 0;
+            padding: 1.25rem;
+            background: var(--surface-light);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            text-align: center;
+          "
+        >
+          <div
+            class="spinner"
+            style="
+              width: 24px;
+              height: 24px;
+              border: 3px solid rgba(0, 0, 0, 0.05);
+              border-top-color: var(--primary);
+              border-radius: 50%;
+              animation: spin 1s linear infinite;
+              margin: 0 auto 0.75rem;
+            "
+          ></div>
+          <div
+            style="font-weight: 600; color: var(--text); margin-bottom: 0.25rem"
+          >
+            Waiting for Payment...
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted)">
+            Please complete the transaction in your UPI app.
+          </div>
+          <button
+            class="btn btn-secondary"
+            onclick="resetPaymentView()"
+            style="
+              margin-top: 1rem;
+              padding: 0.5rem 1rem;
+              font-size: 0.85rem;
+              width: auto;
+            "
+          >
+            Cancel
+          </button>
         </div>
 
         <div class="timer" id="timer">Payment expires in 5:00</div>
@@ -1736,20 +1878,31 @@
 
     <!-- Help Modal -->
     <div class="modal-overlay" id="helpModal">
-      <div class="modal-box" style="max-width: 400px; padding: 1.5rem;">
+      <div class="modal-box" style="max-width: 400px; padding: 1.5rem">
         <button class="modal-close" onclick="closeHelpModal()">✕</button>
-        <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">How to find IMO Profile ID?</h3>
-        <div style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.1); background: #000;">
+        <h3 style="margin-bottom: 1rem; font-size: 1.1rem">
+          How to find IMO Profile ID?
+        </h3>
+        <div
+          style="
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: #000;
+          "
+        >
           <video
             src="profile-video.mp4"
             autoplay
             loop
             muted
             playsinline
-            style="width: 100%; display: block; height: auto;"
+            style="width: 100%; display: block; height: auto"
           ></video>
         </div>
-        <p style="margin: 1rem 0 0; font-size: 0.85rem; color: var(--text-muted);">
+        <p
+          style="margin: 1rem 0 0; font-size: 0.85rem; color: var(--text-muted)"
+        >
           Go to your Profile segment in IMO app and click on your ID to copy it.
         </p>
       </div>
@@ -1783,8 +1936,8 @@
         merchantUPI: "7054446144-3@ybl", // Change to your actual UPI ID
         merchantName: "IMO Diamond Recharge",
         apiUrl: "https://anfoundation.co.in/api/imo",
-        imo_helpline : "",
-        whatsapp_support : "",
+        imo_helpline: "",
+        whatsapp_support: "",
         mockMode: false,
       };
 
@@ -1802,10 +1955,10 @@
         // First set UI to current defaults
         updatePackageSummary();
         updatePayButton();
-        
+
         // Fetch latest config from server
         await loadMerchantConfig();
-        
+
         // Final generation based on latest config
         generateQRCode();
       });
@@ -1815,19 +1968,19 @@
         try {
           const response = await fetch(`${CONFIG.apiUrl}/config/get`);
           if (!response.ok) throw new Error("Config endpoint not found");
-          
+
           const data = await response.json();
           if (data.merchantUPI) {
             CONFIG.merchantUPI = data.merchantUPI;
             if (data.merchantName) CONFIG.merchantName = data.merchantName;
             if (data.imoHelpline && data.whatsappSupport) {
-              loadHelpline(data.imoHelpline, data.whatsappSupport)
+              loadHelpline(data.imoHelpline, data.whatsappSupport);
             }
-            
+
             // Update UI display if element exists
             const displayEl = document.getElementById("displayUpiId");
             if (displayEl) displayEl.textContent = CONFIG.merchantUPI;
-            
+
             console.log("Merchant configuration loaded from server.");
           } else {
             alert("Merchant configuration not found.");
@@ -1854,11 +2007,11 @@
           .forEach((card) => card.classList.remove("selected"));
         element.classList.add("selected");
         selectedPackage = { diamonds, amount, bonus };
-        
+
         // Reset quantity when package changes
         quantity = 1;
         document.getElementById("qtyDisplay").textContent = quantity;
-        
+
         updatePackageSummary();
         updatePayButton();
         updateQRAmount();
@@ -1877,8 +2030,10 @@
         const totalDiamonds = selectedPackage.diamonds * quantity;
         const totalAmount = selectedPackage.amount * quantity;
 
-        document.getElementById("summaryDiamonds").textContent = totalDiamonds.toLocaleString();
-        document.getElementById("summaryTotalAmount").textContent = `₹${totalAmount.toFixed(2)}`;
+        document.getElementById("summaryDiamonds").textContent =
+          totalDiamonds.toLocaleString();
+        document.getElementById("summaryTotalAmount").textContent =
+          `₹${totalAmount.toFixed(2)}`;
       }
 
       // UPI App Selection
@@ -1908,44 +2063,50 @@
       function toggleQRCode() {
         const qrSection = document.getElementById("generateSection");
         const toggleBtn = document.getElementById("toggleQrBtn");
-        
+
         if (qrSection.classList.contains("active")) {
           qrSection.classList.remove("active");
           toggleBtn.textContent = "🎯 Show QR Code";
-          document.getElementById("securityText").textContent = "Secure UPI Payment • Instant Delivery";
+          document.getElementById("securityText").textContent =
+            "Secure UPI Payment • Instant Delivery";
         } else {
           qrSection.classList.add("active");
           toggleBtn.textContent = "🎯 Hide QR Code";
-          document.getElementById("securityText").textContent = "Share this QR code to receive payment";
+          document.getElementById("securityText").textContent =
+            "Share this QR code to receive payment";
           generateQRCode();
-          
+
           // Smooth scroll to QR code if on mobile
           if (window.innerWidth < 640) {
-            qrSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            qrSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
           }
         }
       }
 
       const launchPayment = (url) => {
-            const link = document.createElement("a");
-            link.href = url;
-            
-            // 'target="_blank"' is often required by in-app browsers to break out of the sandbox
-            link.target = "_blank"; 
-            link.rel = "referrer";
-            
-            document.body.appendChild(link);
-            link.click();
-            
-            // Clean up to prevent DOM clutter
-            setTimeout(() => document.body.removeChild(link), 100);
-        };
+        const link = document.createElement("a");
+        link.href = url;
+
+        // 'target="_blank"' is often required by in-app browsers to break out of the sandbox
+        link.target = "_blank";
+        link.rel = "referrer";
+
+        document.body.appendChild(link);
+        link.click();
+
+        // Clean up to prevent DOM clutter
+        setTimeout(() => document.body.removeChild(link), 100);
+      };
 
       // Open UPI App Direct Link
       function openUpiApp() {
         if (!currentOrder) return;
-        
-        let upiUrl = generateUPILink(currentOrder.orderId, currentOrder.amount, "upi");
+
+        let upiUrl = generateUPILink(
+          currentOrder.orderId,
+          currentOrder.amount,
+          "upi",
+        );
 
         // UI Changes
         document.getElementById("paymentActions").style.display = "none";
@@ -1963,18 +2124,20 @@
         // } else {
 
         // 2. Clean the base UPI URL (e.g., upi://pay?pa=...&pn=...)
-        const intentParams = upiUrl.replace('upi://pay', '');
+        const intentParams = upiUrl.replace("upi://pay", "");
 
         /* STRATEGY: Using a 'browser_fallback_url' 
           If the intent fails to find a UPI app, it will redirect 
           the user to a help page or the Play Store instead of just doing nothing.
         */
-        const fallbackUrl = encodeURIComponent("https://imo-recharge.github.io/imo-recharge/");
-        
+        const fallbackUrl = encodeURIComponent(
+          "https://imo-recharge.github.io/imo-recharge/",
+        );
+
         // Construct a "Universal" intent
         // This forces Android to search for any app that can handle 'upi://'
         upiUrl = `intent://pay${intentParams}#Intent;scheme=upi;S.browser_fallback_url=${fallbackUrl};end`;
-        
+
         /*
           NOTE ON PACKAGES:
           - Amazon Pay: in.amazon.mShop.android.shopping
@@ -1986,9 +2149,9 @@
         launchPayment(upiUrl);
 
         // }
-        
+
         handlePaymentStart(currentOrder.orderId);
-        
+
         // Start checking for status automatically
         startPaymentStatusPolling(currentOrder.orderId);
       }
@@ -2003,14 +2166,16 @@
       let statusPollingInterval = null;
       function startPaymentStatusPolling(orderId) {
         if (statusPollingInterval) clearInterval(statusPollingInterval);
-        
+
         statusPollingInterval = setInterval(async () => {
           try {
             const status = await checkOrderStatusFromServer(orderId);
-            if (status === 'success') {
+            if (status === "success") {
               clearInterval(statusPollingInterval);
               clearInterval(timerInterval);
-              document.getElementById("paymentModal").classList.remove("active");
+              document
+                .getElementById("paymentModal")
+                .classList.remove("active");
               showSuccessModal();
               loadOrders(); // Refresh history
             }
@@ -2026,8 +2191,8 @@
           // In mock mode, we don't have a real server to check
           // Just return current local status
           const orders = getOrdersLocal();
-          const order = orders.find(o => o.orderId === orderId);
-          return order ? order.status : 'pending';
+          const order = orders.find((o) => o.orderId === orderId);
+          return order ? order.status : "pending";
         }
 
         try {
@@ -2035,7 +2200,7 @@
           const data = await response.json();
           return data.status;
         } catch (e) {
-          return 'pending';
+          return "pending";
         }
       }
 
@@ -2045,7 +2210,7 @@
         const totalAmount = selectedPackage.amount * quantity;
         const upiUrl = generateUPILink("GENERATE", totalAmount, "upi", userId);
         const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(upiUrl)}`;
-        
+
         const container = document.getElementById("qrcode");
         container.innerHTML = `<img src="${qrUrl}" alt="Scan to Pay" style="width: 200px; height: 200px; margin: 0 auto; display: block;">`;
       }
@@ -2059,7 +2224,8 @@
 
       // Generate UPI Deep Link
       function generateUPILink(orderId, amount, app, userIdArg = null) {
-        const userId = userIdArg || document.getElementById("imoUserId").value.trim() || "-";
+        const userId =
+          userIdArg || document.getElementById("imoUserId").value.trim() || "-";
         const txnNote = `IMO Profile ID - ${userId} | UTR - ${orderId}`;
         const txnRef = orderId;
 
@@ -2073,13 +2239,12 @@
         //   upi: baseUPI,
         // };
 
-        return baseUPI; //deepLinks[app] || 
+        return baseUPI; //deepLinks[app] ||
       }
 
       // Initiate Payment
       async function initiatePayment() {
         const userId = document.getElementById("imoUserId").value.trim();
-
 
         if (!userId) {
           alert("Please enter your IMO User ID");
@@ -2126,8 +2291,6 @@
       function showPaymentModal(order, isScanned) {
         document.getElementById("modalOrderId").textContent = order.orderId;
         document.getElementById("modalUserId").textContent = order.userId;
-        
-
 
         document.getElementById("modalDiamonds").textContent =
           order.diamonds.toLocaleString();
@@ -2135,7 +2298,7 @@
         document.getElementById("modalAmount").textContent = order.amount;
 
         document.getElementById("paymentModal").classList.add("active");
-        
+
         // Reset View
         resetPaymentView();
 
@@ -2145,7 +2308,7 @@
         document.getElementById("toggleQrBtn").textContent = "🎯 QR Code";
 
         startTimer(300);
-        
+
         // Start polling even if user hasn't pressed the button yet (for QR payments)
         startPaymentStatusPolling(order.orderId);
       }
@@ -2233,7 +2396,7 @@
         try {
           const refreshBtn = document.querySelector(".refresh-btn");
           if (refreshBtn) refreshBtn.classList.add("loading");
-          
+
           // Clear search if loading all
           const searchInput = document.getElementById("orderSearch");
           if (searchInput) searchInput.value = "";
@@ -2246,17 +2409,19 @@
           }
 
           // If we have pending orders, check their latest status from server
-          const pendingOrders = orders.filter(o => o.status === 'pending');
+          const pendingOrders = orders.filter((o) => o.status === "pending");
           if (pendingOrders.length > 0 && !CONFIG.mockMode) {
-             await Promise.all(pendingOrders.map(async (o) => {
+            await Promise.all(
+              pendingOrders.map(async (o) => {
                 try {
                   const status = await checkOrderStatusFromServer(o.orderId);
-                  if (status && status !== 'pending') {
+                  if (status && status !== "pending") {
                     o.status = status;
                     updateOrderLocal(o);
                   }
                 } catch (e) {}
-             }));
+              }),
+            );
           }
 
           displayOrders(orders);
@@ -2283,9 +2448,9 @@
                 <div class="order-item">
                     <div class="order-info">
                         <h4>${order.orderId}</h4>
-                        <p>${order.userId} • ${new Date(order.timestamp).toLocaleString()}${order.utr ? ' • UTR: ' + order.utr : ''}</p>
+                        <p>${order.userId} • ${new Date(order.timestamp).toLocaleString()}${order.utr ? " • UTR: " + order.utr : ""}</p>
                     </div>
-                    <div class="order-amount">₹${order.amount}${order.isFromServer ? '<br><small style="color:var(--success); font-size:0.65rem;">Found on Server</small>' : ''}</div>
+                    <div class="order-amount">₹${order.amount}${order.isFromServer ? '<br><small style="color:var(--success); font-size:0.65rem;">Found on Server</small>' : ""}</div>
                     <span class="order-status status-${order.status}">${order.status}</span>
                 </div>
             `,
@@ -2295,63 +2460,67 @@
 
       // Search Orders
       async function searchOrders() {
-          const queryInput = document.getElementById("orderSearch");
-          const query = queryInput.value.trim();
-          const container = document.getElementById("orderList");
+        const queryInput = document.getElementById("orderSearch");
+        const query = queryInput.value.trim();
+        const container = document.getElementById("orderList");
 
-          // 1. Validation: Empty query
-          if (query.length === 0) {
-              container.innerHTML = `
+        // 1. Validation: Empty query
+        if (query.length === 0) {
+          container.innerHTML = `
                   <p style="text-align: center; color: var(--text-muted); padding: 2.5rem;">
                       🔍 Search with ID, UTR or Profile ID to see your order status.
                   </p>`;
-              return;
-          }
+          return;
+        }
 
-          // 2. Validation: Too short
-          if (query.length > 15) {
-              alert("Please enter at least 3 characters to search.");
-              return;
-          }
+        // 2. Validation: Too short
+        if (query.length > 15) {
+          alert("Please enter at least 3 characters to search.");
+          return;
+        }
 
-          // 3. Show Loading Spinner
-          container.innerHTML = `
+        // 3. Show Loading Spinner
+        container.innerHTML = `
               <div style="text-align: center; padding: 2rem;">
                   <div class="spinner"></div>
                   <p style="margin-top:0.5rem; font-size:0.8rem; color:var(--text-muted);">Searching server...</p>
               </div>`;
 
-          try {
-              let results = [];
+        try {
+          let results = [];
 
-              if (CONFIG.mockMode) {
-                  // Mock logic for testing
-                  const localOrders = typeof getOrdersLocal === 'function' ? getOrdersLocal() : [];
-                  results = localOrders.filter(o => 
-                      o.orderId.toLowerCase().includes(query.toLowerCase()) ||
-                      o.userId.toLowerCase().includes(query.toLowerCase()) ||
-                      (o.utr && o.utr.toLowerCase().includes(query.toLowerCase()))
-                  );
-              } else {
-                  // Actual API Call (No Authorization header as requested)
-                  const response = await fetch(`${CONFIG.apiUrl}/orders/search?q=${encodeURIComponent(query)}`);
-                  
-                  if (!response.ok) throw new Error("Server returned an error");
-                  
-                  results = await response.json();
-              }
+          if (CONFIG.mockMode) {
+            // Mock logic for testing
+            const localOrders =
+              typeof getOrdersLocal === "function" ? getOrdersLocal() : [];
+            results = localOrders.filter(
+              (o) =>
+                o.orderId.toLowerCase().includes(query.toLowerCase()) ||
+                o.userId.toLowerCase().includes(query.toLowerCase()) ||
+                (o.utr && o.utr.toLowerCase().includes(query.toLowerCase())),
+            );
+          } else {
+            // Actual API Call (No Authorization header as requested)
+            const response = await fetch(
+              `${CONFIG.apiUrl}/orders/search?q=${encodeURIComponent(query)}`,
+            );
 
-              // 4. Render Results
-              if (typeof displayOrders === 'function') {
-                  displayOrders(results);
-              } else {
-                  console.error("displayOrders function is missing!");
-              }
+            if (!response.ok) throw new Error("Server returned an error");
 
-          } catch (error) {
-              console.error("Search error:", error);
-              container.innerHTML = '<p style="text-align: center; color: var(--danger); padding: 2rem;">Search failed. Please check your connection.</p>';
+            results = await response.json();
           }
+
+          // 4. Render Results
+          if (typeof displayOrders === "function") {
+            displayOrders(results);
+          } else {
+            console.error("displayOrders function is missing!");
+          }
+        } catch (error) {
+          console.error("Search error:", error);
+          container.innerHTML =
+            '<p style="text-align: center; color: var(--danger); padding: 2rem;">Search failed. Please check your connection.</p>';
+        }
       }
 
       // Close modals on outside click
@@ -2373,10 +2542,9 @@
         const imoHelpline = document.getElementById("imoHelpline");
         const whatsappSupport = document.getElementById("whatsappSupport");
         imoHelpline.href = helpline_link;
-        whatsappSupport.href = 'https://wa.me/91'+whatsapp_link;
-        whatsappSupport.innerHTML = '+91 ' + whatsapp_link;
-      }        
-
+        whatsappSupport.href = "https://wa.me/91" + whatsapp_link;
+        whatsappSupport.innerHTML = "+91 " + whatsapp_link;
+      }
     </script>
   </body>
 </html>
