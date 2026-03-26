@@ -2115,8 +2115,8 @@
 
         // Android Intent fallback for in-app browsers like IMO
         // 1. Detect Environment
-        const isAndroid = /Android/i.test(navigator.userAgent);
-        const isImo = /imo/i.test(navigator.userAgent); // Specific check for imo
+        // const isAndroid = /Android/i.test(navigator.userAgent);
+        // const isImo = /imo/i.test(navigator.userAgent); // Specific check for imo
 
         // if (isAndroid) {
 
@@ -2147,12 +2147,11 @@
 
         // }
 
+        window.location.href = upiUrl;
         handlePaymentStart(currentOrder.orderId);
 
         // Start checking for status automatically
         startPaymentStatusPolling(currentOrder.orderId);
-
-        window.location.href = upiUrl;
       }
 
       function resetPaymentView() {
@@ -2234,9 +2233,9 @@
           userIdArg || document.getElementById("imoUserId").value.trim() || "-";
         const txnNote = `IMO Profile ID - ${userId} | UTR - ${orderId}`;
         //const txnRef = orderId;
-        const txnRef = `RECH-${Date.now()}-${Math.random().toString(36).substring(7).toUpperCase()}`;
+        const txnRef = `UTIL-${orderId}`;
         const mc = "4900"; // Recharge MCC
-        const baseUPI = `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&mc=${mc}&tr=${txnRef}&am=${tamount}&cu=INR&tn=${encodeURIComponent(txnNote)}`;
+        const baseUPI = `intent://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&mc=${mc}&tr=${txnRef}&am=${tamount}&cu=INR`; //&tn=${encodeURIComponent(txnNote)
 
         // const deepLinks = {
         //   gpay: `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
