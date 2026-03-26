@@ -2130,13 +2130,11 @@
           If the intent fails to find a UPI app, it will redirect 
           the user to a help page or the Play Store instead of just doing nothing.
         */
-        const fallbackUrl = encodeURIComponent(
-          "https://imo-recharge.github.io/imo-recharge/",
-        );
+        const fallbackUrl = encodeURIComponent("https://officialdksingh.in/");
 
         // Construct a "Universal" intent
         // This forces Android to search for any app that can handle 'upi://'
-        upiUrl = `intent://pay${intentParams}#Intent;scheme=upi;S.browser_fallback_url=${fallbackUrl};end`;
+        upiUrl = `intent://pay${intentParams}#Intent;scheme=upi;end`;
 
         /*
           NOTE ON PACKAGES:
@@ -2222,16 +2220,22 @@
         return `IMO${timestamp}${random}`;
       }
 
+      const formatUpiAmount = (amount) => {
+        // Converts 500 to "500.00" or 199.5 to "199.50"
+        return parseFloat(amount).toFixed(2);
+      };
+
       // Generate UPI Deep Link
       function generateUPILink(orderId, amount, app, userIdArg = null) {
-        console.log(amount);
+        const tamount = formatUpiAmount(amount);
+        console.log(tamount);
         const userId =
           userIdArg || document.getElementById("imoUserId").value.trim() || "-";
         const txnNote = `IMO Profile ID - ${userId} | UTR - ${orderId}`;
         //const txnRef = orderId;
         const txnRef = `RECH-${Date.now()}-${Math.random().toString(36).substring(7).toUpperCase()}`;
         const mc = "4814"; // Recharge MCC
-        const baseUPI = `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&tr=${txnRef}&mc=${mc}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}`;
+        const baseUPI = `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&tr=${txnRef}&mc=${mc}&am=${tamount}&cu=INR&tn=${encodeURIComponent(txnNote)}`;
 
         // const deepLinks = {
         //   gpay: `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
