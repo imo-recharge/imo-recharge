@@ -2225,14 +2225,14 @@
 
       // Generate UPI Deep Link
       function generateUPILink(orderId, amount, app, userIdArg = null) {
-        //const tamount = formatUpiAmount(amount);
+        const tamount = formatUpiAmount(amount);
         const userId =
           userIdArg || document.getElementById("imoUserId").value.trim() || "-";
         const txnNote = `IMO Profile ID - ${userId} | UTR - ${orderId}`;
         //const txnRef = orderId;
         const txnRef = `UTIL-${orderId}`;
         const mc = "4900"; // Recharge MCC
-        const baseUPI = `upi://pay?pa=${encodeURIComponent(CONFIG.merchantUPI)}&pn=${encodeURIComponent(CONFIG.merchantName)}&mc=${mc}&tr=${txnRef}&am=${amount}&cu=INR`; //&tn=${encodeURIComponent(txnNote)
+        const baseUPI = `upi://pay?pa=${encodeURIComponent(CONFIG.merchantUPI)}&pn=${encodeURIComponent(CONFIG.merchantName)}&mc=${mc}&tr=${txnRef}&am=${tamount}&cu=INR`; //&tn=${encodeURIComponent(txnNote)
 
         // const deepLinks = {
         //   gpay: `upi://pay?pa=${CONFIG.merchantUPI}&pn=${encodeURIComponent(CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`,
