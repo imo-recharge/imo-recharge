@@ -2124,17 +2124,17 @@
         // } else {
 
         // 2. Clean the base UPI URL (e.g., upi://pay?pa=...&pn=...)
-        const intentParams = upiUrl.replace("upi://pay", "");
+        // const intentParams = upiUrl.replace("upi://pay", "");
 
         /* STRATEGY: Using a 'browser_fallback_url' 
           If the intent fails to find a UPI app, it will redirect 
           the user to a help page or the Play Store instead of just doing nothing.
         */
-        const fallbackUrl = encodeURIComponent("https://officialdksingh.in/");
+        // const fallbackUrl = encodeURIComponent("https://officialdksingh.in/");
 
         // Construct a "Universal" intent
         // This forces Android to search for any app that can handle 'upi://'
-        upiUrl = `intent://pay${intentParams}#Intent;scheme=upi;end`;
+        // upiUrl = `intent://pay${intentParams}#Intent;scheme=upi;end`;
 
         /*
           NOTE ON PACKAGES:
@@ -2143,8 +2143,7 @@
           - GPay (Default above): com.google.android.apps.nbu.paisa.user
           - Remove 'package=...;' to show the "Select App" chooser.
         */
-
-        launchPayment(upiUrl);
+        // launchPayment(upiUrl);
 
         // }
 
@@ -2152,6 +2151,8 @@
 
         // Start checking for status automatically
         startPaymentStatusPolling(currentOrder.orderId);
+
+        window.location.href = upiUrl;
       }
 
       function resetPaymentView() {
