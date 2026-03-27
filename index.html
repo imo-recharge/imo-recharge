@@ -1484,6 +1484,7 @@
           >
             * Please Include Country Code If Imo Profile ID Number is Mobile No.
           </p>
+          <a href="https://payments-test.cashfree.com/links?code=ea56r6bu0gk0_AAAAAACoTDk">Pay</a>
           <div class="form-group">
             <label class="form-label">Select Recharge credit List</label>
             <div class="diamond-packages" id="packages">
@@ -2100,6 +2101,15 @@
       // Open UPI App Direct Link
       function openUpiApp() {
         if (!currentOrder) return;
+
+        // cashfree.checkout({
+        //     paymentSessionId: session_id,
+        //     paymentMethod: {
+        //         upi: {
+        //             channel: "intent" // or "collect"
+        //         }
+        //     }
+        // });
 
         let upiUrl = generateUPILink(
           currentOrder.orderId,
