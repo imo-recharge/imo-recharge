@@ -869,7 +869,12 @@
       <div class="modal-overlay" id="productsModal">
         <div
           class="modal-box"
-          style="max-width: 800px; width: 95%; max-height: 90vh; overflow-y: auto"
+          style="
+            max-width: 800px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+          "
         >
           <button class="modal-close" onclick="closeProductsModal()">✕</button>
           <h3 style="margin-bottom: 1rem; font-size: 1.5rem; font-weight: 700">
@@ -1008,10 +1013,11 @@
         configGetEndpoint: "https://anfoundation.co.in/api/imo/config/get",
         changePasswordEndpoint:
           "https://anfoundation.co.in/api/imo/change-password",
-        productsEndpoint: "https://anfoundation.co.in/api/imo/products",
-        productsSaveEndpoint: "https://anfoundation.co.in/api/imo/products/save",
+        productsEndpoint: "https://anfoundation.co.in/api/imo/products/",
+        productsSaveEndpoint:
+          "https://anfoundation.co.in/api/imo/products/save/",
         productsDeleteEndpoint:
-          "https://anfoundation.co.in/api/imo/products/delete",
+          "https://anfoundation.co.in/api/imo/products/delete/",
       };
 
       // State Management
@@ -1727,7 +1733,8 @@
         document.getElementById("prodDiamonds").value = diamonds;
         document.getElementById("prodPrice").value = price;
         document.getElementById("prodBonus").value = bonus;
-        document.getElementById("saveProductBtn").textContent = "Update Product";
+        document.getElementById("saveProductBtn").textContent =
+          "Update Product";
         document.getElementById("cancelEditBtn").style.display = "block";
       }
 
