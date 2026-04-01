@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us - Aryan Enterprises</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --secondary: #ec4899;
+        --accent: #f59e0b;
+        --success: #10b981;
+        --danger: #ef4444;
+        --bg: #ffffff;
+        --surface: #f8fafc;
+        --surface-light: #f1f5f9;
+        --text: #1e293b;
+        --text-muted: #64748b;
+        --gradient-1: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+      }
+      header {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      nav {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: var(--gradient-1);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-decoration: none;
+      }
+      .logo-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--gradient-1);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+      }
+      .logo-icon img {
+        width: 20px;
+        height: 20px;
+      }
+      .content-container {
+        max-width: 800px;
+        margin: 4rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      }
+      h1 {
+        margin-bottom: 2rem;
+        font-weight: 800;
+      }
+      h2 {
+        margin: 1.5rem 0 1rem;
+        font-weight: 700;
+      }
+      p {
+        margin-bottom: 1rem;
+        color: var(--text-muted);
+      }
+
+      /* Footer Styles */
+      footer {
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(25px) saturate(180%);
+        border-top: 1px solid rgba(255, 255, 255, 0.4);
+        padding: 3rem 1rem 2rem;
+        margin-top: 4rem;
+      }
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+      }
+      .footer-section h4 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1.25rem;
+        color: var(--text);
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+      .footer-section h4::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 30px;
+        height: 2px;
+        background: var(--gradient-1);
+      }
+      .footer-links {
+        list-style: none;
+      }
+      .footer-links li {
+        margin-bottom: 0.75rem;
+      }
+      .footer-links a {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+      }
+      .footer-links a:hover {
+        color: var(--primary);
+        padding-left: 5px;
+      }
+      .footer-bottom {
+        max-width: 1200px;
+        margin: 2rem auto 0;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: space-between;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+      }
+      @media (max-width: 768px) {
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+        .footer-bottom {
+          flex-direction: column;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="index.html" class="logo">
+          <div class="logo-icon"><img src="Diamond.png" alt="Diamond" /></div>
+          Aryan Enterprises
+        </a>
+      </nav>
+    </header>
+
+    <div class="content-container">
+      <h1>About Us</h1>
+      <p>
+        Welcome to Aryan Enterprises, your number one destination for IMO
+        diamond recharges. We are dedicated to providing you with the very best
+        of service, with an emphasis on speed, security, and customer
+        satisfaction.
+      </p>
+      <p>
+        Founded in 2024, Aryan Enterprises has come a long way from its
+        beginnings. When we first started out, our passion for helping IMO users
+        get instant diamonds drove us to start our own business.
+      </p>
+      <p>
+        We hope you enjoy our services as much as we enjoy offering them to you.
+        If you have any questions or comments, please don't hesitate to contact
+        us.
+      </p>
+      <h2>Our Mission</h2>
+      <p>
+        To provide the fastest and most reliable diamond recharge platform for
+        the global IMO community, ensuring a seamless experience for every user.
+      </p>
+    </div>
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>About Us</h4>
+          <p>
+            Aryan Enterprises is your trusted platform for instant IMO diamond
+            recharge. We provide secure and fast services to enhance your
+            experience.
+          </p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about-us.html">About Us</a></li>
+            <li><a href="contact-us.html">Contact Us</a></li>
+            <li><a href="terms-and-conditions.html">Terms & Conditions</a></li>
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+            <li>
+              <a href="refund-and-cancellation-policy.html"
+                >Refund & Cancellation</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Support</h4>
+          <ul class="footer-links">
+            <li><a href="https://wa.me/917054446144">WhatsApp Support</a></li>
+            <li><a href="https://s.imoim.net/iO3OUL">IMO Helpline Group</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2024 Aryan Enterprises. All rights reserved.</div>
+        <div>Made with ❤️ for IMO Community</div>
+      </div>
+    </footer>
+  </body>
+</html>

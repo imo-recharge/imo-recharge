@@ -711,6 +711,13 @@
             >
               🔑 Password
             </button>
+            <button
+              class="btn-fetch"
+              onclick="openProductsModal()"
+              style="background: #6366f1; color: white"
+            >
+              📦 Products
+            </button>
             <button class="btn-fetch hide-mobile" onclick="fetchOrders()">
               Refresh
             </button>
@@ -857,6 +864,127 @@
           ></div>
         </div>
       </div>
+
+      <!-- Products Modal -->
+      <div class="modal-overlay" id="productsModal">
+        <div
+          class="modal-box"
+          style="max-width: 800px; width: 95%; max-height: 90vh; overflow-y: auto"
+        >
+          <button class="modal-close" onclick="closeProductsModal()">✕</button>
+          <h3 style="margin-bottom: 1rem; font-size: 1.5rem; font-weight: 700">
+            Product Management
+          </h3>
+          <p
+            style="
+              margin-bottom: 1.5rem;
+              color: var(--text-muted);
+              font-size: 0.9rem;
+            "
+          >
+            Add or update IMO Diamond packages.
+          </p>
+
+          <!-- Add Product Form -->
+          <div
+            style="
+              background: var(--surface-light);
+              padding: 1.5rem;
+              border-radius: 16px;
+              margin-bottom: 2rem;
+            "
+          >
+            <h4 style="font-weight: 700; margin-bottom: 1rem">
+              Add New / Edit Package
+            </h4>
+            <input type="hidden" id="editProductId" />
+            <div
+              style="
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 1rem;
+              "
+            >
+              <div class="form-group" style="margin-bottom: 0">
+                <label class="form-label">Diamond Count</label>
+                <input
+                  type="number"
+                  id="prodDiamonds"
+                  class="form-input"
+                  placeholder="e.g. 500"
+                />
+              </div>
+              <div class="form-group" style="margin-bottom: 0">
+                <label class="form-label">Price (INR)</label>
+                <input
+                  type="number"
+                  id="prodPrice"
+                  class="form-input"
+                  placeholder="e.g. 850"
+                />
+              </div>
+              <div class="form-group" style="margin-bottom: 0">
+                <label class="form-label">Bonus</label>
+                <input
+                  type="number"
+                  id="prodBonus"
+                  class="form-input"
+                  placeholder="e.g. 50"
+                  value="0"
+                />
+              </div>
+              <div
+                class="form-group"
+                style="margin-bottom: 0; display: flex; align-items: flex-end"
+              >
+                <button
+                  class="btn btn-primary"
+                  id="saveProductBtn"
+                  onclick="saveProduct()"
+                >
+                  Save Product
+                </button>
+              </div>
+            </div>
+            <button
+              id="cancelEditBtn"
+              style="
+                display: none;
+                margin-top: 1rem;
+                background: none;
+                border: none;
+                color: var(--danger);
+                cursor: pointer;
+                font-size: 0.85rem;
+              "
+              onclick="resetProductForm()"
+            >
+              Cancel Edit
+            </button>
+          </div>
+
+          <!-- Products Table -->
+          <div class="orders-table-wrapper">
+            <table class="table is-fullwidth is-hoverable">
+              <thead>
+                <tr>
+                  <th>Diamonds</th>
+                  <th>Price</th>
+                  <th>Bonus</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="productsTableBody">
+                <!-- Products will be injected here -->
+              </tbody>
+            </table>
+          </div>
+          <div
+            id="productsStatus"
+            style="margin-top: 1rem; font-size: 0.85rem; text-align: center"
+          ></div>
+        </div>
+      </div>
     </div>
 
     <script>
@@ -869,6 +997,10 @@
         configGetEndpoint: "https://anfoundation.co.in/api/imo/config/get",
         changePasswordEndpoint:
           "https://anfoundation.co.in/api/imo/change-password",
+        productsEndpoint: "https://anfoundation.co.in/api/imo/products",
+        productsSaveEndpoint: "https://anfoundation.co.in/api/imo/products/save",
+        productsDeleteEndpoint:
+          "https://anfoundation.co.in/api/imo/products/delete",
       };
 
       // State Management
@@ -1459,6 +1591,159 @@
         } finally {
           btn.disabled = false;
           btn.textContent = "Update Password";
+        }
+      }
+
+      // Products Management Logic
+      async function openProductsModal() {
+        document.getElementById("productsModal").classList.add("active");
+        fetchProducts();
+      }
+
+      function closeProductsModal() {
+        document.getElementById("productsModal").classList.remove("active");
+        resetProductForm();
+      }
+
+      async function fetchProducts() {
+        const tbody = document.getElementById("productsTableBody");
+        const status = document.getElementById("productsStatus");
+
+        tbody.innerHTML = '<tr><td colspan="4" class="has-text-centered">Loading...</td></tr>';
+
+        try {
+          const response = await fetch(API_CONFIG.productsEndpoint);
+          const data = await response.json();
+
+          if (response.ok) {
+            renderProducts(data);
+            status.textContent = "";
+          } else {
+            throw new Error(data.message || "Failed to fetch products");
+          }
+        } catch (error) {
+          console.error("Products fetch error:", error);
+          status.textContent = "❌ Error loading products.";
+          tbody.innerHTML = '<tr><td colspan="4" class="has-text-centered">Failed to load</td></tr>';
+        }
+      }
+
+      function renderProducts(products) {
+        const tbody = document.getElementById("productsTableBody");
+        if (!products || products.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" class="has-text-centered">No products found.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = products
+          .map(
+            (p) => `
+          <tr>
+            <td>💎 ${p.diamonds}</td>
+            <td>₹${p.price}</td>
+            <td style="color: var(--success)">+${p.bonus || 0}</td>
+            <td>
+              <div class="buttons are-small">
+                <button class="button is-info" onclick="editProduct(${p.id}, ${p.diamonds}, ${p.price}, ${p.bonus || 0})">Edit</button>
+                <button class="button is-danger" onclick="deleteProduct(${p.id})">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `,
+          )
+          .join("");
+      }
+
+      async function saveProduct() {
+        const id = document.getElementById("editProductId").value;
+        const diamonds = document.getElementById("prodDiamonds").value;
+        const price = document.getElementById("prodPrice").value;
+        const bonus = document.getElementById("prodBonus").value;
+        const btn = document.getElementById("saveProductBtn");
+        const status = document.getElementById("productsStatus");
+
+        if (!diamonds || !price) {
+          alert("Diamonds and Price are required.");
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Saving...";
+
+        try {
+          const response = await fetch(API_CONFIG.productsSaveEndpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+            },
+            body: JSON.stringify({
+              id: id || null,
+              diamonds: parseInt(diamonds),
+              price: parseFloat(price),
+              bonus: parseInt(bonus) || 0,
+            }),
+          });
+
+          const data = await response.json();
+          if (response.ok && data.success) {
+            status.style.color = "var(--success)";
+            status.textContent = "✅ Product saved successfully!";
+            resetProductForm();
+            fetchProducts();
+          } else {
+            throw new Error(data.message || "Failed to save product");
+          }
+        } catch (error) {
+          console.error("Save error:", error);
+          status.style.color = "var(--danger)";
+          status.textContent = `❌ ${error.message}`;
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Save Product";
+        }
+      }
+
+      function editProduct(id, diamonds, price, bonus) {
+        document.getElementById("editProductId").value = id;
+        document.getElementById("prodDiamonds").value = diamonds;
+        document.getElementById("prodPrice").value = price;
+        document.getElementById("prodBonus").value = bonus;
+        document.getElementById("saveProductBtn").textContent = "Update Product";
+        document.getElementById("cancelEditBtn").style.display = "block";
+      }
+
+      function resetProductForm() {
+        document.getElementById("editProductId").value = "";
+        document.getElementById("prodDiamonds").value = "";
+        document.getElementById("prodPrice").value = "";
+        document.getElementById("prodBonus").value = "0";
+        document.getElementById("saveProductBtn").textContent = "Save Product";
+        document.getElementById("cancelEditBtn").style.display = "none";
+      }
+
+      async function deleteProduct(id) {
+        if (!confirm("Are you sure you want to delete this product?")) return;
+
+        try {
+          const response = await fetch(API_CONFIG.productsDeleteEndpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+            },
+            body: JSON.stringify({ id: id }),
+          });
+
+          const data = await response.json();
+          if (response.ok && data.success) {
+            fetchProducts();
+          } else {
+            throw new Error(data.message || "Failed to delete product");
+          }
+        } catch (error) {
+          console.error("Delete error:", error);
+          alert(`❌ ${error.message}`);
         }
       }
     </script>
