@@ -2139,6 +2139,9 @@
         const container = document.getElementById("packages");
         if (!container) return;
 
+        // Sort by serial_no
+        products.sort((a, b) => (a.serial_no || 0) - (b.serial_no || 0));
+
         // Try to find 500 as default, or use first if not found
         let defaultIndex = products.findIndex((p) => p.diamonds === 500);
         if (defaultIndex === -1 && products.length > 0) defaultIndex = 0;

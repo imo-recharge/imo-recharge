@@ -906,6 +906,16 @@
               "
             >
               <div class="form-group" style="margin-bottom: 0">
+                <label class="form-label">S.No</label>
+                <input
+                  type="number"
+                  id="prodSerial"
+                  class="form-input"
+                  placeholder="e.g. 1"
+                  value="1"
+                />
+              </div>
+              <div class="form-group" style="margin-bottom: 0">
                 <label class="form-label">Diamond Count</label>
                 <input
                   type="number"
@@ -968,6 +978,7 @@
             <table class="table is-fullwidth is-hoverable">
               <thead>
                 <tr>
+                  <th>S.No</th>
                   <th>Diamonds</th>
                   <th>Price</th>
                   <th>Bonus</th>
@@ -1609,7 +1620,8 @@
         const tbody = document.getElementById("productsTableBody");
         const status = document.getElementById("productsStatus");
 
-        tbody.innerHTML = '<tr><td colspan="4" class="has-text-centered">Loading...</td></tr>';
+        tbody.innerHTML =
+          '<tr><td colspan="5" class="has-text-centered">Loading...</td></tr>';
 
         try {
           const response = await fetch(API_CONFIG.productsEndpoint);
@@ -1624,27 +1636,30 @@
         } catch (error) {
           console.error("Products fetch error:", error);
           status.textContent = "❌ Error loading products.";
-          tbody.innerHTML = '<tr><td colspan="4" class="has-text-centered">Failed to load</td></tr>';
+          tbody.innerHTML =
+            '<tr><td colspan="5" class="has-text-centered">Failed to load</td></tr>';
         }
       }
 
       function renderProducts(products) {
         const tbody = document.getElementById("productsTableBody");
         if (!products || products.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="4" class="has-text-centered">No products found.</td></tr>';
+          tbody.innerHTML =
+            '<tr><td colspan="5" class="has-text-centered">No products found.</td></tr>';
           return;
         }
 
         tbody.innerHTML = products
           .map(
-            (p) => `
+            (p, index) => `
           <tr>
+            <td>${p.serial_no || index + 1}</td>
             <td>💎 ${p.diamonds}</td>
             <td>₹${p.price}</td>
             <td style="color: var(--success)">+${p.bonus || 0}</td>
             <td>
               <div class="buttons are-small">
-                <button class="button is-info" onclick="editProduct(${p.id}, ${p.diamonds}, ${p.price}, ${p.bonus || 0})">Edit</button>
+                <button class="button is-info" onclick="editProduct(${p.id}, ${p.diamonds}, ${p.price}, ${p.bonus || 0}, ${p.serial_no || 0})">Edit</button>
                 <button class="button is-danger" onclick="deleteProduct(${p.id})">Delete</button>
               </div>
             </td>
@@ -1656,6 +1671,7 @@
 
       async function saveProduct() {
         const id = document.getElementById("editProductId").value;
+        const serialNo = document.getElementById("prodSerial").value;
         const diamonds = document.getElementById("prodDiamonds").value;
         const price = document.getElementById("prodPrice").value;
         const bonus = document.getElementById("prodBonus").value;
@@ -1679,6 +1695,7 @@
             },
             body: JSON.stringify({
               id: id || null,
+              serial_no: parseInt(serialNo) || 0,
               diamonds: parseInt(diamonds),
               price: parseFloat(price),
               bonus: parseInt(bonus) || 0,
@@ -1704,8 +1721,9 @@
         }
       }
 
-      function editProduct(id, diamonds, price, bonus) {
+      function editProduct(id, diamonds, price, bonus, serialNo) {
         document.getElementById("editProductId").value = id;
+        document.getElementById("prodSerial").value = serialNo || 0;
         document.getElementById("prodDiamonds").value = diamonds;
         document.getElementById("prodPrice").value = price;
         document.getElementById("prodBonus").value = bonus;
@@ -1715,6 +1733,7 @@
 
       function resetProductForm() {
         document.getElementById("editProductId").value = "";
+        document.getElementById("prodSerial").value = "1";
         document.getElementById("prodDiamonds").value = "";
         document.getElementById("prodPrice").value = "";
         document.getElementById("prodBonus").value = "0";
