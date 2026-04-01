@@ -1632,7 +1632,7 @@
         try {
           const response = await fetch(API_CONFIG.productsEndpoint);
           const data = await response.json();
-
+          console.log(data);
           if (response.ok) {
             renderProducts(data);
             status.textContent = "";
